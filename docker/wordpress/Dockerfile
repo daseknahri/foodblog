@@ -10,6 +10,8 @@ COPY docker/wordpress/entrypoint.sh /usr/local/bin/kepoli-wordpress-entrypoint
 
 RUN a2enmod headers expires deflate \
     && a2enconf kepoli-performance \
+    && curl -fsSL -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+    && chmod +x /usr/local/bin/wp \
     && chmod +x /usr/local/bin/kepoli-wordpress-entrypoint /seed/bin/bootstrap.sh
 
 ENTRYPOINT ["kepoli-wordpress-entrypoint"]

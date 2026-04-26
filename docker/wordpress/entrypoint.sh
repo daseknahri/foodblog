@@ -1,6 +1,8 @@
 #!/bin/sh
 set -e
 
+export WP_CLI_ALLOW_ROOT=1
+
 mkdir -p /var/www/html/wp-content/themes /var/www/html/wp-content/mu-plugins /var/www/html/wp-content/plugins
 
 rm -rf /var/www/html/wp-content/themes/kepoli
@@ -15,5 +17,10 @@ chown -R www-data:www-data \
   /var/www/html/wp-content/plugins/kepoli-author-tools \
   /seed \
   /content 2>/dev/null || true
+
+if [ "${1:-}" = "apache2-foreground" ] && [ -x /seed/bin/bootstrap.sh ]; then
+  /seed/bin/bootstrap.sh
+  chown -R www-data:www-data /var/www/html/wp-content /var/www/html/wp-config.php 2>/dev/null || true
+fi
 
 exec docker-entrypoint.sh "$@"

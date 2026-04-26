@@ -29,6 +29,14 @@ function kepoli_autoseed_activate_plugin(string $plugin): void
 }
 
 add_action('init', static function (): void {
+    if (defined('WP_INSTALLING') && WP_INSTALLING) {
+        return;
+    }
+
+    if (function_exists('is_blog_installed') && !is_blog_installed()) {
+        return;
+    }
+
     kepoli_autoseed_activate_plugin('kepoli-author-tools/kepoli-author-tools.php');
 
     $target_version = function_exists('kepoli_seed_target_version')
