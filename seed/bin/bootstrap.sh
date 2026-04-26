@@ -81,6 +81,9 @@ define('AUTOMATIC_UPDATER_DISABLED', false);
 PHP
 fi
 
+chown www-data:www-data wp-config.php 2>/dev/null || true
+chmod 640 wp-config.php 2>/dev/null || true
+
 if ! grep -q "HTTP_X_FORWARDED_PROTO" wp-config.php; then
   echo "Patching wp-config.php for reverse-proxy HTTPS"
   tmp_config="$(mktemp)"
@@ -110,6 +113,8 @@ if ! grep -q "HTTP_X_FORWARDED_PROTO" wp-config.php; then
     }
   ' wp-config.php > "$tmp_config"
   mv "$tmp_config" wp-config.php
+  chown www-data:www-data wp-config.php 2>/dev/null || true
+  chmod 640 wp-config.php 2>/dev/null || true
 fi
 
 echo "Waiting for database..."
