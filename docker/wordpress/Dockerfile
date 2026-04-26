@@ -8,7 +8,7 @@ COPY content/ /content/
 COPY docker/wordpress/kepoli-performance.conf /etc/apache2/conf-available/kepoli-performance.conf
 COPY docker/wordpress/entrypoint.sh /usr/local/bin/kepoli-wordpress-entrypoint
 
-RUN a2enmod headers expires deflate \
+RUN a2enmod headers expires deflate rewrite \
     && a2enconf kepoli-performance \
     && { echo 'memory_limit=512M'; echo 'upload_max_filesize=64M'; echo 'post_max_size=64M'; } > /usr/local/etc/php/conf.d/kepoli-memory.ini \
     && curl -fsSL -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \

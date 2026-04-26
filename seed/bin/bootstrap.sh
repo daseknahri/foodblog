@@ -149,6 +149,21 @@ wp option update time_format "$TIME_FORMAT"
 wp option update permalink_structure "/%category%/%postname%/"
 wp rewrite structure "/%category%/%postname%/" --hard
 
+cat > .htaccess <<'HTACCESS'
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
+HTACCESS
+chown www-data:www-data .htaccess 2>/dev/null || true
+chmod 664 .htaccess 2>/dev/null || true
+
 admin_id="$(wp user get "$WP_ADMIN_USER" --field=ID 2>/dev/null || true)"
 if [ -n "$admin_id" ]; then
   wp user meta update "$admin_id" locale "$WP_ADMIN_LOCALE" || true
