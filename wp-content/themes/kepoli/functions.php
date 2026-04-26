@@ -922,6 +922,17 @@ function kepoli_category_card_image_data(WP_Term $category): array
     $cache_key = kepoli_fragment_cache_key('category_card_image', (string) $category->term_id);
     $cached = get_transient($cache_key);
     if (is_array($cached)) {
+        if (!empty($cached['url']) && is_string($cached['url'])) {
+            $cached['url'] = kepoli_normalize_media_url($cached['url']);
+        }
+        if (!empty($cached['gallery']) && is_array($cached['gallery'])) {
+            foreach ($cached['gallery'] as &$cached_item) {
+                if (is_array($cached_item) && !empty($cached_item['url']) && is_string($cached_item['url'])) {
+                    $cached_item['url'] = kepoli_normalize_media_url($cached_item['url']);
+                }
+            }
+            unset($cached_item);
+        }
         $cache[$category->term_id] = $cached;
         return $cached;
     }
@@ -954,7 +965,7 @@ function kepoli_category_card_image_data(WP_Term $category): array
             $post_id = (int) $post_id;
             $thumbnail_id = (int) get_post_thumbnail_id($post_id);
             $image = $thumbnail_id ? wp_get_attachment_image_src($thumbnail_id, $cover_size) : false;
-            $image_url = is_array($image) ? (string) $image[0] : '';
+            $image_url = is_array($image) ? kepoli_normalize_media_url((string) $image[0]) : '';
             if (!$image_url) {
                 continue;
             }
@@ -988,6 +999,15 @@ function kepoli_category_card_image_data(WP_Term $category): array
     $cache[$category->term_id] = $data;
 
     return $data;
+}
+
+function kepoli_normalize_media_url(string $url): string
+{
+    if ($url === '') {
+        return '';
+    }
+
+    return set_url_scheme($url, 'https');
 }
 
 function kepoli_archive_count_label(WP_Term $category): string
@@ -1166,7 +1186,7 @@ function kepoli_attachment_image_url(int $attachment_id, string $size = 'large')
         $url = wp_get_attachment_url($attachment_id);
     }
 
-    return is_string($url) ? $url : '';
+    return is_string($url) ? kepoli_normalize_media_url($url) : '';
 }
 
 function kepoli_post_featured_image_id(int $post_id = 0): int
@@ -2335,6 +2355,10 @@ function kepoli_read_time(int $post_id = 0): string
     $post_id = $post_id ?: get_the_ID();
     $words = str_word_count(wp_strip_all_tags((string) get_post_field('post_content', $post_id)));
     $minutes = max(1, (int) ceil($words / 220));
+    if (kepoli_is_english()) {
+        return sprintf(_n('%d min read', '%d min read', $minutes, 'kepoli'), $minutes);
+    }
+
     return sprintf(_n('%d min de citit', '%d min de citit', $minutes, 'kepoli'), $minutes);
 }
 
