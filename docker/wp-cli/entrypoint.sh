@@ -2,6 +2,7 @@
 set -e
 
 export WP_CLI_ALLOW_ROOT=1
+export WP_CLI_PHP_ARGS="${WP_CLI_PHP_ARGS:--d memory_limit=512M}"
 
 mkdir -p /var/www/html/wp-content/themes /var/www/html/wp-content/mu-plugins /var/www/html/wp-content/plugins
 
