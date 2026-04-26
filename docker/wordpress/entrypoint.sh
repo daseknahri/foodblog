@@ -13,6 +13,19 @@ cp -a /opt/kepoli/wp-content/themes/kepoli /var/www/html/wp-content/themes/kepol
 cp -a /opt/kepoli/wp-content/mu-plugins/. /var/www/html/wp-content/mu-plugins/
 cp -a /opt/kepoli/wp-content/plugins/kepoli-author-tools /var/www/html/wp-content/plugins/kepoli-author-tools
 
+cat > /var/www/html/.htaccess <<'HTACCESS'
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
+HTACCESS
+
 chown -R www-data:www-data \
   /var/www/html/wp-content/themes/kepoli \
   /var/www/html/wp-content/mu-plugins \
@@ -20,6 +33,8 @@ chown -R www-data:www-data \
   /var/www/html/wp-content/uploads \
   /seed \
   /content 2>/dev/null || true
+chown www-data:www-data /var/www/html/.htaccess 2>/dev/null || true
+chmod 664 /var/www/html/.htaccess 2>/dev/null || true
 
 if [ "${1:-}" = "apache2-foreground" ] && [ -x /seed/bin/bootstrap.sh ]; then
   (
