@@ -1,0 +1,527 @@
+[
+  {
+    "kind": "recipe",
+    "slug": "lemon-herb-chicken-tray-bake",
+    "title": "Lemon Herb Chicken Tray Bake",
+    "category": "main-dishes",
+    "tags": ["chicken", "tray bake", "dinner", "lemon"],
+    "excerpt": "A practical lemon herb chicken tray bake with potatoes, carrots, and a bright pan sauce, built for a weeknight dinner that still feels generous.",
+    "intro": "This tray bake is useful when you want dinner to feel complete without managing three pans at once. The chicken roasts over potatoes and carrots, the lemon softens into the juices, and the herbs give the whole pan a fresh finish.",
+    "prep": "20 min",
+    "cook": "45 min",
+    "servings": "4 servings",
+    "ingredients": ["6 bone-in chicken thighs", "700 g small potatoes, halved", "3 carrots, cut into batons", "1 red onion, cut into wedges", "1 lemon, thinly sliced", "3 tbsp olive oil", "2 tsp dried oregano", "1 tsp sweet paprika", "3 garlic cloves, crushed", "1 small handful parsley", "salt and black pepper"],
+    "steps": ["Heat the oven to 200 C and line a large baking tray with parchment.", "Toss potatoes, carrots, onion, lemon slices, olive oil, oregano, paprika, garlic, salt, and pepper directly on the tray.", "Pat the chicken dry, season it well, and place it skin-side up over the vegetables.", "Roast for 40 to 45 minutes, turning the vegetables once, until the chicken is golden and cooked through.", "Rest the tray for 5 minutes, spoon the pan juices over the chicken, and finish with chopped parsley."],
+    "notes": "Use a tray large enough that the vegetables sit in one loose layer. If everything is crowded, the chicken will steam and the potatoes will soften without getting the roasted edges that make the dish satisfying.",
+    "related": ["baked-salmon-with-dill-potatoes", "creamy-tomato-spinach-pasta", "mushroom-barley-stew"],
+    "related_articles": ["how-to-plan-weeknight-dinners"],
+    "seo_title": "Lemon Herb Chicken Tray Bake",
+    "meta_description": "A clear lemon herb chicken tray bake with potatoes, carrots, garlic, and practical timing notes for a complete home dinner."
+  },
+  {
+    "kind": "recipe",
+    "slug": "creamy-tomato-spinach-pasta",
+    "title": "Creamy Tomato Spinach Pasta",
+    "category": "quick-recipes",
+    "tags": ["pasta", "quick dinner", "tomato", "spinach"],
+    "excerpt": "Creamy tomato spinach pasta made in a simple sauce with garlic, pasta water, and enough greens to make a quick dinner feel balanced.",
+    "intro": "This is the kind of pasta that helps on evenings when the kitchen energy is low. The sauce is short, the ingredients are familiar, and the pasta water does the quiet work of making everything glossy instead of heavy.",
+    "prep": "10 min",
+    "cook": "20 min",
+    "servings": "4 servings",
+    "ingredients": ["320 g short pasta", "2 tbsp olive oil", "3 garlic cloves, minced", "2 tbsp tomato paste", "400 g crushed tomatoes", "120 ml cream", "120 g baby spinach", "40 g grated parmesan", "1 tsp dried basil", "salt and black pepper", "reserved pasta water"],
+    "steps": ["Boil the pasta in salted water until just al dente, reserving a mug of pasta water before draining.", "Warm the olive oil in a wide pan and cook the garlic for 30 seconds without browning it.", "Stir in the tomato paste, then add crushed tomatoes, basil, salt, and pepper.", "Simmer for 8 minutes, then lower the heat and stir in cream, spinach, and parmesan.", "Add the pasta and loosen the sauce with pasta water until it coats every piece."],
+    "notes": "Add the spinach at the end so it wilts without turning dull. If the sauce tightens while the pasta sits, a splash of hot pasta water brings it back without adding more cream.",
+    "related": ["chickpea-spinach-curry", "vegetable-rice-skillet", "lemon-herb-chicken-tray-bake"],
+    "related_articles": ["pantry-staples-for-fast-meals"],
+    "seo_title": "Creamy Tomato Spinach Pasta",
+    "meta_description": "A quick creamy tomato spinach pasta with garlic, parmesan, and pasta water tips for a smooth weeknight sauce."
+  },
+  {
+    "kind": "recipe",
+    "slug": "vegetable-rice-skillet",
+    "title": "Vegetable Rice Skillet",
+    "category": "quick-recipes",
+    "tags": ["rice", "vegetables", "one pan", "quick dinner"],
+    "excerpt": "A one-pan vegetable rice skillet with peas, peppers, carrots, and gentle spices, made for fast dinners and easy leftovers.",
+    "intro": "A good rice skillet should be simple, but not flat. This version builds flavor from onion, peppers, and a little paprika before the rice goes in, so the finished pan tastes planned even when it uses basic pantry ingredients.",
+    "prep": "15 min",
+    "cook": "30 min",
+    "servings": "4 servings",
+    "ingredients": ["250 g long-grain rice", "1 onion, diced", "1 red pepper, diced", "2 carrots, diced", "150 g frozen peas", "2 tbsp olive oil", "2 garlic cloves, minced", "1 tsp sweet paprika", "1/2 tsp cumin", "650 ml vegetable stock", "1 tbsp lemon juice", "salt and black pepper"],
+    "steps": ["Rinse the rice until the water runs mostly clear, then drain it well.", "Cook onion, pepper, and carrots in olive oil until the onion is soft and the pepper smells sweet.", "Add garlic, paprika, cumin, salt, and rice, stirring for 1 minute to coat the grains.", "Pour in the stock, cover, and cook gently for 18 to 20 minutes without stirring.", "Fold in peas, cover for 5 minutes off the heat, then finish with lemon juice and black pepper."],
+    "notes": "The most important step is leaving the rice alone while it cooks. Stirring too often releases starch and can turn the skillet sticky before the grains have finished steaming.",
+    "related": ["chickpea-spinach-curry", "creamy-tomato-spinach-pasta", "roasted-carrot-lentil-soup"],
+    "related_articles": ["pantry-staples-for-fast-meals"],
+    "seo_title": "Vegetable Rice Skillet Recipe",
+    "meta_description": "A practical vegetable rice skillet with peas, peppers, carrots, and pantry spices for a fast one-pan meal."
+  },
+  {
+    "kind": "recipe",
+    "slug": "roasted-carrot-lentil-soup",
+    "title": "Roasted Carrot Lentil Soup",
+    "category": "seasonal-cooking",
+    "tags": ["soup", "lentils", "carrots", "seasonal"],
+    "excerpt": "Roasted carrot lentil soup with red lentils, cumin, and lemon, giving a smooth bowl that feels warming without being heavy.",
+    "intro": "Roasting the carrots first gives this soup a deeper sweetness than boiling everything together. Red lentils bring body, lemon keeps the flavor awake, and the final texture is smooth enough for a simple lunch or light dinner.",
+    "prep": "15 min",
+    "cook": "40 min",
+    "servings": "4 servings",
+    "ingredients": ["700 g carrots, peeled and chopped", "1 onion, chopped", "3 garlic cloves", "2 tbsp olive oil", "180 g red lentils", "1 tsp ground cumin", "1/2 tsp coriander", "1 l vegetable stock", "1 tbsp lemon juice", "2 tbsp yogurt for serving", "salt and black pepper"],
+    "steps": ["Heat the oven to 210 C and roast carrots, onion, and garlic with olive oil, salt, and pepper for 25 minutes.", "Rinse the red lentils until the water runs clear.", "Move the roasted vegetables to a pot with lentils, cumin, coriander, and stock.", "Simmer for 15 minutes, until the lentils collapse and the carrots are fully soft.", "Blend until smooth, adjust with water or stock, and finish with lemon juice and yogurt."],
+    "notes": "If the soup tastes too sweet, add lemon and salt gradually before adding more spice. The balance should be warm and bright, not sugary.",
+    "related": ["mushroom-barley-stew", "vegetable-rice-skillet", "chickpea-spinach-curry"],
+    "related_articles": ["how-to-store-fresh-herbs"],
+    "seo_title": "Roasted Carrot Lentil Soup",
+    "meta_description": "Roasted carrot lentil soup with red lentils, cumin, lemon, and a smooth texture for a warming seasonal meal."
+  },
+  {
+    "kind": "recipe",
+    "slug": "chickpea-spinach-curry",
+    "title": "Chickpea Spinach Curry",
+    "category": "quick-recipes",
+    "tags": ["chickpeas", "spinach", "curry", "pantry"],
+    "excerpt": "A quick chickpea spinach curry with coconut milk, tomato, and pantry spices, built for a filling dinner that does not need long simmering.",
+    "intro": "This curry is gentle, flexible, and useful when the fridge is nearly empty. Canned chickpeas make it fast, spinach adds freshness, and the sauce becomes rich enough with a short simmer and a squeeze of lemon at the end.",
+    "prep": "10 min",
+    "cook": "25 min",
+    "servings": "4 servings",
+    "ingredients": ["2 cans chickpeas, drained", "1 onion, diced", "3 garlic cloves, minced", "1 tbsp grated ginger", "2 tbsp tomato paste", "1 tsp curry powder", "1/2 tsp turmeric", "400 ml coconut milk", "150 g spinach", "1 tbsp lemon juice", "2 tbsp oil", "salt"],
+    "steps": ["Cook the onion in oil until soft and lightly golden at the edges.", "Add garlic, ginger, tomato paste, curry powder, turmeric, and salt, stirring for 1 minute.", "Add chickpeas and coconut milk, then simmer for 15 minutes until the sauce thickens.", "Crush a few chickpeas against the pan to give the curry more body.", "Fold in spinach and lemon juice, then serve with rice or flatbread."],
+    "notes": "A few crushed chickpeas make the sauce thicker without flour or extra cream. Add spinach only at the end so it stays green and does not disappear into the sauce.",
+    "related": ["vegetable-rice-skillet", "creamy-tomato-spinach-pasta", "roasted-carrot-lentil-soup"],
+    "related_articles": ["pantry-staples-for-fast-meals"],
+    "seo_title": "Chickpea Spinach Curry Dinner",
+    "meta_description": "A fast chickpea spinach curry with coconut milk, tomato paste, lemon, and pantry spices for a dependable dinner."
+  },
+  {
+    "kind": "recipe",
+    "slug": "baked-salmon-with-dill-potatoes",
+    "title": "Baked Salmon With Dill Potatoes",
+    "category": "main-dishes",
+    "tags": ["salmon", "potatoes", "dill", "dinner"],
+    "excerpt": "Baked salmon with dill potatoes, lemon, and a simple yogurt sauce, made for a calm dinner with clear timing and little cleanup.",
+    "intro": "This dinner works because the potatoes start first and the salmon joins later, so both finish at the right moment. Dill, lemon, and yogurt keep the plate fresh without needing a complicated sauce.",
+    "prep": "15 min",
+    "cook": "35 min",
+    "servings": "4 servings",
+    "ingredients": ["4 salmon fillets", "700 g baby potatoes, halved", "2 tbsp olive oil", "1 lemon", "2 tbsp chopped dill", "150 g Greek yogurt", "1 tsp Dijon mustard", "1 small cucumber, diced", "1 garlic clove, grated", "salt and black pepper"],
+    "steps": ["Heat the oven to 200 C and toss potatoes with olive oil, salt, pepper, and half the dill.", "Roast the potatoes for 20 minutes before adding the fish.", "Season the salmon with salt, pepper, lemon zest, and a little olive oil.", "Place salmon on the tray and bake for 10 to 14 minutes, depending on thickness.", "Mix yogurt, mustard, cucumber, garlic, lemon juice, and remaining dill, then serve beside the salmon."],
+    "notes": "Starting the potatoes before the salmon prevents overcooked fish. Check the fillets early if they are thin; they should flake gently but still look moist in the center.",
+    "related": ["lemon-herb-chicken-tray-bake", "vegetable-rice-skillet", "mushroom-barley-stew"],
+    "related_articles": ["how-to-plan-weeknight-dinners"],
+    "seo_title": "Baked Salmon With Dill Potatoes",
+    "meta_description": "Baked salmon with dill potatoes, lemon, and yogurt sauce, with practical timing so the fish and potatoes finish together."
+  },
+  {
+    "kind": "recipe",
+    "slug": "berry-yogurt-loaf-cake",
+    "title": "Berry Yogurt Loaf Cake",
+    "category": "desserts",
+    "tags": ["cake", "berries", "yogurt", "baking"],
+    "excerpt": "A soft berry yogurt loaf cake with a tender crumb, simple mixing method, and enough fruit to make each slice bright without turning wet.",
+    "intro": "Yogurt keeps this loaf cake moist, while berries give small pockets of acidity. The batter is easy, but the details matter: coat the berries lightly, avoid overmixing, and let the cake cool before slicing.",
+    "prep": "15 min",
+    "cook": "50 min",
+    "servings": "10 slices",
+    "ingredients": ["220 g plain flour", "150 g sugar", "2 tsp baking powder", "1/2 tsp salt", "2 eggs", "180 g plain yogurt", "90 ml neutral oil", "1 tsp vanilla extract", "180 g mixed berries", "1 tbsp flour for berries", "1 tsp lemon zest"],
+    "steps": ["Heat the oven to 180 C and line a loaf tin with parchment.", "Whisk flour, sugar, baking powder, and salt in one bowl.", "Whisk eggs, yogurt, oil, vanilla, and lemon zest in another bowl.", "Fold wet ingredients into dry ingredients just until no flour pockets remain.", "Toss berries with 1 tbsp flour, fold them in gently, and bake for 45 to 55 minutes."],
+    "notes": "Do not rush the cooling time. A warm loaf can look baked but still tear when sliced, especially around the berry pockets where moisture collects.",
+    "related": ["apple-cinnamon-skillet-pancakes", "creamy-tomato-spinach-pasta", "roasted-carrot-lentil-soup"],
+    "related_articles": ["how-to-store-fresh-herbs"],
+    "seo_title": "Berry Yogurt Loaf Cake Recipe",
+    "meta_description": "A soft berry yogurt loaf cake with simple mixing steps, tender texture, and tips for keeping berries from sinking."
+  },
+  {
+    "kind": "recipe",
+    "slug": "apple-cinnamon-skillet-pancakes",
+    "title": "Apple Cinnamon Skillet Pancakes",
+    "category": "desserts",
+    "tags": ["pancakes", "apple", "cinnamon", "brunch"],
+    "excerpt": "Apple cinnamon skillet pancakes with tender fruit and a warm spice flavor, useful for brunch or a simple sweet meal.",
+    "intro": "These pancakes are cooked in a skillet but feel a little more special because the apples soften first. The batter stays familiar, the cinnamon is gentle, and the fruit makes the pancakes satisfying without needing much topping.",
+    "prep": "15 min",
+    "cook": "25 min",
+    "servings": "4 servings",
+    "ingredients": ["2 apples, thinly sliced", "1 tbsp butter", "1 tbsp brown sugar", "1 tsp cinnamon", "180 g flour", "2 tsp baking powder", "1 egg", "250 ml milk", "1 tbsp oil", "1 tsp vanilla extract", "pinch of salt", "yogurt or honey for serving"],
+    "steps": ["Cook apple slices in butter, brown sugar, and half the cinnamon until just tender.", "Whisk flour, baking powder, salt, and remaining cinnamon in a bowl.", "Whisk egg, milk, oil, and vanilla, then stir into the dry ingredients.", "Spoon batter into a warm greased skillet and add a few apple slices to each pancake.", "Cook until bubbles appear, flip carefully, and serve warm with yogurt or honey."],
+    "notes": "Keep the heat medium rather than high. Apples and sugar can brown quickly, and gentle heat gives the pancakes time to cook through before the outside darkens.",
+    "related": ["berry-yogurt-loaf-cake", "creamy-tomato-spinach-pasta", "vegetable-rice-skillet"],
+    "related_articles": ["how-to-plan-weeknight-dinners"],
+    "seo_title": "Apple Cinnamon Skillet Pancakes",
+    "meta_description": "Apple cinnamon skillet pancakes with tender apples, gentle spice, and practical heat control for an easy sweet meal."
+  },
+  {
+    "kind": "recipe",
+    "slug": "mushroom-barley-stew",
+    "title": "Mushroom Barley Stew",
+    "category": "seasonal-cooking",
+    "tags": ["mushrooms", "barley", "stew", "comfort food"],
+    "excerpt": "A mushroom barley stew with carrots, thyme, and a deep broth, made for cool days when you want comfort without a heavy sauce.",
+    "intro": "Barley gives this stew a satisfying chew and mushrooms bring depth without needing meat. The key is browning the mushrooms first, then letting the barley simmer until the broth turns slightly silky.",
+    "prep": "15 min",
+    "cook": "50 min",
+    "servings": "4 servings",
+    "ingredients": ["300 g mushrooms, sliced", "160 g pearl barley", "1 onion, diced", "2 carrots, diced", "2 celery sticks, diced", "2 tbsp olive oil", "2 garlic cloves, minced", "1 tsp thyme", "1.2 l vegetable stock", "1 tbsp soy sauce", "1 tbsp parsley", "black pepper"],
+    "steps": ["Brown mushrooms in olive oil in a wide pot, letting their moisture cook off before stirring too much.", "Add onion, carrots, celery, garlic, thyme, and black pepper, cooking until the onion softens.", "Stir in barley, stock, and soy sauce.", "Simmer for 40 to 45 minutes, until the barley is tender and the broth is slightly thickened.", "Adjust salt, add parsley, and rest the stew for 5 minutes before serving."],
+    "notes": "Mushrooms need space and patience at the start. If they steam instead of brown, the stew will still work, but it will miss the savory base that makes the broth taste full.",
+    "related": ["roasted-carrot-lentil-soup", "lemon-herb-chicken-tray-bake", "baked-salmon-with-dill-potatoes"],
+    "related_articles": ["pantry-staples-for-fast-meals"],
+    "seo_title": "Mushroom Barley Stew Recipe",
+    "meta_description": "Mushroom barley stew with carrots, thyme, and a deep broth, plus browning tips for a fuller vegetarian comfort meal."
+  },
+  {
+    "kind": "article",
+    "slug": "how-to-plan-weeknight-dinners",
+    "title": "How to Plan Weeknight Dinners Without Overthinking",
+    "category": "guides",
+    "tags": ["meal planning", "weeknight dinners", "kitchen habits"],
+    "excerpt": "A practical guide to planning weeknight dinners with flexible anchors, realistic prep, and simple fallback meals for busy days.",
+    "takeaways": ["Choose two reliable dinner anchors before adding variety.", "Plan around effort level, not only around ingredients.", "Keep one pantry meal and one freezer-friendly meal available each week.", "Use leftovers intentionally so they become lunch or a second dinner, not forgotten containers."],
+    "sections": [
+      {
+        "heading": "Start with dinner anchors",
+        "body": "A weeknight plan becomes easier when two meals are already familiar. Choose one quick meal and one more generous meal, then build the rest around them. Anchors reduce decision fatigue because you are not inventing a new routine every evening. For example, one anchor can be a pasta, rice skillet, or curry that uses pantry ingredients, while the second can be a tray bake or soup that gives leftovers."
+      },
+      {
+        "heading": "Match recipes to real energy",
+        "body": "A recipe can look simple and still be wrong for a tired Wednesday if it needs many pans or constant attention. Mark meals as low, medium, or high effort. Save high-effort dinners for nights when you have time to enjoy the process. This also helps beginners choose recipes honestly, because a short ingredient list is not always the same as a calm cooking experience."
+      },
+      {
+        "heading": "Use overlap without repetition",
+        "body": "Ingredient overlap saves money and prep time, but the meals should not feel identical. Roast extra vegetables for a tray bake, then use the rest in rice, pasta, or soup. The trick is changing texture, sauce, or serving style. A lemony chicken dinner, a tomato pasta, and a vegetable rice pan can share onions or herbs without tasting like the same meal repeated."
+      },
+      {
+        "heading": "Keep fallback meals visible",
+        "body": "Every plan needs a backup. Pasta, chickpeas, rice, eggs, frozen vegetables, and canned tomatoes can rescue dinner when shopping or timing changes. Fallback meals work best when they are written down, not stored only as a vague idea. Keep the backup simple enough that it still works when you are hungry, busy, or missing one fresh ingredient."
+      },
+      {
+        "heading": "Plan leftovers before cooking",
+        "body": "Leftovers are useful when they have a job. Decide whether extra food becomes lunch, a second dinner, or a base for another dish. This prevents the common problem of cooking extra but still feeling like there is nothing ready to eat. Labeling the plan in your mind before storing the food makes it more likely that the next meal happens without another full round of cooking."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How many dinners should I plan at once?",
+        "answer": "For most home cooks, three to five planned dinners are enough. Leave space for leftovers, invitations, tired nights, and simple meals from the pantry."
+      },
+      {
+        "question": "Should every dinner include a new recipe?",
+        "answer": "No. Repeating reliable meals is part of good planning. New recipes are easier to enjoy when the rest of the week is not overloaded."
+      },
+      {
+        "question": "What is the easiest fallback dinner to keep ready?",
+        "answer": "A pasta, rice skillet, or chickpea curry is usually dependable because the ingredients store well and the cooking time stays short. Keep the seasoning simple and add fresh herbs, lemon, yogurt, or cheese at the end if you have them."
+      }
+    ],
+    "related": ["lemon-herb-chicken-tray-bake", "baked-salmon-with-dill-potatoes", "apple-cinnamon-skillet-pancakes", "vegetable-rice-skillet"],
+    "seo_title": "How to Plan Weeknight Dinners",
+    "meta_description": "A practical weeknight dinner planning guide with flexible anchors, realistic effort levels, fallback meals, and leftover ideas."
+  },
+  {
+    "kind": "article",
+    "slug": "how-to-store-fresh-herbs",
+    "title": "How to Store Fresh Herbs So They Last Longer",
+    "category": "guides",
+    "tags": ["fresh herbs", "storage", "kitchen tips"],
+    "excerpt": "A clear guide to storing fresh herbs by texture, with simple fridge methods, moisture control, and ideas for using herbs before they fade.",
+    "takeaways": ["Soft herbs need gentle moisture and protection from cold airflow.", "Woody herbs last better when wrapped loosely and kept dry enough.", "Herbs should be checked before storage so damaged stems do not spoil the bunch.", "Freezing works best when the herbs are destined for cooked dishes, not fresh garnish."],
+    "sections": [
+      {
+        "heading": "Separate soft and woody herbs",
+        "body": "Parsley, cilantro, dill, basil, and mint behave differently from rosemary, thyme, and sage. Soft herbs bruise easily and lose freshness fast. Woody herbs tolerate drier storage and usually need less fuss to stay usable. Sorting them first prevents one bad storage method from ruining the whole shop, especially when several herbs come home in the same bag."
+      },
+      {
+        "heading": "Remove damaged leaves first",
+        "body": "Before storing herbs, open the bunch and remove slimy, yellow, or crushed pieces. One damaged section can spread moisture through the package. This small step often adds more life than any special container. It also gives you a chance to trim dry stem ends, shake away excess water, and decide which leaves should be used first."
+      },
+      {
+        "heading": "Use the jar method for soft herbs",
+        "body": "Trim the stems and place soft herbs in a jar with a little water, like a small bouquet. Cover loosely with a bag and refrigerate most herbs. Basil is the exception for many kitchens because it can darken in the cold. Keep the leaves above the water line and change the water when it clouds, otherwise the lower stems can soften and smell stale."
+      },
+      {
+        "heading": "Wrap woody herbs loosely",
+        "body": "Rosemary, thyme, and sage usually prefer a barely damp paper towel inside a loose bag or container. Too much water makes them mold faster, while a completely open fridge drawer can dry them out. The goal is light humidity, not wetness, so the paper towel should feel cool and flexible rather than soaked."
+      },
+      {
+        "heading": "Use fading herbs before they are wasted",
+        "body": "Herbs that are losing freshness can still become sauces, dressings, omelets, soups, rice dishes, or marinades. If they smell clean and look safe, use them in cooked food before they become too tired for garnish. Chop them into yogurt, blend them with oil and lemon, or stir them into hot grains where perfect leaf shape no longer matters."
+      }
+    ],
+    "faq": [
+      {
+        "question": "Can I freeze fresh herbs?",
+        "answer": "Yes, but frozen herbs are best for cooked dishes. They usually lose the bright texture needed for salads or final garnish."
+      },
+      {
+        "question": "Why do herbs get slimy in the fridge?",
+        "answer": "Too much trapped moisture is the usual reason. Remove damaged leaves and avoid sealing wet herbs in a tight bag."
+      },
+      {
+        "question": "How often should I change the water in a herb jar?",
+        "answer": "Change it every couple of days or whenever it looks cloudy. Trim stems again if they look tired, and remove any leaves touching the water because they break down quickly. A clean jar and fresh stem ends make the bouquet method work much better for everyday cooking at home."
+      }
+    ],
+    "related": ["roasted-carrot-lentil-soup", "berry-yogurt-loaf-cake", "lemon-herb-chicken-tray-bake", "baked-salmon-with-dill-potatoes"],
+    "seo_title": "How to Store Fresh Herbs",
+    "meta_description": "How to store fresh herbs by type, with fridge methods, moisture tips, freezing advice, and ways to use herbs before they fade."
+  },
+  {
+    "kind": "article",
+    "slug": "pantry-staples-for-fast-meals",
+    "title": "Pantry Staples for Fast Meals",
+    "category": "guides",
+    "tags": ["pantry", "quick meals", "ingredients"],
+    "excerpt": "A practical pantry staples guide for fast meals, covering grains, canned goods, sauces, and small flavor boosters that make dinner easier.",
+    "takeaways": ["A useful pantry supports the meals you actually cook, not an imaginary perfect menu.", "Grains, canned tomatoes, legumes, and broth create fast dinner foundations.", "Small flavor boosters can change a basic meal without adding much effort.", "Restocking is easier when staples are grouped by how they help: base, protein, sauce, or finish."],
+    "sections": [
+      {
+        "heading": "Build around meal foundations",
+        "body": "Start with ingredients that can become dinner quickly: pasta, rice, barley, couscous, oats, canned tomatoes, beans, chickpeas, lentils, and stock. These staples are useful because they turn small fresh ingredients into a full meal. A handful of spinach, one pepper, or a few mushrooms becomes much more useful when there is already a base ready in the cupboard."
+      },
+      {
+        "heading": "Keep flexible proteins available",
+        "body": "Canned beans, chickpeas, tuna, eggs, yogurt, nuts, and frozen fish or chicken can make a meal feel complete. The goal is not to store everything, but to keep enough options that one missing ingredient does not cancel dinner. Choose proteins that match your real cooking habits, because the best pantry is the one you actually use before it expires."
+      },
+      {
+        "heading": "Use sauces and pastes wisely",
+        "body": "Tomato paste, mustard, soy sauce, curry paste, vinegar, tahini, and hot sauce can change the direction of a dish quickly. These ingredients are powerful, so buy the ones that fit your cooking habits instead of collecting bottles you rarely open. One spoon of paste or a splash of vinegar often does more for flavor than adding another full ingredient."
+      },
+      {
+        "heading": "Do not forget finishing ingredients",
+        "body": "Lemon juice, herbs, grated cheese, toasted seeds, pickles, yogurt, and good olive oil often make a simple meal feel finished. They add brightness, salt, creaminess, or crunch when a dish tastes flat. This is especially helpful for fast meals, because a finishing ingredient can make simple grains or beans feel intentional instead of plain."
+      },
+      {
+        "heading": "Restock with a short list",
+        "body": "A pantry works best when it is easy to maintain. Keep a short restock list on paper or in your phone: two grains, two legumes, one tomato product, one broth option, and three flavor boosters. That is enough for many fast meals. Review the list before shopping and again before cooking, so duplicates do not crowd the shelf while useful basics run out."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How many pantry staples do I really need?",
+        "answer": "A small, reliable pantry is better than a crowded one. Start with ingredients that support five meals you already cook."
+      },
+      {
+        "question": "Are canned foods useful for good home cooking?",
+        "answer": "Yes. Canned tomatoes, beans, chickpeas, and fish can be practical, flavorful, and economical when balanced with fresh ingredients."
+      },
+      {
+        "question": "What should I check before restocking?",
+        "answer": "Check expiry dates, open packages, and what you actually used during the week. Restock patterns matter more than long lists. If an ingredient was skipped for several weeks, do not replace it automatically; use that space for something that supports meals you cook often on normal busy days at home instead."
+      }
+    ],
+    "related": ["creamy-tomato-spinach-pasta", "vegetable-rice-skillet", "chickpea-spinach-curry", "mushroom-barley-stew"],
+    "seo_title": "Pantry Staples for Fast Meals",
+    "meta_description": "A pantry staples guide for fast meals, with practical bases, proteins, sauces, finishing ingredients, and restock habits."
+  },
+  {
+    "kind": "recipe",
+    "slug": "garlic-butter-chicken-rice",
+    "title": "Garlic Butter Chicken Rice",
+    "category": "main-dishes",
+    "tags": ["chicken", "rice", "one pan", "garlic butter"],
+    "excerpt": "Garlic butter chicken rice made in one pan, with tender thighs, simple vegetables, and enough broth flavor for an easy family dinner.",
+    "intro": "This dinner is built for nights when you want one pan to do most of the work. The chicken browns first, the rice cooks in the same pan, and a little garlic butter at the end makes the meal feel generous without adding a separate sauce.",
+    "prep": "15 min",
+    "cook": "40 min",
+    "servings": "4 servings",
+    "ingredients": ["4 boneless chicken thighs", "250 g long-grain rice", "1 onion, diced", "2 garlic cloves, minced", "2 tbsp butter", "1 tbsp olive oil", "1 carrot, diced", "100 g peas", "650 ml chicken stock", "1 tsp dried thyme", "1 tbsp lemon juice", "salt and black pepper"],
+    "steps": ["Season the chicken with salt, pepper, and thyme.", "Brown the chicken in olive oil for 3 minutes per side, then move it to a plate.", "Cook onion, carrot, and garlic in the same pan until the onion softens.", "Stir in rice and stock, return the chicken on top, cover, and simmer gently for 20 minutes.", "Rest off the heat for 8 minutes, fold in peas, butter, and lemon juice, then serve."],
+    "notes": "Keep the heat low once the stock is added. A gentle simmer lets the rice cook evenly and prevents the bottom from scorching before the chicken finishes.",
+    "related": ["lemon-herb-chicken-tray-bake", "vegetable-rice-skillet", "baked-salmon-with-dill-potatoes"],
+    "related_articles": ["how-to-plan-weeknight-dinners"],
+    "seo_title": "Garlic Butter Chicken Rice Recipe",
+    "meta_description": "A one-pan garlic butter chicken rice recipe with tender thighs, vegetables, broth, and simple timing for a reliable dinner."
+  },
+  {
+    "kind": "recipe",
+    "slug": "tomato-basil-egg-bake",
+    "title": "Tomato Basil Egg Bake",
+    "category": "quick-recipes",
+    "tags": ["eggs", "tomato", "basil", "quick dinner"],
+    "excerpt": "Tomato basil egg bake with a simple skillet sauce, soft eggs, and herbs, useful for a fast dinner, brunch, or pantry-based meal.",
+    "intro": "This egg bake turns basic tomatoes and eggs into a warm meal with very little planning. The sauce cooks quickly, the eggs finish in the oven, and basil adds freshness right before serving.",
+    "prep": "10 min",
+    "cook": "22 min",
+    "servings": "3 servings",
+    "ingredients": ["5 eggs", "1 tbsp olive oil", "1 small onion, sliced", "2 garlic cloves, minced", "400 g crushed tomatoes", "1 tsp dried oregano", "1 small handful basil", "40 g feta or grated cheese", "pinch of chili flakes", "salt and black pepper"],
+    "steps": ["Heat the oven to 190 C.", "Cook onion in olive oil until soft, then add garlic and chili flakes for 30 seconds.", "Add crushed tomatoes, oregano, salt, and pepper, then simmer for 8 minutes.", "Make small wells in the sauce and crack in the eggs.", "Bake for 8 to 10 minutes, until the whites are set and the yolks are still slightly soft.", "Finish with basil and cheese before serving."],
+    "notes": "The eggs keep cooking after the pan leaves the oven, so remove the bake when the centers still look slightly glossy. Serve with bread, rice, or a green salad.",
+    "related": ["creamy-tomato-spinach-pasta", "chickpea-spinach-curry", "vegetable-rice-skillet"],
+    "related_articles": ["pantry-staples-for-fast-meals"],
+    "seo_title": "Tomato Basil Egg Bake Recipe",
+    "meta_description": "A quick tomato basil egg bake with pantry tomatoes, soft eggs, herbs, and cheese for an easy brunch or weeknight meal."
+  },
+  {
+    "kind": "recipe",
+    "slug": "herby-potato-green-bean-salad",
+    "title": "Herby Potato Green Bean Salad",
+    "category": "seasonal-cooking",
+    "tags": ["potatoes", "green beans", "salad", "herbs"],
+    "excerpt": "Herby potato green bean salad with a mustard dressing, fresh herbs, and practical make-ahead notes for lunches or simple sides.",
+    "intro": "This salad is bright, filling, and useful when you want something that can sit for a little while without losing its texture. Warm potatoes soak up the dressing, green beans keep the plate fresh, and herbs make the whole bowl feel lively.",
+    "prep": "15 min",
+    "cook": "20 min",
+    "servings": "4 servings",
+    "ingredients": ["700 g small potatoes", "250 g green beans", "2 tbsp olive oil", "1 tbsp Dijon mustard", "1 tbsp lemon juice", "1 tsp honey", "1 small shallot, finely chopped", "1 handful parsley", "1 handful dill", "salt and black pepper"],
+    "steps": ["Boil the potatoes in salted water until tender, then drain and halve them.", "Blanch the green beans for 3 minutes, then cool them briefly under cold water.", "Whisk olive oil, mustard, lemon juice, honey, shallot, salt, and pepper.", "Toss warm potatoes with most of the dressing so they absorb the flavor.", "Fold in green beans and herbs, then adjust with the remaining dressing before serving."],
+    "notes": "Dress the potatoes while they are still warm, but add the herbs after the salad cools slightly. This keeps the flavor deep without bruising the leaves.",
+    "related": ["baked-salmon-with-dill-potatoes", "roasted-carrot-lentil-soup", "lemon-herb-chicken-tray-bake"],
+    "related_articles": ["how-to-store-fresh-herbs"],
+    "seo_title": "Herby Potato Green Bean Salad",
+    "meta_description": "A herby potato green bean salad with mustard dressing, lemon, parsley, dill, and make-ahead tips for simple seasonal meals."
+  },
+  {
+    "kind": "recipe",
+    "slug": "one-pot-lentil-tomato-pasta",
+    "title": "One-Pot Lentil Tomato Pasta",
+    "category": "quick-recipes",
+    "tags": ["pasta", "lentils", "tomato", "one pot"],
+    "excerpt": "One-pot lentil tomato pasta with red lentils, short pasta, and a thick tomato sauce, made for a filling pantry dinner.",
+    "intro": "Red lentils are helpful in pasta because they cook quickly and give the sauce body. This one-pot version keeps the process simple, but still tastes rounded thanks to tomato paste, garlic, and a little cheese at the end.",
+    "prep": "10 min",
+    "cook": "28 min",
+    "servings": "4 servings",
+    "ingredients": ["280 g short pasta", "120 g red lentils", "1 tbsp olive oil", "1 onion, diced", "3 garlic cloves, minced", "2 tbsp tomato paste", "400 g crushed tomatoes", "750 ml vegetable stock", "1 tsp dried basil", "40 g grated parmesan", "salt and black pepper"],
+    "steps": ["Rinse the red lentils until the water runs mostly clear.", "Cook onion in olive oil until soft, then add garlic and tomato paste.", "Stir in lentils, pasta, crushed tomatoes, stock, basil, salt, and pepper.", "Simmer uncovered, stirring often, until the pasta is tender and the lentils have softened.", "Add a splash of water if needed, then finish with parmesan and black pepper."],
+    "notes": "Stir more often near the end because lentils thicken the sauce as they break down. The pasta should look glossy and saucy, not dry.",
+    "related": ["creamy-tomato-spinach-pasta", "chickpea-spinach-curry", "vegetable-rice-skillet"],
+    "related_articles": ["pantry-staples-for-fast-meals"],
+    "seo_title": "One-Pot Lentil Tomato Pasta",
+    "meta_description": "A filling one-pot lentil tomato pasta with red lentils, short pasta, tomato paste, and stock for a practical pantry dinner."
+  },
+  {
+    "kind": "recipe",
+    "slug": "cinnamon-plum-crumble",
+    "title": "Cinnamon Plum Crumble",
+    "category": "desserts",
+    "tags": ["plums", "crumble", "cinnamon", "dessert"],
+    "excerpt": "Cinnamon plum crumble with juicy fruit and a simple oat topping, made for a relaxed seasonal dessert that does not need pastry.",
+    "intro": "A crumble is useful because the fruit does not need to look perfect. Plums soften into a bright filling, cinnamon warms the edges, and the oat topping gives enough crunch to make the dessert feel complete.",
+    "prep": "15 min",
+    "cook": "35 min",
+    "servings": "6 servings",
+    "ingredients": ["700 g plums, pitted and sliced", "2 tbsp sugar", "1 tbsp lemon juice", "1 tsp cinnamon", "120 g rolled oats", "100 g flour", "80 g brown sugar", "90 g cold butter, cubed", "pinch of salt", "yogurt or cream for serving"],
+    "steps": ["Heat the oven to 185 C and butter a medium baking dish.", "Toss plums with sugar, lemon juice, and half the cinnamon.", "Mix oats, flour, brown sugar, salt, and remaining cinnamon.", "Rub in the butter until the topping forms coarse crumbs.", "Scatter the topping over the fruit and bake until bubbling and golden.", "Rest for 10 minutes before serving so the juices thicken slightly."],
+    "notes": "If the plums are very sweet, reduce the sugar in the fruit. If they are firm or sharp, add a little more sugar and let them sit for 10 minutes before baking.",
+    "related": ["berry-yogurt-loaf-cake", "apple-cinnamon-skillet-pancakes", "roasted-carrot-lentil-soup"],
+    "related_articles": ["how-to-plan-weeknight-dinners"],
+    "seo_title": "Cinnamon Plum Crumble Recipe",
+    "meta_description": "A simple cinnamon plum crumble with juicy fruit, oat topping, and practical sweetness tips for a relaxed seasonal dessert."
+  },
+  {
+    "kind": "recipe",
+    "slug": "turkey-bean-chili",
+    "title": "Turkey Bean Chili",
+    "category": "main-dishes",
+    "tags": ["turkey", "beans", "chili", "comfort food"],
+    "excerpt": "Turkey bean chili with tomatoes, beans, and gentle spices, built for a hearty dinner that reheats well for another meal.",
+    "intro": "This chili is meant to be dependable rather than complicated. Turkey keeps it lighter than a heavy stew, beans make it filling, and the spices have enough warmth without taking over the whole pot.",
+    "prep": "15 min",
+    "cook": "40 min",
+    "servings": "5 servings",
+    "ingredients": ["500 g ground turkey", "1 tbsp oil", "1 onion, diced", "1 red pepper, diced", "3 garlic cloves, minced", "2 tbsp tomato paste", "1 tsp cumin", "1 tsp smoked paprika", "1/2 tsp chili powder", "400 g crushed tomatoes", "2 cans beans, drained", "300 ml stock", "salt and black pepper"],
+    "steps": ["Brown the turkey in oil, breaking it into small pieces.", "Add onion and pepper, then cook until the vegetables soften.", "Stir in garlic, tomato paste, cumin, paprika, chili powder, salt, and pepper.", "Add tomatoes, beans, and stock, then simmer for 30 minutes.", "Rest for 5 minutes and serve with yogurt, herbs, rice, or bread."],
+    "notes": "Chili improves after a short rest because the beans absorb more flavor and the sauce thickens. Add extra stock if you prefer a looser bowl.",
+    "related": ["mushroom-barley-stew", "garlic-butter-chicken-rice", "lemon-herb-chicken-tray-bake"],
+    "related_articles": ["pantry-staples-for-fast-meals"],
+    "seo_title": "Turkey Bean Chili Recipe",
+    "meta_description": "A hearty turkey bean chili with tomatoes, beans, gentle spices, and reheating notes for an easy comfort-food dinner."
+  },
+  {
+    "kind": "article",
+    "slug": "how-to-build-a-simple-salad",
+    "title": "How to Build a Simple Salad That Feels Like a Meal",
+    "category": "guides",
+    "tags": ["salad", "meal prep", "kitchen tips"],
+    "excerpt": "A simple guide to building salads that feel filling, balanced, and useful for lunch or dinner instead of tasting like an afterthought.",
+    "takeaways": ["A good meal salad needs a base, something filling, something crisp, and a clear dressing.", "Warm ingredients can make a salad feel more satisfying without much extra work.", "Texture matters as much as flavor when the ingredients are simple.", "Dressing should be added in stages so the salad stays bright instead of heavy."],
+    "sections": [
+      {
+        "heading": "Start with a sturdy base",
+        "body": "A salad that needs to work as a meal should begin with more than delicate leaves. Romaine, cabbage, kale, grains, potatoes, beans, lentils, or pasta give the bowl structure. Tender greens can still be used, but they do better when mixed with something that can hold dressing, toppings, and a little waiting time."
+      },
+      {
+        "heading": "Add something filling",
+        "body": "Protein or slow carbohydrates make the difference between a side salad and dinner. Eggs, chicken, chickpeas, beans, salmon, yogurt dressing, cheese, potatoes, rice, or barley can all help. The goal is not to make the bowl heavy; it is to give it enough substance that readers are not hungry again after one hour."
+      },
+      {
+        "heading": "Use texture on purpose",
+        "body": "Crisp vegetables, toasted seeds, croutons, nuts, pickles, roasted vegetables, and soft cheese all change how a salad feels. If every ingredient is soft, the bowl can taste flat even when the seasoning is correct. One crunchy element and one creamy or tender element usually make the result feel more complete."
+      },
+      {
+        "heading": "Balance the dressing",
+        "body": "Most simple dressings need fat, acid, salt, and a small flavor booster. Olive oil, lemon juice or vinegar, mustard, honey, garlic, yogurt, herbs, or tahini can work in different combinations. Add part of the dressing first, toss well, then decide whether the salad needs more instead of pouring everything at once."
+      },
+      {
+        "heading": "Serve it at the right moment",
+        "body": "Some salads improve after ten minutes, while others wilt quickly. Grain, potato, bean, and cabbage salads can often sit and absorb flavor. Tender lettuce, herbs, and crunchy toppings are better added close to serving. This small timing habit makes homemade salads feel fresher and more intentional."
+      }
+    ],
+    "faq": [
+      {
+        "question": "What makes a salad filling enough for dinner?",
+        "answer": "A dinner salad usually needs protein, a hearty base, or both. Beans, eggs, chicken, fish, lentils, grains, or potatoes can make the bowl satisfying without turning it complicated. Add one crisp vegetable and one bright ingredient, such as lemon, pickles, herbs, or vinegar, so the salad still feels fresh while it fills the plate."
+      },
+      {
+        "question": "Can I prepare salad ahead of time?",
+        "answer": "Yes, but store delicate greens, dressing, and crunchy toppings separately when possible. Sturdy ingredients like grains, cabbage, potatoes, and beans handle advance prep better. If the salad includes warm ingredients, cool them before mixing with tender leaves so the greens do not wilt too early."
+      },
+      {
+        "question": "Why does my salad taste bland?",
+        "answer": "It may need more salt, acid, or texture. A little lemon, vinegar, cheese, herbs, toasted seeds, or pickles can make a simple salad feel brighter. Taste the dressing separately and then taste the salad after tossing, because leaves and grains absorb seasoning differently."
+      }
+    ],
+    "related": ["herby-potato-green-bean-salad", "baked-salmon-with-dill-potatoes", "chickpea-spinach-curry", "vegetable-rice-skillet"],
+    "seo_title": "How to Build a Simple Salad Meal",
+    "meta_description": "A practical guide to building simple salads with filling bases, balanced dressing, texture, and timing so they work as meals."
+  },
+  {
+    "kind": "article",
+    "slug": "beginner-guide-to-seasoning-food",
+    "title": "Beginner Guide to Seasoning Food With More Confidence",
+    "category": "guides",
+    "tags": ["seasoning", "cooking basics", "kitchen confidence"],
+    "excerpt": "A beginner-friendly guide to seasoning food with salt, acid, herbs, spices, and tasting habits that make everyday cooking easier.",
+    "takeaways": ["Seasoning is not only about salt; acid, fat, herbs, and texture all affect balance.", "Taste in small steps instead of trying to fix the whole dish at once.", "Dried spices need warmth or time to release their flavor.", "A final adjustment can change a dish more than adding many extra ingredients."],
+    "sections": [
+      {
+        "heading": "Understand what salt does",
+        "body": "Salt does more than make food salty. It helps ingredients taste more like themselves, which is why a soup, sauce, or stew can taste dull even when it has many ingredients. Beginners should add salt in small stages, taste, and give hot food a moment to settle before deciding whether it needs more."
+      },
+      {
+        "heading": "Use acid when food tastes flat",
+        "body": "Lemon juice, vinegar, yogurt, pickles, tomatoes, and mustard can wake up a dish that feels heavy or muted. Acid is especially useful in soups, beans, grains, roasted vegetables, and creamy sauces. Add a little, stir, and taste again; the right amount should make the food brighter, not sharply sour."
+      },
+      {
+        "heading": "Give spices a chance to bloom",
+        "body": "Many dried spices taste better when they meet warm fat or a hot pan before liquid is added. Curry powder, cumin, paprika, coriander, and chili flakes can become deeper after thirty seconds with oil, onion, or tomato paste. This step should smell fragrant, but the spices should not burn."
+      },
+      {
+        "heading": "Finish with fresh flavor",
+        "body": "Fresh herbs, lemon zest, black pepper, grated cheese, yogurt, olive oil, or toasted seeds can give a finished dish more life. These ingredients are often best added near the end because heat can dull their brightness. A simple final touch can make basic pantry cooking feel much more complete."
+      },
+      {
+        "heading": "Build a tasting habit",
+        "body": "The most useful seasoning skill is tasting calmly. Taste before adding salt, after simmering, and again before serving. Ask whether the dish needs salt, acid, richness, heat, or freshness. This habit turns seasoning from guessing into a small set of decisions that become easier with practice."
+      }
+    ],
+    "faq": [
+      {
+        "question": "How do I fix food that tastes too salty?",
+        "answer": "Add more unsalted ingredients if possible, such as potatoes, beans, rice, pasta, tomatoes, or broth. A little acid or fat can help balance the taste, but it cannot remove salt. This is why adding seasoning gradually is safer than trying to correct a whole pot at the end."
+      },
+      {
+        "question": "When should I add herbs?",
+        "answer": "Hardy herbs like thyme and rosemary can cook longer. Soft herbs like parsley, dill, cilantro, mint, and basil are usually best near the end or as a garnish. If you are unsure, add a little during cooking and save more for the final fresh taste."
+      },
+      {
+        "question": "Why does food taste good in the pan but dull on the plate?",
+        "answer": "Food can lose brightness as it cools or when it meets a plain side. A final squeeze of lemon, fresh herbs, pepper, or a small spoon of sauce can bring it back. This is why tasting right before serving matters, even when the recipe seemed finished a few minutes earlier."
+      }
+    ],
+    "related": ["tomato-basil-egg-bake", "roasted-carrot-lentil-soup", "turkey-bean-chili", "creamy-tomato-spinach-pasta"],
+    "seo_title": "Beginner Guide to Seasoning Food",
+    "meta_description": "A beginner guide to seasoning food with salt, acid, herbs, spices, tasting habits, and final adjustments for better home cooking."
+  }
+]

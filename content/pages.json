@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "home",
+    "title": "Home",
+    "content": "<p>Welcome to kuchniatwist, a food publication built around everyday recipes, seasonal cooking ideas, and practical kitchen guides.</p><p>We write for readers who cook at home and want clear, trustworthy guidance, with pages that are easy to scan, original featured images, and internal links that help readers keep exploring naturally.</p>"
+  },
+  {
+    "slug": "recipes",
+    "title": "Recipes",
+    "content": "<p>This page groups the cooking side of kuchniatwist: quick recipes, main dishes, desserts, and seasonal ideas readers can actually make at home.</p><p>Every recipe should include a useful introduction, clear ingredients, reliable steps, a realistic timing estimate, a featured image, and practical serving or storage notes.</p>"
+  },
+  {
+    "slug": "guides",
+    "title": "Guides",
+    "content": "<p>kuchniatwist also publishes food guides about ingredients, cooking habits, kitchen planning, and the choices that make everyday cooking easier to repeat.</p><p>These articles exist to support the recipes, answer common questions, and help readers move from a search result to a better cooking decision.</p>"
+  },
+  {
+    "slug": "about-kuchniatwist",
+    "title": "About kuchniatwist",
+    "content": "<p>kuchniatwist is a food publication for readers who cook at home and want clear, trustworthy guidance. We publish everyday recipes, seasonal cooking ideas, and practical kitchen guides, with an emphasis on clarity, usefulness, and original editorial work.</p><p>The site is built for readers who arrive from search, social, or recommendations and want to understand quickly who is behind the publication, what kind of content they will find, and why the guidance is worth trusting.</p><h2>Who the site is for</h2><ul><li>people cooking in ordinary home kitchens;</li><li>beginners who need calm, readable steps;</li><li>readers comparing ingredients, effort, timing, and expected results;</li><li>families and casual cooks who want practical help without hype.</li></ul><h2>How we work</h2><p>We write for real home use. We avoid exaggerated claims, misleading headlines, thin pages created only for ads, and recycled filler. When a page needs a correction or an update, we revise it.</p><h2>Advertising and editorial independence</h2><p>kuchniatwist may run advertising to support the site, but ads do not decide what we publish. Sponsored material, if it appears, must be clearly labeled.</p><p>For questions about the publication, partnerships, or corrections, write to <a href=\"mailto:{{SITE_EMAIL}}\">{{SITE_EMAIL}}</a>.</p>"
+  },
+  {
+    "slug": "about-author",
+    "title": "About the author",
+    "content": "<p>isalune merovik writes for kuchniatwist about home cooking, approachable recipes, and practical decisions that help readers feel more confident in the kitchen.</p><p>The work is prepared for people who want clearer guidance, more repeatable results, and useful context instead of empty lifestyle copy.</p><h2>What the author aims for</h2><ul><li>recipes that can be followed in normal home kitchens;</li><li>clear explanations for beginners and returning cooks;</li><li>attention to ingredients, timing, texture, serving, and storage;</li><li>editorial work that stays practical and avoids unsupported health claims.</li></ul><h2>Corrections</h2><p>If you notice a mistake, an unclear step, or information that needs updating, email <a href=\"mailto:{{WRITER_EMAIL}}\">{{WRITER_EMAIL}}</a>.</p>"
+  },
+  {
+    "slug": "contact",
+    "title": "Contact",
+    "content": "<p>Use this page for questions about kuchniatwist, editorial corrections, partnership requests, advertising questions, or technical issues.</p><h2>Contact details</h2><p><strong>Site email:</strong> <a href=\"mailto:{{SITE_EMAIL}}\">{{SITE_EMAIL}}</a></p><p><strong>Writer email:</strong> <a href=\"mailto:{{WRITER_EMAIL}}\">{{WRITER_EMAIL}}</a></p><h2>How to help us answer faster</h2><ul><li>include the URL or title of the page you mean;</li><li>mention the paragraph, step, or issue that looks wrong;</li><li>include your device and browser for technical problems;</li><li>for privacy or advertising questions, tell us where you saw the issue.</li></ul>"
+  },
+  {
+    "slug": "privacy-policy",
+    "title": "Privacy Policy",
+    "content": "<p>This policy explains how kuchniatwist, available at kuchniatwist.pl, may collect, use, and protect personal data related to visitors and readers.</p><p>Reading the site does not require an account. Most data appears through technical site operations, traffic measurement, direct messages sent by email, newsletter signups, and, when configured, advertising services.</p><h2>What data may be processed</h2><ul><li>technical data such as IP address, browser, device type, and pages viewed;</li><li>interaction data related to site usage;</li><li>information you send directly by email or the newsletter form;</li><li>consent preferences related to cookies and advertising.</li></ul><h2>Third-party services</h2><p>kuchniatwist may use services such as Search Console, Site Kit, Analytics, or advertising providers. Those services can set cookies or use similar identifiers depending on configuration and visitor consent choices.</p><h2>Your rights</h2><p>Subject to applicable law, you may request access, correction, deletion, restriction, or objection for certain processing. For questions, email <a href=\"mailto:{{SITE_EMAIL}}\">{{SITE_EMAIL}}</a>.</p>"
+  },
+  {
+    "slug": "cookie-policy",
+    "title": "Cookie Policy",
+    "content": "<p>kuchniatwist may use cookies and similar technologies for site operation, security, preferences, analytics, newsletter handling, and advertising.</p><h2>Types of cookies</h2><ul><li>necessary cookies for site functionality and security;</li><li>analytics cookies that help us understand traffic;</li><li>advertising cookies, if advertising partners are active;</li><li>consent cookies that remember privacy choices.</li></ul><h2>Control</h2><p>You can manage preferences through the consent layer when available and can also block or remove cookies in your browser. Refusing non-essential cookies should not block access to editorial content.</p><p>For questions about cookie usage, write to <a href=\"mailto:{{SITE_EMAIL}}\">{{SITE_EMAIL}}</a>.</p>"
+  },
+  {
+    "slug": "advertising-and-consent",
+    "title": "Advertising and Consent",
+    "content": "<p>kuchniatwist may support the site through online advertising, including Ezoic and its advertising partners, once the configuration, disclosures, and consent setup are ready.</p><h2>How advertising may work</h2><p>Ads may be personalized or non-personalized depending on visitor consent, local regulation, and the configuration of the advertising services used on the site.</p><h2>Consent expectations</h2><p>For visitors in Poland, the EEA, the United Kingdom, Switzerland, and other relevant regions, the use of non-essential advertising cookies or personalized ads may require consent before activation.</p><h2>Editorial independence</h2><p>Advertising does not determine what we publish. Editorial pages, author information, contact details, and policy pages remain available regardless of ad status.</p><p>For questions about ads or consent, write to <a href=\"mailto:{{SITE_EMAIL}}\">{{SITE_EMAIL}}</a>.</p>"
+  },
+  {
+    "slug": "editorial-policy",
+    "title": "Editorial Policy",
+    "content": "<p>This page explains the publishing principles that guide recipes and food articles on kuchniatwist.</p><h2>Purpose of the content</h2><p>The primary goal is usefulness: clear steps, practical context, relevant images, helpful internal links, and text that helps readers understand what they are doing.</p><h2>Originality</h2><p>We do not publish pages created only for search traffic or ads. We do not republish other sources wholesale, and we avoid misleading imagery or empty roundup content.</p><h2>Corrections</h2><p>If we find an error or receive specific feedback, we update the page. Readers can send corrections to <a href=\"mailto:{{SITE_EMAIL}}\">{{SITE_EMAIL}}</a> or <a href=\"mailto:{{WRITER_EMAIL}}\">{{WRITER_EMAIL}}</a>.</p><h2>Commercial relationships</h2><p>Advertising and business relationships do not change the editorial criteria used to decide what is published. Sponsored material, if any, is labeled clearly.</p>"
+  },
+  {
+    "slug": "terms-and-conditions",
+    "title": "Terms and Conditions",
+    "content": "<p>By accessing and using kuchniatwist, you agree to these terms and conditions.</p><h2>Purpose of the site</h2><p>kuchniatwist publishes food and editorial material for informational home-use purposes. Recipes and articles do not replace professional advice tailored to your situation.</p><h2>Intellectual property</h2><p>Text, content structure, visual identity, and site assets belong to the site or are used with the appropriate rights. Systematic copying or full republication is not allowed without permission.</p><h2>Limitation of liability</h2><p>We make reasonable efforts to publish useful and current material, but cooking outcomes vary by ingredients, equipment, timing, and personal experience.</p><p>For questions about these terms, write to <a href=\"mailto:{{SITE_EMAIL}}\">{{SITE_EMAIL}}</a>.</p>"
+  },
+  {
+    "slug": "culinary-disclaimer",
+    "title": "Culinary Disclaimer",
+    "content": "<p>Recipes and food articles published on kuchniatwist are provided for informational home-use purposes.</p><h2>Results may vary</h2><p>Dishes can turn out differently depending on ingredients, brands, humidity, equipment, portion size, heat, and the cook's experience.</p><h2>Allergens and food safety</h2><p>Readers are responsible for checking labels, allergens, storage conditions, expiry dates, and whether ingredients fit their own dietary needs or restrictions.</p><h2>Not professional advice</h2><p>The content does not replace guidance from a doctor, dietitian, nutrition professional, or food-safety specialist.</p><p>For corrections or clarifications, write to <a href=\"mailto:{{SITE_EMAIL}}\">{{SITE_EMAIL}}</a> or <a href=\"mailto:{{WRITER_EMAIL}}\">{{WRITER_EMAIL}}</a>.</p>"
+  }
+]

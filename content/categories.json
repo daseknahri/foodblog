@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Quick Recipes",
+    "slug": "quick-recipes",
+    "description": "Fast, dependable recipes for weekdays, busy evenings, and readers who want something useful on the table without guesswork."
+  },
+  {
+    "name": "Main Dishes",
+    "slug": "main-dishes",
+    "description": "Comforting lunch and dinner ideas with clear timing, serving notes, and practical guidance for home cooks."
+  },
+  {
+    "name": "Desserts",
+    "slug": "desserts",
+    "description": "Cakes, bakes, chilled sweets, and simple treats explained with texture cues, timing notes, and storage help."
+  },
+  {
+    "name": "Seasonal Cooking",
+    "slug": "seasonal-cooking",
+    "description": "Ingredient-led ideas, seasonal menus, and timely recipes that help readers cook with what is actually available."
+  },
+  {
+    "name": "Guides",
+    "slug": "guides",
+    "description": "Practical food articles about ingredients, kitchen habits, planning, and techniques that support everyday cooking."
+  }
+]
