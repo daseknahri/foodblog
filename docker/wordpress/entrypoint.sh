@@ -20,8 +20,10 @@ chown -R www-data:www-data \
   /content 2>/dev/null || true
 
 if [ "${1:-}" = "apache2-foreground" ] && [ -x /seed/bin/bootstrap.sh ]; then
-  /seed/bin/bootstrap.sh
-  chown -R www-data:www-data /var/www/html/wp-content /var/www/html/wp-config.php 2>/dev/null || true
+  (
+    /seed/bin/bootstrap.sh
+    chown -R www-data:www-data /var/www/html/wp-content /var/www/html/wp-config.php 2>/dev/null || true
+  ) &
 fi
 
 exec docker-entrypoint.sh "$@"
