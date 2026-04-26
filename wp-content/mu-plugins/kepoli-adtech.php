@@ -63,12 +63,14 @@ add_action('template_redirect', static function (): void {
     }
 
     $publisher_id = kepoli_mu_env('ADSENSE_PUB_ID');
-    status_header($publisher_id === '' ? 404 : 200);
+    status_header(200);
     header('Content-Type: text/plain; charset=utf-8');
 
     if ($publisher_id !== '') {
         $publisher_id = str_starts_with($publisher_id, 'pub-') ? $publisher_id : 'pub-' . $publisher_id;
         echo 'google.com, ' . esc_html($publisher_id) . ", DIRECT, f08c47fec0942fa0\n";
+    } else {
+        echo "# ads.txt will be populated after the advertising partner provides publisher records.\n";
     }
 
     exit;
