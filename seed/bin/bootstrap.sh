@@ -31,7 +31,7 @@ fi
 case "$WP_LOCALE" in
   en*)
     SITE_TAGLINE="${SITE_TAGLINE:-Recipes, kitchen guides, and practical home cooking notes}"
-    TIMEZONE_STRING="${TIMEZONE_STRING:-UTC}"
+    TIMEZONE_STRING="${TIMEZONE_STRING:-Europe/Warsaw}"
     DATE_FORMAT="${DATE_FORMAT:-F j, Y}"
     TIME_FORMAT="${TIME_FORMAT:-g:i a}"
     ;;
