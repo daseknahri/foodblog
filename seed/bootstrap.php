@@ -1197,6 +1197,11 @@ function kepoli_seed_import_featured_image(int $post_id, array $image): void
         require_once ABSPATH . 'wp-admin/includes/image.php';
         require_once ABSPATH . 'wp-admin/includes/file.php';
 
+        $uploads = wp_upload_dir();
+        if (!empty($uploads['basedir']) && !is_dir($uploads['basedir'])) {
+            wp_mkdir_p($uploads['basedir']);
+        }
+
         $bits = file_get_contents($source);
         if ($bits === false) {
             throw new RuntimeException("Cannot read image {$source}");

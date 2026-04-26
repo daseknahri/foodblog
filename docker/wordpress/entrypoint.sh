@@ -5,6 +5,7 @@ export WP_CLI_ALLOW_ROOT=1
 export WP_CLI_PHP_ARGS="${WP_CLI_PHP_ARGS:--d memory_limit=512M}"
 
 mkdir -p /var/www/html/wp-content/themes /var/www/html/wp-content/mu-plugins /var/www/html/wp-content/plugins
+mkdir -p /var/www/html/wp-content/uploads
 
 rm -rf /var/www/html/wp-content/themes/kepoli
 rm -rf /var/www/html/wp-content/plugins/kepoli-author-tools
@@ -16,6 +17,7 @@ chown -R www-data:www-data \
   /var/www/html/wp-content/themes/kepoli \
   /var/www/html/wp-content/mu-plugins \
   /var/www/html/wp-content/plugins/kepoli-author-tools \
+  /var/www/html/wp-content/uploads \
   /seed \
   /content 2>/dev/null || true
 
