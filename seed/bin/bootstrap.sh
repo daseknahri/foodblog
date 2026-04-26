@@ -65,10 +65,51 @@ if [ ! -f wp-config.php ]; then
     --skip-check \
     --force \
     --extra-php <<'PHP'
+if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos((string) $_SERVER['HTTP_X_FORWARDED_PROTO'], 'https') !== false) {
+    $_SERVER['HTTPS'] = 'on';
+    $_SERVER['SERVER_PORT'] = 443;
+}
+if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+    $_SERVER['HTTP_HOST'] = (string) $_SERVER['HTTP_X_FORWARDED_HOST'];
+}
+define('WP_HOME', getenv('SITE_URL') ?: 'https://kuchniatwist.pl');
+define('WP_SITEURL', getenv('SITE_URL') ?: 'https://kuchniatwist.pl');
+define('FORCE_SSL_ADMIN', true);
 define('DISALLOW_FILE_EDIT', true);
 define('WP_POST_REVISIONS', 5);
 define('AUTOMATIC_UPDATER_DISABLED', false);
 PHP
+fi
+
+if ! grep -q "HTTP_X_FORWARDED_PROTO" wp-config.php; then
+  echo "Patching wp-config.php for reverse-proxy HTTPS"
+  tmp_config="$(mktemp)"
+  awk '
+    BEGIN {
+      inserted = 0
+      block = "if (!empty($_SERVER['\''HTTP_X_FORWARDED_PROTO'\'']) && strpos((string) $_SERVER['\''HTTP_X_FORWARDED_PROTO'\''], '\''https'\'') !== false) {\n" \
+              "    $_SERVER['\''HTTPS'\''] = '\''on'\'';\n" \
+              "    $_SERVER['\''SERVER_PORT'\''] = 443;\n" \
+              "}\n" \
+              "if (!empty($_SERVER['\''HTTP_X_FORWARDED_HOST'\''])) {\n" \
+              "    $_SERVER['\''HTTP_HOST'\''] = (string) $_SERVER['\''HTTP_X_FORWARDED_HOST'\''];\n" \
+              "}\n" \
+              "define('\''WP_HOME'\'', getenv('\''SITE_URL'\'') ?: '\''https://kuchniatwist.pl'\'');\n" \
+              "define('\''WP_SITEURL'\'', getenv('\''SITE_URL'\'') ?: '\''https://kuchniatwist.pl'\'');\n" \
+              "define('\''FORCE_SSL_ADMIN'\'', true);\n"
+    }
+    /\/\* That'\''s all, stop editing! Happy publishing\. \*\// && inserted == 0 {
+      printf "%s\n", block
+      inserted = 1
+    }
+    { print }
+    END {
+      if (inserted == 0) {
+        printf "\n%s\n", block
+      }
+    }
+  ' wp-config.php > "$tmp_config"
+  mv "$tmp_config" wp-config.php
 fi
 
 echo "Waiting for database..."
