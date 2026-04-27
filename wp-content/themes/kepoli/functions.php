@@ -961,6 +961,82 @@ function kepoli_render_reader_trust_links(string $class = 'browse-links browse-l
     echo '</div>';
 }
 
+function kepoli_official_page_slugs(): array
+{
+    return [
+        'about-kuchniatwist',
+        'about-author',
+        'contact',
+        'privacy-policy',
+        'cookie-policy',
+        'advertising-and-consent',
+        'editorial-policy',
+        'terms-and-conditions',
+        'culinary-disclaimer',
+    ];
+}
+
+function kepoli_is_official_page(): bool
+{
+    return is_page() && in_array(kepoli_current_page_slug(), kepoli_official_page_slugs(), true);
+}
+
+function kepoli_official_page_header_items(): array
+{
+    if (!kepoli_is_official_page()) {
+        return [];
+    }
+
+    $items = [
+        [
+            'label' => kepoli_ui_text('Pagina oficiala', 'Official page'),
+            'value' => kepoli_ui_text('Informatii editoriale si de publicare', 'Publishing and editorial information'),
+        ],
+        [
+            'label' => kepoli_ui_text('Actualizat', 'Updated'),
+            'value' => get_the_modified_date(kepoli_is_english() ? 'F j, Y' : 'j F Y'),
+        ],
+        [
+            'label' => kepoli_ui_text('Contact', 'Contact'),
+            'value' => kepoli_public_contact_email(),
+            'url' => 'mailto:' . kepoli_public_contact_email(),
+        ],
+    ];
+
+    if (kepoli_current_page_slug() === 'about-author') {
+        $items[2] = [
+            'label' => kepoli_ui_text('Profil', 'Profile'),
+            'value' => 'Gravatar',
+            'url' => 'https://gravatar.com/isalunemerovik',
+        ];
+    }
+
+    return $items;
+}
+
+function kepoli_render_official_page_header_meta(string $class = 'page-header-meta'): void
+{
+    $items = kepoli_official_page_header_items();
+    if ($items === []) {
+        return;
+    }
+
+    echo '<div class="' . esc_attr($class) . '" aria-label="' . esc_attr(kepoli_ui_text('Repere de pagina', 'Page details')) . '">';
+    foreach ($items as $item) {
+        echo '<div class="page-header-meta__item">';
+        echo '<span class="page-header-meta__label">' . esc_html($item['label']) . '</span>';
+
+        if (!empty($item['url'])) {
+            echo '<a class="page-header-meta__value" href="' . esc_url($item['url']) . '">' . esc_html($item['value']) . '</a>';
+        } else {
+            echo '<span class="page-header-meta__value">' . esc_html($item['value']) . '</span>';
+        }
+
+        echo '</div>';
+    }
+    echo '</div>';
+}
+
 function kepoli_category_card_meta(WP_Term $category): array
 {
     $map = [

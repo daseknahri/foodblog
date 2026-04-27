@@ -1372,6 +1372,48 @@ h3 {
   margin-top: 18px;
 }
 
+.page-header-meta {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.page-header-meta__item {
+  min-height: 48px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 253, 248, 0.68);
+  box-shadow: 0 1px 0 rgba(255, 253, 248, 0.74);
+}
+
+.page-header-meta__label {
+  color: var(--muted);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.page-header-meta__value {
+  color: var(--ink);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+a.page-header-meta__value:hover,
+a.page-header-meta__value:focus-visible {
+  color: var(--clay);
+}
+
 .browse-link {
   min-height: 38px;
   display: inline-flex;
@@ -3436,6 +3478,15 @@ h3 {
 
   .browse-links {
     display: flex;
+  }
+
+  .page-header-meta {
+    gap: 8px;
+  }
+
+  .page-header-meta__item {
+    width: 100%;
+    min-height: 0;
   }
 
   .home-hero {
