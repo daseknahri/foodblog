@@ -1163,15 +1163,15 @@ function kepoli_page_resource_links(): array
     $terms_page = kepoli_find_page_by_candidates(['termeni-si-conditii', 'terms-and-conditions']);
     $terms_slug = $terms_page instanceof WP_Post ? (string) $terms_page->post_name : (kepoli_is_english() ? 'terms-and-conditions' : 'termeni-si-conditii');
     $clusters = [
-        $about_slug => [$author_slug, $editorial_slug, 'contact', $advertising_slug],
-        $author_slug => [$about_slug, $editorial_slug, 'contact', $advertising_slug],
-        'contact' => [$about_slug, $author_slug, $editorial_slug, $privacy_slug, $cookies_slug],
-        $privacy_slug => [$cookies_slug, $advertising_slug, $terms_slug, 'contact'],
-        $cookies_slug => [$privacy_slug, $advertising_slug, 'contact'],
-        $advertising_slug => [$privacy_slug, $cookies_slug, $editorial_slug, 'contact'],
-        $editorial_slug => [$about_slug, $author_slug, $advertising_slug, 'contact'],
-        $disclaimer_slug => [$editorial_slug, $terms_slug, 'contact'],
-        $terms_slug => [$privacy_slug, $cookies_slug, 'contact'],
+        $about_slug => [$author_slug, $editorial_slug, 'contact', $advertising_slug, $privacy_slug],
+        $author_slug => [$about_slug, $editorial_slug, 'contact', $disclaimer_slug],
+        'contact' => [$about_slug, $author_slug, $editorial_slug, $privacy_slug, $cookies_slug, $terms_slug],
+        $privacy_slug => [$cookies_slug, $advertising_slug, $terms_slug, $editorial_slug, 'contact'],
+        $cookies_slug => [$privacy_slug, $advertising_slug, $terms_slug, 'contact'],
+        $advertising_slug => [$privacy_slug, $cookies_slug, $editorial_slug, $terms_slug, 'contact'],
+        $editorial_slug => [$about_slug, $author_slug, $advertising_slug, $disclaimer_slug, 'contact'],
+        $disclaimer_slug => [$editorial_slug, $terms_slug, $author_slug, 'contact'],
+        $terms_slug => [$privacy_slug, $cookies_slug, $disclaimer_slug, 'contact'],
     ];
 
     if (!isset($clusters[$slug])) {

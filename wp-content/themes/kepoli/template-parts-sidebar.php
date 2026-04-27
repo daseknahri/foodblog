@@ -64,8 +64,12 @@ $site_name = kepoli_site_name();
         <li><a href="<?php echo esc_url(kepoli_about_page_url()); ?>"><?php echo esc_html(sprintf(kepoli_ui_text('Despre %s', 'About %s'), $site_name)); ?></a></li>
         <li><a href="<?php echo esc_url(kepoli_author_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Despre autor', 'About the author')); ?></a></li>
         <li><a href="<?php echo esc_url(kepoli_contact_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Contact', 'Contact')); ?></a></li>
+        <li><a href="<?php echo esc_url(kepoli_editorial_policy_url()); ?>"><?php echo esc_html(kepoli_ui_text('Politica editoriala', 'Editorial policy')); ?></a></li>
         <li><a href="<?php echo esc_url(kepoli_privacy_policy_url()); ?>"><?php echo esc_html(kepoli_ui_text('Confidentialitate', 'Privacy')); ?></a></li>
+        <li><a href="<?php echo esc_url(kepoli_cookie_policy_url()); ?>"><?php echo esc_html(kepoli_ui_text('Politica de cookies', 'Cookie policy')); ?></a></li>
         <li><a href="<?php echo esc_url(kepoli_advertising_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Publicitate si consimtamant', 'Advertising and consent')); ?></a></li>
+        <li><a href="<?php echo esc_url(kepoli_terms_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Termeni si conditii', 'Terms and conditions')); ?></a></li>
+        <li><a href="<?php echo esc_url(kepoli_disclaimer_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Disclaimer culinar', 'Culinary disclaimer')); ?></a></li>
     </ul>
 </section>
 
