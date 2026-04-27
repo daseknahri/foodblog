@@ -6,6 +6,7 @@ get_header();
 $writer_name = kepoli_writer_name();
 $writer_email = kepoli_writer_email();
 $site_name = get_bloginfo('name') ?: 'kuchniatwist';
+$gravatar_profile_url = 'https://gravatar.com/daseknahri';
 ?>
 <section class="section">
     <div class="author-strip">
@@ -20,6 +21,10 @@ $site_name = get_bloginfo('name') ?: 'kuchniatwist';
             <?php if ($writer_email !== '') : ?>
                 <p><a href="mailto:<?php echo esc_attr($writer_email); ?>"><?php echo esc_html($writer_email); ?></a></p>
             <?php endif; ?>
+            <a class="author-profile-chip" href="<?php echo esc_url($gravatar_profile_url); ?>" target="_blank" rel="me noopener">
+                <span class="author-profile-chip__label"><?php echo esc_html(kepoli_ui_text('Profil verificat', 'Verified profile')); ?></span>
+                <strong><?php echo esc_html(kepoli_ui_text('View Gravatar profile', 'View Gravatar profile')); ?></strong>
+            </a>
         </div>
     </div>
 </section>
