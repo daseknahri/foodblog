@@ -69,11 +69,13 @@ The `kepoli-author-tools` plugin keeps the writing workflow simple for beginner 
 Run these before pushing a launch change:
 
 ```sh
-node scripts/verify-content.mjs
-node scripts/image-status.mjs
-node scripts/audit-replica-readiness.mjs
-node scripts/audit-rebrand.mjs
-node scripts/audit-ezoic-readiness.mjs
+node scripts/preflight-launch.mjs
+```
+
+To include the live site too:
+
+```sh
+node scripts/preflight-launch.mjs --live https://kuchniatwist.pl
 ```
 
 ## Media

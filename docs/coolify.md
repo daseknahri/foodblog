@@ -14,6 +14,7 @@
 7. Add all required variables from `.env.example`.
 8. Enable GitHub auto-deploy.
 9. Leave the `seed` profile disabled for normal deploys. The `wordpress` container self-seeds automatically.
+10. Use the container health status only as a basic uptime signal. The compose healthcheck now probes `/robots.txt`, which is a lighter public endpoint than `/wp-login.php` and still confirms WordPress is serving requests.
 
 If a manual reseed is needed later, run:
 
@@ -40,3 +41,9 @@ What the result means:
 - Missing `kepoli-seed-*` meta tags: the fingerprint flag is disabled, or the public site is still on a build older than the deploy fingerprint update. The meta tag prefix is an internal implementation name and does not affect the public brand.
 
 Turn `KEPOLI_DEPLOY_FINGERPRINT` back off after the check so normal production pages do not expose internal deployment details.
+
+For a broader release pass before redeploying or applying to a monetization platform, run:
+
+```sh
+node scripts/preflight-launch.mjs --live https://kuchniatwist.pl
+```
