@@ -376,6 +376,20 @@ function kepoli_brand_description(): string
     return sprintf('%s publica retete romanesti, articole culinare si ghiduri practice pentru gatit acasa.', kepoli_site_name());
 }
 
+function kepoli_current_page_slug(): string
+{
+    if (!is_page()) {
+        return '';
+    }
+
+    $page_id = get_queried_object_id();
+    if (!$page_id) {
+        return '';
+    }
+
+    return (string) get_post_field('post_name', $page_id);
+}
+
 function kepoli_current_description(): string
 {
     $description = get_bloginfo('description');
@@ -386,6 +400,41 @@ function kepoli_current_description(): string
         $description = category_description() ?: single_cat_title('', false);
     } elseif (is_front_page()) {
         $description = kepoli_brand_description();
+    } elseif (is_page()) {
+        $page_descriptions = [
+            'about-kuchniatwist' => kepoli_is_english()
+                ? sprintf('Learn what %s publishes, who it is for, and how the publication approaches recipes, guides, corrections, and advertising.', kepoli_site_name())
+                : sprintf('Afla ce publica %s si cum abordeaza retetele, articolele, corecturile si publicitatea.', kepoli_site_name()),
+            'about-author' => kepoli_is_english()
+                ? sprintf('Meet %s, the writer behind %s, and learn how the site approaches practical home-cooking guidance.', kepoli_writer_name(), kepoli_site_name())
+                : sprintf('Afla cine este %s si cum abordeaza %s ghidurile si retetele pentru gatit acasa.', kepoli_writer_name(), kepoli_site_name()),
+            'contact' => kepoli_is_english()
+                ? sprintf('Contact %s for editorial corrections, partnerships, privacy questions, advertising issues, or technical problems.', kepoli_site_name())
+                : sprintf('Contacteaza %s pentru corecturi, parteneriate, intrebari despre confidentialitate sau probleme tehnice.', kepoli_site_name()),
+            'privacy-policy' => kepoli_is_english()
+                ? sprintf('Read how %s may process technical data, email submissions, newsletter signups, consent choices, and third-party services.', kepoli_site_name())
+                : sprintf('Citeste cum poate procesa %s date tehnice, emailuri, abonari si alegeri de consimtamant.', kepoli_site_name()),
+            'cookie-policy' => kepoli_is_english()
+                ? sprintf('See how %s uses cookies for site operation, preferences, analytics, consent, and advertising when enabled.', kepoli_site_name())
+                : sprintf('Vezi cum foloseste %s cookies pentru functionare, preferinte, analiza si publicitate.', kepoli_site_name()),
+            'advertising-and-consent' => kepoli_is_english()
+                ? sprintf('Understand how advertising, consent, and third-party monetization tools may work on %s when enabled.', kepoli_site_name())
+                : sprintf('Intelege cum pot functiona publicitatea, consimtamantul si instrumentele terte pe %s.', kepoli_site_name()),
+            'editorial-policy' => kepoli_is_english()
+                ? sprintf('Review the editorial standards that guide recipes, kitchen articles, corrections, and sponsored material on %s.', kepoli_site_name())
+                : sprintf('Vezi standardele editoriale care ghideaza retetele, articolele si corecturile pe %s.', kepoli_site_name()),
+            'terms-and-conditions' => kepoli_is_english()
+                ? sprintf('Read the terms that apply to using %s, including content use, availability, and limitations of liability.', kepoli_site_name())
+                : sprintf('Citeste termenii care se aplica folosirii %s, inclusiv utilizarea continutului si limitarile de raspundere.', kepoli_site_name()),
+            'culinary-disclaimer' => kepoli_is_english()
+                ? sprintf('Read the cooking, allergen, substitution, and food-safety disclaimer that applies to recipes and food guides on %s.', kepoli_site_name())
+                : sprintf('Citeste disclaimerul culinar despre alergeni, substitutii si siguranta alimentara aplicabil pe %s.', kepoli_site_name()),
+        ];
+
+        $page_slug = kepoli_current_page_slug();
+        if (isset($page_descriptions[$page_slug])) {
+            $description = $page_descriptions[$page_slug];
+        }
     }
 
     return trim(wp_strip_all_tags((string) $description));
@@ -419,7 +468,20 @@ function kepoli_current_seo_title(): string
     } elseif (is_404()) {
         $title = (kepoli_is_english() ? 'Page not found | ' : 'Pagina negasita | ') . $site_name;
     } elseif (is_page()) {
-        $title = single_post_title('', false);
+        $page_titles = [
+            'about-kuchniatwist' => kepoli_is_english() ? 'About the publication' : 'Despre publicatie',
+            'about-author' => kepoli_is_english() ? 'About the author' : 'Despre autor',
+            'contact' => kepoli_is_english() ? 'Contact and corrections' : 'Contact si corecturi',
+            'privacy-policy' => kepoli_is_english() ? 'Privacy policy' : 'Politica de confidentialitate',
+            'cookie-policy' => kepoli_is_english() ? 'Cookie policy' : 'Politica de cookies',
+            'advertising-and-consent' => kepoli_is_english() ? 'Advertising and consent' : 'Publicitate si consimtamant',
+            'editorial-policy' => kepoli_is_english() ? 'Editorial policy' : 'Politica editoriala',
+            'terms-and-conditions' => kepoli_is_english() ? 'Terms and conditions' : 'Termeni si conditii',
+            'culinary-disclaimer' => kepoli_is_english() ? 'Culinary disclaimer' : 'Disclaimer culinar',
+        ];
+
+        $page_slug = kepoli_current_page_slug();
+        $title = $page_titles[$page_slug] ?? single_post_title('', false);
     } elseif (is_archive()) {
         $title = get_the_archive_title();
     } else {
@@ -2853,6 +2915,25 @@ function kepoli_static_page_json_ld(): void
                 'url' => kepoli_contact_page_url(),
                 'availableLanguage' => ['ro', 'en'],
             ],
+        ];
+    } elseif (is_page(['privacy-policy', 'cookie-policy', 'advertising-and-consent', 'editorial-policy', 'terms-and-conditions', 'culinary-disclaimer'])) {
+        $page_slug = kepoli_current_page_slug();
+        $page_type = match ($page_slug) {
+            'privacy-policy', 'cookie-policy', 'advertising-and-consent', 'terms-and-conditions' => 'WebPage',
+            'editorial-policy' => 'AboutPage',
+            'culinary-disclaimer' => 'WebPage',
+            default => 'WebPage',
+        };
+
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => $page_type,
+            'name' => get_the_title(),
+            'url' => get_permalink(),
+            'description' => kepoli_current_description(),
+            'inLanguage' => get_bloginfo('language') ?: 'en-US',
+            'isPartOf' => ['@id' => home_url('/#website')],
+            'about' => ['@id' => home_url('/#organization')],
         ];
     }
 
