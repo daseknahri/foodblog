@@ -11,12 +11,24 @@ This clone is prepared for Ezoic review as an English food blog on `https://kuch
 - Do not add popup newsletter code or Reader Revenue Manager scripts.
 - Keep the native newsletter form only on the home/about areas unless the design changes later.
 - Make sure `www.kuchniatwist.pl` redirects to `https://kuchniatwist.pl`.
+- Keep `/ads.txt` reachable. Before Ezoic gives you an Ads.txt Manager ID, the site serves a harmless placeholder. After Ezoic gives the ID, set `EZOIC_ADSTXT_ACCOUNT_ID`.
 
 ## After Ezoic Approval
 
 - Configure the site from the Ezoic dashboard or the integration method Ezoic recommends for the account.
 - Let Ezoic handle ad placement until there is enough traffic data to tune placements.
-- Confirm `ads.txt` using the method Ezoic requires for the active integration.
+- Confirm `ads.txt` using Ezoic's Ads.txt Manager. Ezoic's current docs say ads.txt setup is required for publishers using Ezoic and recommend the WordPress plugin for WordPress sites. This repo also supports a server-side redirect:
+
+```env
+EZOIC_ADSTXT_ACCOUNT_ID=19390
+```
+
+If Ezoic gives a custom redirect URL instead of just an account ID, use:
+
+```env
+EZOIC_ADSTXT_REDIRECT_URL=https://srv.adstxtmanager.com/19390/kuchniatwist.pl
+```
+
 - Configure consent/privacy messaging from the monetization platform or approved CMP path before personalized ads are shown.
 - Keep direct AdSense variables empty unless you intentionally run direct AdSense placements outside Ezoic.
 
@@ -30,6 +42,8 @@ SITE_EMAIL=contact@kuchniatwist.pl
 WP_LOCALE=en_US
 CANONICAL_REDIRECT_HOSTS=www.kuchniatwist.pl
 ADSENSE_ENABLE=0
+EZOIC_ADSTXT_ACCOUNT_ID=
+EZOIC_ADSTXT_REDIRECT_URL=
 GA_ENABLE=0
 ```
 

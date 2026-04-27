@@ -48,6 +48,14 @@ GA_ENABLE=0
 
 After approval, configure Ezoic from the dashboard or through the integration method Ezoic recommends for the account. Confirm the final `ads.txt` setup from Ezoic before enabling live monetization.
 
+For Ezoic Ads.txt Manager, set one of these in Coolify after Ezoic gives the value:
+
+```env
+EZOIC_ADSTXT_ACCOUNT_ID=19390
+# or
+EZOIC_ADSTXT_REDIRECT_URL=https://srv.adstxtmanager.com/19390/kuchniatwist.pl
+```
+
 ## Newsletter
 
 The newsletter signup is a small native WordPress form on the front page and the About kuchniatwist page. Signups are stored in WordPress admin under `Newsletter`, where they can be reviewed or exported as CSV.

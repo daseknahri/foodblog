@@ -62,6 +62,21 @@ add_action('template_redirect', static function (): void {
         return;
     }
 
+    $ezoic_ads_txt_url = kepoli_mu_env('EZOIC_ADSTXT_REDIRECT_URL');
+    $ezoic_account_id = kepoli_mu_env('EZOIC_ADSTXT_ACCOUNT_ID');
+    if ($ezoic_ads_txt_url === '' && $ezoic_account_id !== '') {
+        $site_url = kepoli_mu_env('SITE_URL', home_url('/'));
+        $site_host = strtolower((string) parse_url($site_url, PHP_URL_HOST));
+        if ($site_host !== '') {
+            $ezoic_ads_txt_url = 'https://srv.adstxtmanager.com/' . rawurlencode($ezoic_account_id) . '/' . rawurlencode($site_host);
+        }
+    }
+
+    if ($ezoic_ads_txt_url !== '') {
+        wp_redirect(esc_url_raw($ezoic_ads_txt_url), 301, 'kuchniatwist');
+        exit;
+    }
+
     $publisher_id = kepoli_mu_env('ADSENSE_PUB_ID');
     status_header(200);
     header('Content-Type: text/plain; charset=utf-8');
