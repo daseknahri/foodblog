@@ -6,7 +6,7 @@ get_header();
 $writer_name = kepoli_writer_name();
 $writer_email = kepoli_writer_email();
 $site_name = get_bloginfo('name') ?: 'kuchniatwist';
-$gravatar_profile_url = 'https://gravatar.com/daseknahri';
+$gravatar_profile_url = 'https://gravatar.com/isalunemerovik';
 ?>
 <section class="section">
     <div class="author-strip">
