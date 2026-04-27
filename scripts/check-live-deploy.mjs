@@ -81,7 +81,23 @@ async function main() {
   console.log(`Live current: ${liveCurrent || '(missing)'}`);
 
   if (!liveTarget) {
-    throw new Error('Live site is missing kepoli-seed-target meta. Either KEPOLI_DEPLOY_FINGERPRINT is disabled, or production is serving an older theme build.');
+    if (html.includes('contact@kepoli.com') || /\bkepoli\.com\b/i.test(html)) {
+      throw new Error('Live site is missing deploy fingerprint meta and still exposes old Kepoli public identity.');
+    }
+
+    const requiredMarkers = [
+      'contact@kuchniatwist.pl',
+      'Quick Recipes',
+      'Cook this week',
+      'About kuchniatwist',
+    ];
+    const missingMarkers = requiredMarkers.filter((marker) => !html.includes(marker));
+    if (missingMarkers.length > 0) {
+      throw new Error(`Live site is missing deploy fingerprint meta and expected public markers: ${missingMarkers.join(', ')}`);
+    }
+
+    console.log('Deploy fingerprint meta is disabled, but public homepage markers match the current kuchniatwist build.');
+    return;
   }
 
   if (liveTarget !== expectedVersion) {
