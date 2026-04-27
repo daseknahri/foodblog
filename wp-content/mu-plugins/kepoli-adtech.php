@@ -14,6 +14,20 @@ function kepoli_mu_env(string $key, string $default = ''): string
     return $value === false || $value === '' ? $default : trim((string) $value);
 }
 
+function kepoli_mu_public_contact_email(): string
+{
+    $email = sanitize_email(kepoli_mu_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+    $site_url = kepoli_mu_env('SITE_URL', home_url('/'));
+    $host = wp_parse_url($site_url, PHP_URL_HOST);
+    $host = is_string($host) ? preg_replace('/^www\./', '', strtolower($host)) : '';
+
+    if ($email === '' || str_contains(strtolower($email), '@' . 'kepoli' . '.com')) {
+        return $host !== '' ? 'contact@' . $host : 'contact@kuchniatwist.pl';
+    }
+
+    return $email;
+}
+
 function kepoli_mu_redirect_hosts(string $canonical_host): array
 {
     $hosts = [
@@ -98,7 +112,7 @@ add_action('template_redirect', static function (): void {
     }
 
     $site_url = trailingslashit(kepoli_mu_env('SITE_URL', home_url('/')));
-    $contact_email = sanitize_email(kepoli_mu_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+    $contact_email = kepoli_mu_public_contact_email();
     $contact_page = trailingslashit(home_url('/contact/'));
     $expires = gmdate('Y-m-d\T00:00:00\Z', strtotime('+12 months'));
 

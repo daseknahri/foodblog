@@ -193,6 +193,19 @@ async function checkLive(baseUrl) {
       failures.push(`Live check failed: ${url} (${error.message})`);
     }
   }
+
+  for (const suffix of ['/', '/contact/', '/about-kuchniatwist/']) {
+    const url = `${baseUrl}${suffix}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) continue;
+      const html = await response.text();
+      if (/contact@kepoli\.com/i.test(html)) failures.push(`Live old contact email found on ${url}`);
+      if (/\bkepoli\.com\b/i.test(html)) failures.push(`Live old domain found on ${url}`);
+    } catch (error) {
+      failures.push(`Live content check failed: ${url} (${error.message})`);
+    }
+  }
 }
 
 function printSection(title, items) {

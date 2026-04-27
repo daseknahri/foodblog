@@ -15,6 +15,20 @@ function kepoli_seed_env(string $key, string $default = ''): string
     return $value === false || $value === '' ? $default : trim((string) $value);
 }
 
+function kepoli_seed_public_contact_email(): string
+{
+    $email = sanitize_email(kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+    $site_url = kepoli_seed_env('SITE_URL', home_url('/'));
+    $host = wp_parse_url($site_url, PHP_URL_HOST);
+    $host = is_string($host) ? preg_replace('/^www\./', '', strtolower($host)) : '';
+
+    if ($email === '' || str_contains(strtolower($email), '@' . 'kepoli' . '.com')) {
+        return $host !== '' ? 'contact@' . $host : 'contact@kuchniatwist.pl';
+    }
+
+    return $email;
+}
+
 function kepoli_seed_json(string $path): array
 {
     $raw = file_get_contents($path);
@@ -235,7 +249,7 @@ function kepoli_seed_upsert_page(array $page, int $author_id): int
         'ping_status' => 'closed',
         'post_content' => str_replace(
             ['{{SITE_EMAIL}}', '{{WRITER_EMAIL}}'],
-            [kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl'), kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com')],
+            [kepoli_seed_public_contact_email(), kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com')],
             $page['content']
         ),
     ];
@@ -1319,7 +1333,7 @@ $disclaimer_page_slug = kepoli_seed_find_page_slug($pages, ['disclaimer-culinar'
 
 update_option('blogname', $site_name);
 update_option('blogdescription', kepoli_seed_default_tagline($site_name));
-update_option('admin_email', kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+update_option('admin_email', kepoli_seed_public_contact_email());
 update_option('blog_public', '1');
 update_option('timezone_string', kepoli_seed_is_english() ? 'Europe/Warsaw' : 'Europe/Bucharest');
 update_option('date_format', kepoli_seed_is_english() ? 'F j, Y' : 'j F Y');

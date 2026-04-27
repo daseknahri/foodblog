@@ -13,6 +13,25 @@ function kepoli_env(string $key, string $default = ''): string
     return $value === false || $value === '' ? $default : trim((string) $value);
 }
 
+function kepoli_site_host(): string
+{
+    $site_url = kepoli_env('SITE_URL', home_url('/'));
+    $host = wp_parse_url($site_url, PHP_URL_HOST);
+    return is_string($host) && $host !== '' ? strtolower($host) : strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
+}
+
+function kepoli_public_contact_email(): string
+{
+    $email = sanitize_email(kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+    $host = preg_replace('/^www\./', '', kepoli_site_host());
+
+    if ($email === '' || str_contains(strtolower($email), '@' . 'kepoli' . '.com')) {
+        return $host !== '' ? 'contact@' . $host : 'contact@kuchniatwist.pl';
+    }
+
+    return $email;
+}
+
 function kepoli_env_bool(string $key, bool $default = false): bool
 {
     $value = strtolower(kepoli_env($key, $default ? '1' : '0'));
@@ -524,11 +543,11 @@ function kepoli_schema_publisher(): array
         '@id' => home_url('/#organization'),
         'name' => 'kuchniatwist',
         'url' => home_url('/'),
-        'email' => kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl'),
+        'email' => kepoli_public_contact_email(),
         'contactPoint' => [
             '@type' => 'ContactPoint',
             'contactType' => 'editorial',
-            'email' => kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl'),
+            'email' => kepoli_public_contact_email(),
             'url' => kepoli_contact_page_url(),
             'availableLanguage' => ['ro', 'en'],
         ],
@@ -2243,7 +2262,7 @@ function kepoli_newsletter_cta(string $class = ''): string
     $email_field_id = 'newsletter-email-' . wp_generate_uuid4();
     $honeypot_id = 'newsletter-website-' . wp_generate_uuid4();
     $current_url = kepoli_current_url();
-    $contact_email = kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl');
+    $contact_email = kepoli_public_contact_email();
     $source_label = is_front_page()
         ? sprintf(kepoli_ui_text('Prima pagina %s', '%s front page'), kepoli_site_name())
         : wp_strip_all_tags(get_the_title() ?: wp_get_document_title());
@@ -2741,12 +2760,12 @@ function kepoli_site_json_ld(): void
                 '@id' => home_url('/#organization'),
                 'name' => $site_name,
                 'url' => home_url('/'),
-                'email' => kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl'),
+                'email' => kepoli_public_contact_email(),
                 'description' => kepoli_brand_description(),
                 'contactPoint' => [
                     '@type' => 'ContactPoint',
                     'contactType' => 'editorial',
-                    'email' => kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl'),
+                    'email' => kepoli_public_contact_email(),
                     'url' => kepoli_contact_page_url(),
                     'availableLanguage' => ['ro', 'en'],
                 ],
@@ -2830,7 +2849,7 @@ function kepoli_static_page_json_ld(): void
             'mainEntity' => [
                 '@type' => 'ContactPoint',
                 'contactType' => 'editorial',
-                'email' => kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl'),
+                'email' => kepoli_public_contact_email(),
                 'url' => kepoli_contact_page_url(),
                 'availableLanguage' => ['ro', 'en'],
             ],

@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
-const liveUrl = (process.argv[2] || process.env.SITE_URL || 'https://kepoli.com').replace(/\/+$/, '');
+const liveUrl = (process.argv[2] || process.env.SITE_URL || 'https://kuchniatwist.pl').replace(/\/+$/, '');
 
 const versionFiles = [
   'seed/bootstrap.php',

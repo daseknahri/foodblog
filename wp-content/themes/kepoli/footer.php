@@ -22,7 +22,8 @@ $site_name = kepoli_site_name();
         <div class="site-footer__brand">
             <img src="<?php echo esc_url(kepoli_asset_uri('kuchniatwist-wordmark')); ?>" alt="<?php echo esc_attr($site_name); ?>"<?php echo kepoli_asset_dimension_attributes('kuchniatwist-wordmark'); ?> loading="lazy" decoding="async">
             <p><?php echo esc_html(kepoli_brand_description()); ?></p>
-            <p><a href="mailto:<?php echo esc_attr(kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl')); ?>"><?php echo esc_html(kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl')); ?></a></p>
+            <?php $public_contact_email = kepoli_public_contact_email(); ?>
+            <p><a href="mailto:<?php echo esc_attr($public_contact_email); ?>"><?php echo esc_html($public_contact_email); ?></a></p>
             <div class="site-footer__identity">
                 <a href="<?php echo esc_url(kepoli_about_page_url()); ?>"><?php echo esc_html(sprintf(kepoli_ui_text('Despre %s', 'About %s'), $site_name)); ?></a>
                 <a href="<?php echo esc_url(kepoli_author_page_url()); ?>"><?php echo esc_html($author_label); ?></a>
