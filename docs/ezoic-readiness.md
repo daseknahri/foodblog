@@ -12,6 +12,7 @@ This clone is prepared for Ezoic review as an English food blog on `https://kuch
 - Keep the native newsletter form only on the home/about areas unless the design changes later.
 - Make sure `www.kuchniatwist.pl` redirects to `https://kuchniatwist.pl`.
 - Keep `/ads.txt` reachable. Before Ezoic gives you an Ads.txt Manager ID, the site serves a harmless placeholder. After Ezoic gives the ID, set `EZOIC_ADSTXT_ACCOUNT_ID`.
+- Keep `EZOIC_PLUGIN_ENABLE=0` until you intentionally enable the Ezoic WordPress plugin from the Ezoic dashboard flow.
 
 ## After Ezoic Approval
 
@@ -44,7 +45,22 @@ CANONICAL_REDIRECT_HOSTS=www.kuchniatwist.pl
 ADSENSE_ENABLE=0
 EZOIC_ADSTXT_ACCOUNT_ID=
 EZOIC_ADSTXT_REDIRECT_URL=
+EZOIC_PLUGIN_ENABLE=0
 GA_ENABLE=0
 ```
 
 `ADSENSE_*` variables remain in the project only because the original theme engine supports direct AdSense slots. They are inactive unless explicitly enabled.
+
+## Checks
+
+Before submission or after a deploy, run:
+
+```sh
+node scripts/audit-ezoic-readiness.mjs
+```
+
+To check the live site too:
+
+```sh
+node scripts/audit-ezoic-readiness.mjs --live https://kuchniatwist.pl
+```

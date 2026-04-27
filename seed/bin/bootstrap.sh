@@ -172,6 +172,11 @@ fi
 wp theme activate kepoli
 wp plugin activate kepoli-author-tools || true
 wp plugin install google-site-kit --activate || true
+if [ "${EZOIC_PLUGIN_ENABLE:-0}" = "1" ]; then
+  wp plugin install ezoic-integration --activate || true
+else
+  wp plugin deactivate ezoic-integration >/dev/null 2>&1 || true
+fi
 wp plugin deactivate akismet hello >/dev/null 2>&1 || true
 
 wp eval-file /seed/bootstrap.php

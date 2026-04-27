@@ -73,6 +73,7 @@ node scripts/verify-content.mjs
 node scripts/image-status.mjs
 node scripts/audit-replica-readiness.mjs
 node scripts/audit-rebrand.mjs
+node scripts/audit-ezoic-readiness.mjs
 ```
 
 ## Media
