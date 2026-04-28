@@ -859,19 +859,35 @@
     return Array.from(new Set(sectionItems)).slice(0, sectionName === 'ingredients' ? 40 : 30);
   }
 
+  function extractRecipeMinutes(compactText, labelPattern) {
+    const pattern = new RegExp(
+      `(?:${labelPattern})\\s*:?\\s*((?:\\d{1,2}\\s*(?:h|hr|hrs|hour|hours|ora|ore)\\s*)?(?:\\d{1,3}\\s*(?:min|mins|minutes?|minute))|(?:\\d{1,2}\\s*(?:h|hr|hrs|hour|hours|ora|ore)))`,
+      'i'
+    );
+    const match = compactText.match(pattern);
+    if (!match) {
+      return '';
+    }
+
+    const duration = match[1];
+    const hoursMatch = duration.match(/(\d{1,2})\s*(?:h|hr|hrs|hour|hours|ora|ore)/i);
+    const minutesMatch = duration.match(/(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
+    const total = (hoursMatch ? Number.parseInt(hoursMatch[1], 10) * 60 : 0)
+      + (minutesMatch ? Number.parseInt(minutesMatch[1], 10) : 0);
+
+    return total > 0 ? String(total) : '';
+  }
+
   function extractRecipeMetaFromText() {
     const text = recipeExtractionText();
     const compactText = text.replace(/\n+/g, ' ');
     const servingsMatch = compactText.match(/(?:servings?|serves|makes|yield|portii|porții|pentru|aproximativ|cam)\s*:?\s*(\d{1,2}\s*(?:servings?|portions?|people|persons|crepes?|pancakes?|pieces?|burgers?|sandwiches?|cookies?|muffins?|slices?|portii|porții|persoane)?)/i);
-    const prepMatch = compactText.match(/(?:prep(?:aration)?(?:\s+time)?|pregatire|preparare|timp\s+de\s+preparare)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
-    const cookMatch = compactText.match(/(?:cook(?:ing)?(?:\s+time)?|bake|baking|boil|simmer|gatire|coacere|fierbere|timp\s+de\s+gatire)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
-    const totalMatch = compactText.match(/(?:total(?:\s+time)?|timp\s+total)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
 
     return {
       servings: servingsMatch ? cleanText(servingsMatch[1]) : '',
-      prepMinutes: prepMatch ? prepMatch[1] : '',
-      cookMinutes: cookMatch ? cookMatch[1] : '',
-      totalMinutes: totalMatch ? totalMatch[1] : '',
+      prepMinutes: extractRecipeMinutes(compactText, 'prep(?:aration)?(?:\\s+time)?|pregatire|preparare|timp\\s+de\\s+preparare'),
+      cookMinutes: extractRecipeMinutes(compactText, 'cook(?:ing)?(?:\\s+time)?|bake|baking|boil|simmer|gatire|coacere|fierbere|timp\\s+de\\s+gatire'),
+      totalMinutes: extractRecipeMinutes(compactText, 'total(?:\\s+time)?|timp\\s+total'),
       ingredients: extractRecipeSectionFromLines('ingredients'),
       steps: extractRecipeSectionFromLines('steps')
     };
