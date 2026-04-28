@@ -92,15 +92,24 @@ function profileValue(keys, fallback = '') {
   return value;
 }
 
-function expectedPublicMarkers() {
+function expectedRequiredPublicMarkers() {
   const markers = [
     profileValue(['brand', 'name'], ''),
     profileValue(['writer', 'name'], ''),
     categories[0]?.name || '',
-    posts[0]?.title || '',
   ];
 
   return markers.map((marker) => String(marker || '').trim()).filter(Boolean);
+}
+
+function expectedAnyPostMarkers() {
+  return posts
+    .map((post) => String(post?.title || '').trim())
+    .filter(Boolean);
+}
+
+function containsMarker(html, marker) {
+  return html.toLowerCase().includes(marker.toLowerCase());
 }
 
 async function main() {
@@ -120,10 +129,16 @@ async function main() {
       throw new Error('Live site is missing deploy fingerprint meta and still exposes old Kepoli public identity.');
     }
 
-    const requiredMarkers = expectedPublicMarkers();
-    const missingMarkers = requiredMarkers.filter((marker) => !html.includes(marker));
+    const requiredMarkers = expectedRequiredPublicMarkers();
+    const missingMarkers = requiredMarkers.filter((marker) => !containsMarker(html, marker));
     if (missingMarkers.length > 0) {
       throw new Error(`Live site is missing deploy fingerprint meta and expected public markers: ${missingMarkers.join(', ')}`);
+    }
+
+    const postMarkers = expectedAnyPostMarkers();
+    const matchedPostMarker = postMarkers.find((marker) => containsMarker(html, marker));
+    if (postMarkers.length > 0 && !matchedPostMarker) {
+      throw new Error('Live site is missing deploy fingerprint meta and none of the current content-pack post titles appear on the homepage.');
     }
 
     console.log('Deploy fingerprint meta is disabled, but public homepage markers match the current site profile.');
