@@ -2,6 +2,7 @@ import fs from 'node:fs';
 
 const posts = JSON.parse(fs.readFileSync('content/posts.json', 'utf8'));
 const pages = JSON.parse(fs.readFileSync('content/pages.json', 'utf8'));
+const siteProfile = JSON.parse(fs.readFileSync('content/site-profile.json', 'utf8'));
 const envExample = fs.readFileSync('.env.example', 'utf8');
 const readme = fs.readFileSync('README.md', 'utf8');
 const adsenseDocs = fs.readFileSync('docs/adsense-readiness.md', 'utf8');
@@ -10,11 +11,41 @@ const wordpressDockerfile = fs.readFileSync('docker/wordpress/Dockerfile', 'utf8
 const apachePerformanceConf = fs.readFileSync('docker/wordpress/kepoli-performance.conf', 'utf8');
 const adtechMuPlugin = fs.readFileSync('wp-content/mu-plugins/kepoli-adtech.php', 'utf8');
 const newsletterMuPlugin = fs.readFileSync('wp-content/mu-plugins/kepoli-newsletter.php', 'utf8');
-const aboutPage = pages.find((page) => /^despre-/.test(String(page.slug || '')) && page.slug !== 'despre-autor') || pages.find((page) => page.slug === 'despre-kepoli');
-const aboutPageSlug = aboutPage?.slug || 'despre-kepoli';
-const aboutTemplatePath = fs.existsSync(`wp-content/themes/kepoli/page-${aboutPageSlug}.php`)
-  ? `wp-content/themes/kepoli/page-${aboutPageSlug}.php`
-  : 'wp-content/themes/kepoli/page-despre-kepoli.php';
+const profileSlugs = siteProfile.slugs || {};
+const profileAssets = siteProfile.assets || {};
+const publicLocale = String(siteProfile.locales?.public || 'ro_RO');
+const publicLanguage = publicLocale.slice(0, 2).toLowerCase() || 'ro';
+const recipesSlug = profileSlugs.recipes || (publicLanguage === 'en' ? 'recipes' : 'retete');
+const guidesSlug = profileSlugs.guides || (publicLanguage === 'en' ? 'guides' : 'articole');
+const aboutSlug = profileSlugs.about || (publicLanguage === 'en' ? 'about-kuchniatwist' : 'despre-kepoli');
+const authorSlug = profileSlugs.author || (publicLanguage === 'en' ? 'about-author' : 'despre-autor');
+const privacySlug = profileSlugs.privacy || (publicLanguage === 'en' ? 'privacy-policy' : 'politica-de-confidentialitate');
+const cookiesSlug = profileSlugs.cookies || (publicLanguage === 'en' ? 'cookie-policy' : 'politica-de-cookies');
+const advertisingSlug = profileSlugs.advertising || (publicLanguage === 'en' ? 'advertising-and-consent' : 'publicitate-si-consimtamant');
+const editorialSlug = profileSlugs.editorial || (publicLanguage === 'en' ? 'editorial-policy' : 'politica-editoriala');
+const disclaimerSlug = profileSlugs.disclaimer || (publicLanguage === 'en' ? 'culinary-disclaimer' : 'disclaimer-culinar');
+const socialCoverAsset = profileAssets.social_cover || 'kepoli-social-cover';
+const canonicalRedirectHosts = String(envExample.match(/^CANONICAL_REDIRECT_HOSTS=(.+)$/m)?.[1] || '');
+const minimumPostCount = Number(siteProfile.launch?.min_posts || (publicLanguage === 'en' ? 20 : 30));
+const aboutPage = pages.find((page) => String(page.slug || '') === aboutSlug)
+  || pages.find((page) => /^about-/.test(String(page.slug || '')) && page.slug !== authorSlug)
+  || pages.find((page) => /^despre-/.test(String(page.slug || '')) && page.slug !== authorSlug);
+const aboutPageSlug = aboutPage?.slug || aboutSlug;
+const templatePathForSlug = (slug, fallbacks = []) => {
+  for (const candidate of [slug, ...fallbacks]) {
+    const path = `wp-content/themes/kepoli/page-${candidate}.php`;
+    if (fs.existsSync(path)) {
+      return path;
+    }
+  }
+
+  return '';
+};
+const readTemplateForSlug = (slug, fallbacks = []) => {
+  const path = templatePathForSlug(slug, fallbacks);
+  return path !== '' ? fs.readFileSync(path, 'utf8') : '';
+};
+const aboutTemplatePath = templatePathForSlug(aboutPageSlug, ['about-kuchniatwist', 'despre-kepoli']);
 const siteJs = fs.readFileSync('wp-content/themes/kepoli/assets/js/site.js', 'utf8');
 const siteMinJs = fs.readFileSync('wp-content/themes/kepoli/assets/js/site.min.js', 'utf8');
 const articleJs = fs.readFileSync('wp-content/themes/kepoli/assets/js/article.js', 'utf8');
@@ -29,9 +60,9 @@ const themeFiles = new Map([
   ['search', fs.readFileSync('wp-content/themes/kepoli/search.php', 'utf8')],
   ['page', fs.readFileSync('wp-content/themes/kepoli/page.php', 'utf8')],
   ['page-about', fs.existsSync(aboutTemplatePath) ? fs.readFileSync(aboutTemplatePath, 'utf8') : ''],
-  ['page-retete', fs.readFileSync('wp-content/themes/kepoli/page-retete.php', 'utf8')],
-  ['page-articole', fs.readFileSync('wp-content/themes/kepoli/page-articole.php', 'utf8')],
-  ['page-despre-autor', fs.readFileSync('wp-content/themes/kepoli/page-despre-autor.php', 'utf8')],
+  ['page-retete', readTemplateForSlug(recipesSlug, ['recipes', 'retete'])],
+  ['page-articole', readTemplateForSlug(guidesSlug, ['guides', 'articole'])],
+  ['page-despre-autor', readTemplateForSlug(authorSlug, ['about-author', 'despre-autor'])],
   ['template-parts-card', fs.readFileSync('wp-content/themes/kepoli/template-parts-card.php', 'utf8')],
   ['template-parts-sidebar', fs.readFileSync('wp-content/themes/kepoli/template-parts-sidebar.php', 'utf8')],
 ]);
@@ -39,12 +70,12 @@ const seedBootstrap = fs.readFileSync('seed/bootstrap.php', 'utf8');
 const writerPhotoSvg = fs.readFileSync('wp-content/themes/kepoli/assets/img/writer-photo.svg', 'utf8');
 const obsoleteThemePngs = [
   'wp-content/themes/kepoli/assets/img/hero-homepage.png',
-  'wp-content/themes/kepoli/assets/img/kepoli-social-cover.png',
+  `wp-content/themes/kepoli/assets/img/${socialCoverAsset}.png`,
   'wp-content/themes/kepoli/assets/img/writer-photo.png',
 ];
 const themeAssetStats = {
   heroJpg: fs.statSync('wp-content/themes/kepoli/assets/img/hero-homepage.jpg').size,
-  socialCoverJpg: fs.statSync('wp-content/themes/kepoli/assets/img/kepoli-social-cover.jpg').size,
+  socialCoverJpg: fs.statSync(`wp-content/themes/kepoli/assets/img/${socialCoverAsset}.jpg`).size,
   writerJpg: fs.statSync('wp-content/themes/kepoli/assets/img/writer-photo.jpg').size,
   styleCss: fs.statSync('wp-content/themes/kepoli/style.css').size,
   styleMinCss: fs.statSync('wp-content/themes/kepoli/style.min.css').size,
@@ -127,15 +158,15 @@ function rejectPublicCopy(label, value, patterns) {
 }
 
 requireIncludes(aboutPageSlug, 'trust/originality language', [
-  /publicitate/i,
+  /advertising|publicitate/i,
   /politica-editoriala|editorial/i,
-  /Nu republicam integral materiale|Nu copiem continut integral|Nu publicam pagini create doar/i,
+  /pages created only to display ads|do not intentionally republish|Nu republicam integral materiale|Nu copiem continut integral|Nu publicam pagini create doar/i,
 ]);
 
-requireIncludes('despre-autor', 'editorial accountability', [
-  /feedback|corecturi|eroare/i,
-  /promisiuni/i,
-  /politica-editoriala|actualizata|actualizat/i,
+requireIncludes(authorSlug, 'editorial accountability', [
+  /feedback|corrections|corecturi|eroare/i,
+  /unsupported|promisiuni/i,
+  /editorial|updated|actualizata|actualizat/i,
 ]);
 
 requireIncludes('contact', 'direct contact details', [
@@ -143,35 +174,33 @@ requireIncludes('contact', 'direct contact details', [
   /linkul paginii|browser|titlul exact/i,
 ]);
 
-requireIncludes('politica-de-confidentialitate', 'Google advertising disclosure', [
-  /Google AdSense/i,
-  /Ads Settings|adssettings/i,
-  /aboutads/i,
-  /Romania/i,
+requireIncludes(privacySlug, 'advertising disclosure', [
+  /advertising|publicitate/i,
+  /third-party services|servicii terte/i,
+  /consent|consimtamant/i,
 ]);
 
-requireIncludes('politica-de-cookies', 'cookie consent disclosure', [
-  /Cookie-uri publicitare/i,
-  /consimtamant/i,
-  /Google/i,
-  /continutul editorial/i,
+requireIncludes(cookiesSlug, 'cookie consent disclosure', [
+  /advertising cookies|Cookie-uri publicitare/i,
+  /consent|consimtamant/i,
+  /editorial content|continutul editorial/i,
 ]);
 
-requireIncludes('publicitate-si-consimtamant', 'EEA consent disclosure', [
-  /Google AdSense/i,
-  /Romania/i,
-  /consimtamant/i,
+requireIncludes(advertisingSlug, 'EEA consent disclosure', [
+  /Ezoic|Google AdSense|advertising/i,
+  /Poland|Romania/i,
+  /consent|consimtamant/i,
   /EEA|Spatiul Economic European/i,
-  /nepersonalizate/i,
-  /continutul editorial/i,
+  /non-personalized|nepersonalizate/i,
+  /editorial|continutul editorial/i,
 ]);
 
-requireIncludes('politica-editoriala', 'editorial quality disclosures', [
-  /Originalitate/i,
-  /promisiuni exagerate/i,
-  /sponsorizate|comerciale/i,
-  /subiecte/i,
-  /Titluri|titlurile/i,
+requireIncludes(editorialSlug, 'editorial quality disclosures', [
+  /Originality|Originalitate/i,
+  /inflated claims|promisiuni exagerate/i,
+  /sponsored|sponsorizate|comerciale/i,
+  /subjects|subiecte|scope/i,
+  /misleading imagery|Titluri|titlurile/i,
 ]);
 
 for (const page of pages) {
@@ -195,11 +224,17 @@ rejectPublicCopy('sidebar author box', themeFiles.get('template-parts-sidebar'),
   /Retete romanesti testate/i,
 ]);
 
-rejectPublicCopy('theme public Romanian copy', [...themeFiles.values()].join('\n'), [
-  /['"]%d min read['"]/i,
-  /['"]Kepoli home['"]/,
-  /['"]Breadcrumbs['"]/,
-]);
+if (publicLanguage !== 'en') {
+  rejectPublicCopy('theme public Romanian copy', [...themeFiles.values()].join('\n'), [
+    /['"]%d min read['"]/i,
+    /['"]Kepoli home['"]/,
+    /['"]Breadcrumbs['"]/,
+  ]);
+} else {
+  rejectPublicCopy('theme public English copy', [...themeFiles.values()].join('\n'), [
+    /['"]Kepoli home['"]/,
+  ]);
+}
 
 rejectPublicCopy('author illustration asset', writerPhotoSvg, [
   /placeholder/i,
@@ -213,13 +248,13 @@ requireTextIncludes('.env.example Google service gates', envExample, [
   /ADSENSE_ENABLE=0/,
   /GA_ENABLE=0/,
   /GA_MEASUREMENT_ID=/,
-  /CANONICAL_REDIRECT_HOSTS=www\.kepoli\.com,api\.kepoli\.com,recipe\.kepoli\.com/,
+  new RegExp(`CANONICAL_REDIRECT_HOSTS=${canonicalRedirectHosts.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`),
 ]);
 
 requireTextIncludes('docker compose Google service gates', dockerCompose, [
   /GA_ENABLE:\s*\$\{GA_ENABLE:-0\}/,
   /ADSENSE_ENABLE:\s*\$\{ADSENSE_ENABLE:-0\}/,
-  /CANONICAL_REDIRECT_HOSTS:\s*\$\{CANONICAL_REDIRECT_HOSTS:-www\.kepoli\.com,api\.kepoli\.com,recipe\.kepoli\.com\}/,
+  new RegExp(`CANONICAL_REDIRECT_HOSTS:\\s*\\$\\{CANONICAL_REDIRECT_HOSTS:-${canonicalRedirectHosts.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\}`),
 ]);
 
 requireTextIncludes('canonical host redirects', adtechMuPlugin, [
@@ -228,7 +263,7 @@ requireTextIncludes('canonical host redirects', adtechMuPlugin, [
   /www\.' \. \$canonical_host/,
   /api\.' \. \$canonical_host/,
   /recipe\.' \. \$canonical_host/,
-  /wp_redirect\(\$scheme \. ':\/\/' \. \$canonical_host \. \$request_uri,\s*301,\s*'Kepoli'\)/,
+  /wp_redirect\(\$scheme \. ':\/\/' \. \$canonical_host \. \$request_uri,\s*301,\s*kepoli_mu_site_name\(\)\)/,
 ]);
 
 requireTextIncludes('machine-readable trust files', adtechMuPlugin, [
@@ -236,7 +271,7 @@ requireTextIncludes('machine-readable trust files', adtechMuPlugin, [
   /\/\.well-known\/security\.txt/,
   /\/site\.webmanifest/,
   /Contact:\s*mailto:/,
-  /Preferred-Languages:\s*ro,\s*en/,
+  new RegExp(`Preferred-Languages:\\s*' \\. esc_html\\(strtolower\\(substr\\(kepoli_mu_public_locale\\(\\), 0, 2\\)\\)\\) \\. ", en\\\\n"`),
   /Canonical:/,
   /background_color'\s*=>\s*'#fbf7ef'/,
   /theme_color'\s*=>\s*'#252416'/,
@@ -297,14 +332,14 @@ requireThemeIncludes('functions', 'attachment page redirect hardening', [
   /function kepoli_redirect_attachment_pages\(\): void/,
   /is_attachment\(\)/,
   /wp_get_attachment_url\(\$attachment->ID\)/,
-  /wp_safe_redirect\(\$target,\s*301,\s*'Kepoli'\)/,
+  /wp_safe_redirect\(\$target,\s*301,\s*kepoli_site_name\(\)\)/,
 ]);
 
 requireThemeIncludes('functions', 'author archive redirect hardening', [
   /function kepoli_redirect_author_archives\(\): void/,
   /is_author\(\)/,
   /kepoli_author_page_url\(\)/,
-  /wp_safe_redirect\(\$target,\s*301,\s*'Kepoli'\)/,
+  /wp_safe_redirect\(\$target,\s*301,\s*kepoli_site_name\(\)\)/,
 ]);
 
 requireThemeIncludes('functions', 'robots indexing policy', [
@@ -333,7 +368,7 @@ requireThemeIncludes('functions', 'theme image dimensions', [
 ]);
 
 requireThemeIncludes('header', 'wordmark dimensions', [
-  /kepoli_asset_dimension_attributes\('kepoli-wordmark'\)/,
+  /kepoli_asset_dimension_attributes\((?:'kepoli-wordmark'|kepoli_wordmark_asset\(\))\)/,
 ]);
 
 requireThemeIncludes('front-page', 'static image dimensions', [
@@ -407,7 +442,7 @@ rejectPublicCopy('theme Reader Revenue popup initialization', [...themeFiles.val
 ]);
 
 requireTextIncludes('newsletter storage MU plugin', newsletterMuPlugin, [
-  /Plugin Name:\s*Kepoli Newsletter Signups/,
+  /Plugin Name:\s*(Kepoli|Food Blog) Newsletter Signups/,
   /register_post_type\(kepoli_newsletter_post_type\(\)/,
   /'show_ui'\s*=>\s*true/,
   /'menu_icon'\s*=>\s*'dashicons-email-alt'/,
@@ -433,7 +468,7 @@ requireThemeIncludes('functions', 'structured data image and entity details', [
   /'@id'\s*=>\s*home_url\('\/#organization'\)/,
   /'image'\s*=>\s*\[kepoli_social_image_schema_object\(\)\]/,
   /'mainEntityOfPage'\s*=>\s*\[\s*'@type'\s*=>\s*'WebPage'/s,
-  /'inLanguage'\s*=>\s*get_bloginfo\('language'\)/,
+  /'inLanguage'\s*=>\s*kepoli_language_tag\(\)/,
   /'dateModified'\s*=>\s*get_the_modified_date\('c'\)/,
   /'recipeInstructions'\s*=>\s*array_map\(/,
   /'name'\s*=>\s*kepoli_recipe_step_name/,
@@ -444,7 +479,7 @@ requireThemeIncludes('functions', 'structured data image and entity details', [
 ]);
 
 requireTextIncludes('seed recipe step anchors', seedBootstrap, [
-  /<li id="mod-de-preparare-step-/,
+  /<li id="' \. esc_attr\(sanitize_title\(\$steps_heading\)\) \. '-step-/,
 ]);
 
 requireThemeIncludes('functions', 'production stylesheet enqueue', [
@@ -485,6 +520,8 @@ if (themeAssetStats.articleMinJs >= themeAssetStats.articleJs) {
 
 requireThemeIncludes('functions', 'responsive lazy post media images', [
   /function kepoli_post_media_image_attrs/,
+  /function kepoli_post_featured_image_alt\(int \$post_id = 0\): string[\s\S]*_kepoli_image_plan_alt[\s\S]*get_the_title\(\$post_id\)/,
+  /\$fallback_alt !== '' && \(!array_key_exists\('alt', \$attr\) \|\| trim\(\(string\) \$attr\['alt'\]\) === ''\)/,
   /wp_get_attachment_image\(\$image_id,\s*\$size,\s*false,\s*\$attr\)/,
   /'loading'\s*=>\s*\$priority\s*\?\s*'eager'\s*:\s*'lazy'|'loading'\s*=>\s*'lazy'/,
   /'decoding'\s*=>\s*'async'/,
@@ -493,16 +530,17 @@ requireThemeIncludes('functions', 'responsive lazy post media images', [
 
 requireThemeIncludes('front-page', 'priority homepage hero image', [
   /class="home-hero__image"/,
+  /alt="<\?php echo esc_attr\(\$hero_alt\); \?>"/,
   /fetchpriority="high"/,
   /loading="eager"/,
 ]);
 
 requireThemeIncludes('functions', 'footer legal fallback items', [
   /function kepoli_footer_menu_items\(\): array/,
-  /politica-editoriala/,
-  /publicitate-si-consimtamant/,
-  /politica-de-confidentialitate/,
-  /disclaimer-culinar/,
+  /kepoli_editorial_policy_url\(\)/,
+  /kepoli_advertising_page_url\(\)/,
+  /kepoli_privacy_policy_url\(\)/,
+  /kepoli_disclaimer_page_url\(\)/,
 ]);
 
 requireThemeIncludes('footer', 'footer menu fallback', [
@@ -511,10 +549,10 @@ requireThemeIncludes('footer', 'footer menu fallback', [
 
 requireThemeIncludes('functions', 'primary menu fallback items', [
   /function kepoli_primary_menu_items\(\): array/,
-  /home_url\('\/retete\/'\)/,
-  /home_url\('\/articole\/'\)/,
+  /kepoli_recipes_page_url\(\)/,
+  /kepoli_guides_page_url\(\)/,
   /kepoli_about_page_url\(\)/,
-  /home_url\('\/contact\/'\)/,
+  /kepoli_contact_page_url\(\)/,
 ]);
 
 requireThemeIncludes('header', 'primary menu fallback', [
@@ -553,7 +591,7 @@ requireThemeIncludes('functions', 'clean canonical URL builder', [
 
 requireThemeIncludes('functions', 'hreflang metadata', [
   /<link rel=\\"alternate\\" hreflang=\\"%s\\" href=\\"%s\\">/,
-  /hreflang=\\"ro\\"/,
+  /strtolower\(substr\(\$language,\s*0,\s*2\)\)/,
   /hreflang=\\"x-default\\"/,
 ]);
 
@@ -602,15 +640,15 @@ if (themeAssetStats.styleMinCss >= themeAssetStats.styleCss) {
   failures.push('Minified stylesheet is not smaller than style.css.');
 }
 
-requireIncludes('disclaimer-culinar', 'culinary disclaimer coverage', [
-  /medic|nutritionist|dietetician/i,
-  /Alergeni/i,
-  /Siguranta alimentara/i,
+requireIncludes(disclaimerSlug, 'culinary disclaimer coverage', [
+  /doctor|medic|nutritionist|dietitian|dietetician/i,
+  /Allergens|Alergeni/i,
+  /Food safety|Siguranta alimentara/i,
 ]);
 
 requireThemeIncludes('header', 'editorial utility links', [
   /kepoli_author_page_url\s*\(/,
-  /home_url\('\/contact\/'\)/,
+  /kepoli_contact_page_url\s*\(/,
 ]);
 
 requireThemeIncludes('functions', 'card meta helpers', [
@@ -773,7 +811,7 @@ for (const post of posts) {
   }
 }
 
-if (posts.length < 30) {
+if (posts.length < minimumPostCount) {
   failures.push(`Only ${posts.length} posts found.`);
 }
 
