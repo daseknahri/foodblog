@@ -1248,7 +1248,7 @@ function kepoli_official_page_slugs(): array
         'termeni-si-conditii',
         'culinary-disclaimer',
         'disclaimer-culinar',
-    ]));
+    ])));
 }
 
 function kepoli_is_official_page(): bool
