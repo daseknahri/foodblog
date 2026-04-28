@@ -1,0 +1,31 @@
+{
+  "brand": {
+    "name": "kuchniatwist",
+    "tagline": "Recipes, kitchen guides, and practical home cooking notes",
+    "description": "kuchniatwist publishes practical recipes, seasonal food ideas, and kitchen guides for home cooks.",
+    "site_email": "contact@kuchniatwist.pl"
+  },
+  "locales": {
+    "public": "en_US",
+    "admin": "en_US",
+    "force_admin": true
+  },
+  "writer": {
+    "name": "Isalune Merovik",
+    "email": "isalunemerovik@gmail.com",
+    "bio": "Writes approachable recipes and kitchen guides for kuchniatwist."
+  },
+  "slugs": {
+    "home": "home",
+    "recipes": "recipes",
+    "guides": "guides",
+    "about": "about-kuchniatwist",
+    "author": "about-author",
+    "privacy": "privacy-policy",
+    "cookies": "cookie-policy",
+    "advertising": "advertising-and-consent",
+    "editorial": "editorial-policy",
+    "terms": "terms-and-conditions",
+    "disclaimer": "culinary-disclaimer"
+  }
+}

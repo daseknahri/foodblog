@@ -12,14 +12,25 @@ $recipe_categories = array_values(array_filter(get_categories([
     return !kepoli_is_editorial_category_slug($category->slug);
 }));
 $featured_recipe = kepoli_latest_post_by_kind('recipe');
+$page_id = get_queried_object_id();
+$page_title = $page_id ? get_the_title($page_id) : '';
+$page_content = $page_id ? trim((string) apply_filters('the_content', (string) get_post_field('post_content', $page_id))) : '';
+$page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_content), 28, '') : '';
 ?>
 <header class="archive-header">
     <?php kepoli_breadcrumbs(); ?>
     <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Retete', 'Recipes')); ?></p>
-    <h1><?php echo esc_html(kepoli_ui_text('Retete romanesti', 'Recipes')); ?></h1>
-    <p><?php echo esc_html(sprintf(kepoli_ui_text('Alege o categorie sau porneste de la cele mai noi retete %s.', 'Choose a category or start with the newest %s recipes.'), kepoli_site_name())); ?></p>
+    <h1><?php echo esc_html($page_title !== '' ? $page_title : kepoli_ui_text('Retete pentru acasa', 'Recipes')); ?></h1>
+    <p><?php echo esc_html($page_intro !== '' ? $page_intro : sprintf(kepoli_ui_text('Alege o categorie sau porneste de la cele mai noi retete %s.', 'Choose a category or start with the newest %s recipes.'), kepoli_site_name())); ?></p>
     <?php kepoli_render_reader_trust_links(); ?>
 </header>
+<?php if ($page_content !== '') : ?>
+    <section class="section section--tight">
+        <div class="entry-content entry-content--page">
+            <?php echo $page_content; ?>
+        </div>
+    </section>
+<?php endif; ?>
 <section class="category-band">
     <div class="section">
         <div class="section__header section__header--compact section__header--simple">

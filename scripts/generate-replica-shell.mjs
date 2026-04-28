@@ -29,21 +29,33 @@ const siteUrl = normalizeSiteUrl(domain);
 const hostname = new URL(siteUrl).hostname;
 const projectSlug = slugify(args['project-slug'] || brand);
 const language = resolveLanguage(args.language || args.lang || '', args['wp-locale']);
+const wpLocale = args['wp-locale'] || (language === 'en' ? 'en_US' : 'ro_RO');
 const monetization = resolveMonetization(args.monetization || '');
 const homeSlug = slugify(args['home-slug'] || defaultHomeSlug(language));
 const recipesSlug = slugify(args['recipes-slug'] || defaultRecipesSlug(language));
 const guidesSlug = slugify(args['guides-slug'] || defaultGuidesSlug(language));
 const aboutSlug = slugify(args['about-slug'] || defaultAboutSlug(language, projectSlug));
 const authorSlug = slugify(args['author-slug'] || defaultAuthorSlug(language));
+const privacySlug = slugify(args['privacy-slug'] || defaultPrivacySlug(language));
+const cookiesSlug = slugify(args['cookies-slug'] || defaultCookiesSlug(language));
+const advertisingSlug = slugify(args['advertising-slug'] || defaultAdvertisingSlug(language));
+const editorialSlug = slugify(args['editorial-slug'] || defaultEditorialSlug(language));
+const termsSlug = slugify(args['terms-slug'] || defaultTermsSlug(language));
+const disclaimerSlug = slugify(args['disclaimer-slug'] || defaultDisclaimerSlug(language));
 const country = args.country || (language === 'en' ? 'Poland' : 'Romania');
 const focus = args.focus || defaultFocus(language);
 const audience = args.audience || defaultAudience(language);
+const brandTagline = args['brand-tagline'] || defaultBrandTagline(language, brand);
+const brandDescription = args['brand-description'] || defaultBrandDescription(language, brand);
+const writerBio = args['writer-bio'] || defaultWriterBio(language, brand, writerName);
 const operations = [];
 const backupRoot = path.join(root, '.replica-backups', timestamp());
 
+const siteProfile = buildSiteProfile();
 const categories = buildCategories();
 const pages = buildPages();
 
+writeJson('content/site-profile.json', siteProfile, 'Generated site profile');
 writeJson('content/categories.json', categories, `Generated ${categories.length} starter categories`);
 writeJson('content/pages.json', pages, `Generated ${pages.length} starter pages`);
 
@@ -84,11 +96,20 @@ Optional:
   --language       Language preset: en or ro. Defaults from --wp-locale, otherwise ro.
   --monetization   generic, adsense, or ezoic. Used only for policy copy.
   --project-slug   Internal project slug, also used for the default about-page slug
+  --brand-tagline  Public tagline for content/site-profile.json
+  --brand-description Public brand description for content/site-profile.json
+  --writer-bio     Public writer bio for content/site-profile.json
   --home-slug      Home page slug, default: home or acasa
   --recipes-slug   Recipes landing page slug, default: recipes or retete
   --guides-slug    Guides/articles landing page slug, default: guides or articole
   --about-slug     About-site page slug, default: about-{project-slug} or despre-{project-slug}
   --author-slug    Author page slug, default: about-author or despre-autor
+  --privacy-slug   Privacy page slug, default: privacy-policy or politica-de-confidentialitate
+  --cookies-slug   Cookie page slug, default: cookie-policy or politica-de-cookies
+  --advertising-slug Advertising/consent page slug
+  --editorial-slug Editorial policy page slug
+  --terms-slug     Terms page slug
+  --disclaimer-slug Culinary disclaimer page slug
   --focus          Editorial focus sentence
   --audience       Audience sentence
   --country        Country/market referenced in policy copy
@@ -184,10 +205,52 @@ function defaultAuthorSlug(languageCode) {
   return languageCode === 'en' ? 'about-author' : 'despre-autor';
 }
 
+function defaultPrivacySlug(languageCode) {
+  return languageCode === 'en' ? 'privacy-policy' : 'politica-de-confidentialitate';
+}
+
+function defaultCookiesSlug(languageCode) {
+  return languageCode === 'en' ? 'cookie-policy' : 'politica-de-cookies';
+}
+
+function defaultAdvertisingSlug(languageCode) {
+  return languageCode === 'en' ? 'advertising-and-consent' : 'publicitate-si-consimtamant';
+}
+
+function defaultEditorialSlug(languageCode) {
+  return languageCode === 'en' ? 'editorial-policy' : 'politica-editoriala';
+}
+
+function defaultTermsSlug(languageCode) {
+  return languageCode === 'en' ? 'terms-and-conditions' : 'termeni-si-conditii';
+}
+
+function defaultDisclaimerSlug(languageCode) {
+  return languageCode === 'en' ? 'culinary-disclaimer' : 'disclaimer-culinar';
+}
+
 function defaultFocus(languageCode) {
   return languageCode === 'en'
     ? 'everyday recipes, seasonal cooking ideas, and practical kitchen guides'
     : 'retete de casa, idei de sezon si ghiduri practice de bucatarie';
+}
+
+function defaultBrandTagline(languageCode, siteName) {
+  return languageCode === 'en'
+    ? `${siteName} shares practical recipes and kitchen guides for home cooks.`
+    : `${siteName} publica retete pentru acasa si ghiduri practice de bucatarie.`;
+}
+
+function defaultBrandDescription(languageCode, siteName) {
+  return languageCode === 'en'
+    ? `${siteName} publishes recipes, food guides, and practical kitchen notes for readers who cook at home.`
+    : `${siteName} publica retete, articole culinare si ghiduri practice pentru cititori care gatesc acasa.`;
+}
+
+function defaultWriterBio(languageCode, siteName, authorName) {
+  return languageCode === 'en'
+    ? `${authorName} writes practical recipes and kitchen guides for ${siteName}.`
+    : `${authorName} scrie retete si ghiduri practice pentru ${siteName}.`;
 }
 
 function defaultAudience(languageCode) {
@@ -226,6 +289,40 @@ function monetizationName() {
   if (monetization === 'adsense') return 'Google AdSense';
   if (monetization === 'ezoic') return 'Ezoic and its advertising partners';
   return 'advertising partners';
+}
+
+function buildSiteProfile() {
+  return {
+    brand: {
+      name: brand,
+      tagline: brandTagline,
+      description: brandDescription,
+      site_email: siteEmail,
+    },
+    locales: {
+      public: wpLocale,
+      admin: 'en_US',
+      force_admin: true,
+    },
+    writer: {
+      name: writerName,
+      email: writerEmail,
+      bio: writerBio,
+    },
+    slugs: {
+      home: homeSlug,
+      recipes: recipesSlug,
+      guides: guidesSlug,
+      about: aboutSlug,
+      author: authorSlug,
+      privacy: privacySlug,
+      cookies: cookiesSlug,
+      advertising: advertisingSlug,
+      editorial: editorialSlug,
+      terms: termsSlug,
+      disclaimer: disclaimerSlug,
+    },
+  };
 }
 
 function buildCategories() {
@@ -327,41 +424,41 @@ function buildEnglishPages() {
       `<h2>Contact details</h2><p><strong>Site email:</strong> <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a></p><p><strong>Writer email:</strong> <a href="mailto:{{WRITER_EMAIL}}">{{WRITER_EMAIL}}</a></p>`,
       `<h2>How to help us answer faster</h2><ul><li>include the URL or title of the page you mean;</li><li>mention the paragraph, step, or issue that looks wrong;</li><li>include your device and browser for technical problems;</li><li>for privacy or advertising questions, tell us where you saw the issue.</li></ul>`,
     ]),
-    page('privacy-policy', 'Privacy Policy', [
+    page(privacySlug, 'Privacy Policy', [
       `This policy explains how ${brand}, available at ${hostname}, may collect, use, and protect personal data related to visitors and readers.`,
       `Reading the site does not require an account. Most data appears through technical site operations, traffic measurement, direct messages sent by email, newsletter signups, and, when configured, advertising services.`,
       `<h2>What data may be processed</h2><ul><li>technical data such as IP address, browser, device type, and pages viewed;</li><li>interaction data related to site usage;</li><li>information you send directly by email or the newsletter form;</li><li>consent preferences related to cookies and advertising.</li></ul>`,
       `<h2>Third-party services</h2><p>${brand} may use services such as Search Console, Site Kit, Analytics, or advertising providers. Those services can set cookies or use similar identifiers depending on configuration and visitor consent choices.</p>`,
       `<h2>Your rights</h2><p>Subject to applicable law, you may request access, correction, deletion, restriction, or objection for certain processing. For questions, email <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a>.</p>`,
     ]),
-    page('cookie-policy', 'Cookie Policy', [
+    page(cookiesSlug, 'Cookie Policy', [
       `${brand} may use cookies and similar technologies for site operation, security, preferences, analytics, newsletter handling, and advertising.`,
       `<h2>Types of cookies</h2><ul><li>necessary cookies for site functionality and security;</li><li>analytics cookies that help us understand traffic;</li><li>advertising cookies, if advertising partners are active;</li><li>consent cookies that remember privacy choices.</li></ul>`,
       `<h2>Control</h2><p>You can manage preferences through the consent layer when available and can also block or remove cookies in your browser. Refusing non-essential cookies should not block access to editorial content.</p>`,
       `For questions about cookie usage, write to <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a>.`,
     ]),
-    page('advertising-and-consent', 'Advertising and Consent', [
+    page(advertisingSlug, 'Advertising and Consent', [
       `${brand} may support the site through online advertising, including ${advertisingProvider}, once the configuration, disclosures, and consent setup are ready.`,
       `<h2>How advertising may work</h2><p>Ads may be personalized or non-personalized depending on visitor consent, local regulation, and the configuration of the advertising services used on the site.</p>`,
       `<h2>Consent expectations</h2><p>For visitors in ${country}, the EEA, the United Kingdom, Switzerland, and other relevant regions, the use of non-essential advertising cookies or personalized ads may require consent before activation.</p>`,
       `<h2>Editorial independence</h2><p>Advertising does not determine what we publish. Editorial pages, author information, contact details, and policy pages remain available regardless of ad status.</p>`,
       `For questions about ads or consent, write to <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a>.`,
     ]),
-    page('editorial-policy', 'Editorial Policy', [
+    page(editorialSlug, 'Editorial Policy', [
       `This page explains the publishing principles that guide recipes and food articles on ${brand}.`,
       `<h2>Purpose of the content</h2><p>The primary goal is usefulness: clear steps, practical context, relevant images, helpful internal links, and text that helps readers understand what they are doing.</p>`,
       `<h2>Originality</h2><p>We do not publish pages created only for search traffic or ads. We do not republish other sources wholesale, and we avoid misleading imagery or empty roundup content.</p>`,
       `<h2>Corrections</h2><p>If we find an error or receive specific feedback, we update the page. Readers can send corrections to <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a> or <a href="mailto:{{WRITER_EMAIL}}">{{WRITER_EMAIL}}</a>.</p>`,
       `<h2>Commercial relationships</h2><p>Advertising and business relationships do not change the editorial criteria used to decide what is published. Sponsored material, if any, is labeled clearly.</p>`,
     ]),
-    page('terms-and-conditions', 'Terms and Conditions', [
+    page(termsSlug, 'Terms and Conditions', [
       `By accessing and using ${brand}, you agree to these terms and conditions.`,
       `<h2>Purpose of the site</h2><p>${brand} publishes food and editorial material for informational home-use purposes. Recipes and articles do not replace professional advice tailored to your situation.</p>`,
       `<h2>Intellectual property</h2><p>Text, content structure, visual identity, and site assets belong to the site or are used with the appropriate rights. Systematic copying or full republication is not allowed without permission.</p>`,
       `<h2>Limitation of liability</h2><p>We make reasonable efforts to publish useful and current material, but cooking outcomes vary by ingredients, equipment, timing, and personal experience.</p>`,
       `For questions about these terms, write to <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a>.`,
     ]),
-    page('culinary-disclaimer', 'Culinary Disclaimer', [
+    page(disclaimerSlug, 'Culinary Disclaimer', [
       `Recipes and food articles published on ${brand} are provided for informational home-use purposes.`,
       `<h2>Results may vary</h2><p>Dishes can turn out differently depending on ingredients, brands, humidity, equipment, portion size, heat, and the cook's experience.</p>`,
       `<h2>Allergens and food safety</h2><p>Readers are responsible for checking labels, allergens, storage conditions, expiry dates, and whether ingredients fit their own dietary needs or restrictions.</p>`,
@@ -404,41 +501,41 @@ function buildRomanianPages() {
       `<h2>Date de contact</h2><p><strong>Email site:</strong> <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a></p><p><strong>Email autor:</strong> <a href="mailto:{{WRITER_EMAIL}}">{{WRITER_EMAIL}}</a></p>`,
       `<h2>Cum ne ajuti sa raspundem mai repede</h2><ul><li>trimite linkul paginii sau titlul articolului;</li><li>spune ce paragraf, pas sau functie pare gresita;</li><li>mentionaza dispozitivul si browserul daca este o problema tehnica;</li><li>pentru confidentialitate sau publicitate, include pagina unde ai observat problema.</li></ul>`,
     ]),
-    page('politica-de-confidentialitate', 'Politica de confidentialitate', [
+    page(privacySlug, 'Politica de confidentialitate', [
       `Aceasta politica explica modul in care ${brand}, disponibil la ${hostname}, poate colecta si utiliza date personale ale vizitatorilor.`,
       `Lectura obisnuita a site-ului nu cere crearea unui cont. Datele apar mai ales din functionarea tehnica a site-ului, analiza traficului, mesajele trimise direct si, dupa configurare, publicitate.`,
       `<h2>Ce date pot fi prelucrate</h2><ul><li>date tehnice precum IP, browser, dispozitiv si pagini accesate;</li><li>date despre interactiunea cu site-ul;</li><li>date oferite direct prin email;</li><li>date legate de consimtamantul pentru cookie-uri.</li></ul>`,
       `<h2>Servicii terte</h2><p>${brand} poate folosi servicii Google precum Search Console, Site Kit, Analytics si AdSense. Aceste servicii pot folosi cookie-uri sau identificatori similari in functie de configurarea site-ului si de optiunile de consimtamant.</p>`,
       `<h2>Drepturile tale</h2><p>In limitele legii, poti solicita acces, rectificare, stergere, restrictionare sau opozitie la anumite prelucrari. Pentru intrebari, scrie la <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a>.</p>`,
     ]),
-    page('politica-de-cookies', 'Politica de cookies', [
+    page(cookiesSlug, 'Politica de cookies', [
       `${brand} poate folosi cookie-uri si tehnologii similare pentru functionarea site-ului, securitate, preferinte, analiza si publicitate.`,
       `<h2>Tipuri de cookie-uri</h2><ul><li>cookie-uri necesare pentru functionare si securitate;</li><li>cookie-uri de analiza pentru intelegerea traficului;</li><li>cookie-uri publicitare, daca AdSense sau servicii similare sunt active;</li><li>cookie-uri de consimtamant pentru salvarea optiunilor.</li></ul>`,
       `<h2>Control</h2><p>Poti modifica preferintele prin bannerul de consimtamant, cand este disponibil, si poti bloca sau sterge cookie-uri din browser. Refuzul cookie-urilor neesentiale nu ar trebui sa blocheze accesul la continutul editorial.</p>`,
       `Pentru intrebari despre cookie-uri, scrie la <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a>.`,
     ]),
-    page('publicitate-si-consimtamant', 'Publicitate si consimtamant', [
+    page(advertisingSlug, 'Publicitate si consimtamant', [
       `${brand} poate sustine site-ul prin publicitate online, inclusiv ${monetizationName()}, dupa ce configurarea si consimtamantul sunt pregatite corect.`,
       `<h2>Cum functioneaza publicitatea</h2><p>Reclamele pot fi personalizate sau nepersonalizate in functie de setarile de consimtamant, tara vizitatorului si configurarea serviciilor folosite.</p>`,
       `<h2>Consimtamant</h2><p>Pentru vizitatorii din ${country}, EEA, Regatul Unit si Elvetia, folosirea cookie-urilor de publicitate si personalizarea reclamelor poate necesita consimtamant prealabil.</p>`,
       `<h2>Independenta editoriala</h2><p>Publicitatea nu decide ce publicam. Continutul editorial, paginile despre autor, contact si politica editoriala raman accesibile indiferent de stadiul publicitatii.</p>`,
       `Pentru intrebari despre publicitate, scrie la <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a>.`,
     ]),
-    page('politica-editoriala', 'Politica editoriala', [
+    page(editorialSlug, 'Politica editoriala', [
       `Aceasta pagina explica principiile dupa care ${brand} publica retete si articole culinare.`,
       `<h2>Scopul continutului</h2><p>Scopul principal este utilitatea: pasi clari, context practic, imagini relevante, legaturi interne si texte care ajuta cititorul sa inteleaga ce face.</p>`,
       `<h2>Originalitate</h2><p>Nu publicam pagini create doar pentru trafic sau reclame. Nu copiem continut integral din alte surse si nu folosim imagini inselatoare.</p>`,
       `<h2>Corecturi</h2><p>Daca observam o eroare sau primim feedback concret, actualizam pagina. Cititorii pot trimite corecturi la <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a> sau <a href="mailto:{{WRITER_EMAIL}}">{{WRITER_EMAIL}}</a>.</p>`,
       `<h2>Publicitate</h2><p>Publicitatea si colaborarile comerciale nu schimba criteriile editoriale. Materialele sponsorizate, daca apar, vor fi marcate clar.</p>`,
     ]),
-    page('termeni-si-conditii', 'Termeni si conditii', [
+    page(termsSlug, 'Termeni si conditii', [
       `Prin accesarea si utilizarea site-ului ${brand} accepti acesti termeni si conditii.`,
       `<h2>Scopul site-ului</h2><p>${brand} publica materiale culinare si editoriale cu scop informativ pentru uz casnic. Retetele si articolele nu reprezinta consultanta profesionala personalizata.</p>`,
       `<h2>Proprietate intelectuala</h2><p>Textele, structura continutului, elementele grafice, logo-ul si identitatea vizuala apartin site-ului sau sunt utilizate cu drepturi corespunzatoare. Nu este permisa copierea integrala sau republicarea sistematica fara acord.</p>`,
       `<h2>Limitarea raspunderii</h2><p>Depunem eforturi rezonabile pentru continut util si actualizat, dar rezultatele culinare pot varia in functie de ingrediente, echipamente si experienta.</p>`,
       `Pentru intrebari privind termenii, scrie la <a href="mailto:{{SITE_EMAIL}}">{{SITE_EMAIL}}</a>.`,
     ]),
-    page('disclaimer-culinar', 'Disclaimer culinar', [
+    page(disclaimerSlug, 'Disclaimer culinar', [
       `Retetele si articolele publicate pe ${brand} sunt oferite in scop informativ si pentru uz casnic.`,
       `<h2>Rezultatele pot varia</h2><p>Preparatele pot iesi diferit in functie de ingrediente, marci, dimensiuni, umiditate, echipamente, temperatura si experienta celui care gateste.</p>`,
       `<h2>Alergeni si siguranta alimentara</h2><p>Cititorul este responsabil sa verifice etichetele, alergenii, data de expirare, depozitarea si compatibilitatea ingredientelor cu propriile restrictii alimentare.</p>`,

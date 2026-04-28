@@ -2,10 +2,10 @@
   const PAGE_BREAK = '<!--nextpage-->';
   const CONFIG = window.kepoliAuthorTools || {};
   const SITE_NAME = CONFIG.siteName || 'Food Blog';
-  const SITE_IS_ENGLISH = !!CONFIG.isEnglish;
+  const PUBLIC_IS_ENGLISH = CONFIG.publicIsEnglish !== undefined ? !!CONFIG.publicIsEnglish : !!CONFIG.isEnglish;
 
   function contentText(ro, en) {
-    return SITE_IS_ENGLISH ? en : ro;
+    return PUBLIC_IS_ENGLISH ? en : ro;
   }
 
   function getTextarea() {
@@ -249,8 +249,9 @@
     const stopwords = new Set([
       'acest', 'aceasta', 'aceste', 'acasa', 'aici', 'ale', 'are', 'care', 'cand', 'cum',
       'din', 'este', 'fara', 'mai', 'mult', 'pentru', 'prin', 'sau', 'sunt', 'unde',
-      'un', 'una', 'unei', 'unui', 'reteta', 'recipes', 'romanesc', 'romaneasca', 'kepoli',
-      'the', 'and', 'with', 'from'
+      'un', 'una', 'unei', 'unui', 'reteta', 'romanesc', 'romaneasca', 'kepoli',
+      'the', 'and', 'with', 'from', 'this', 'that', 'your', 'into', 'kuchniatwist',
+      'recipe', 'recipes', 'guide', 'guides', 'food', 'cooking', 'kitchen'
     ]);
 
     return cleanText(text)
@@ -497,8 +498,8 @@
 
     const tagScores = new Map();
     const seedTags = kind === 'article'
-      ? (SITE_IS_ENGLISH ? ['ingredients', 'kitchen tips', 'cooking techniques'] : ['ingrediente', 'organizare', 'tehnici'])
-      : (SITE_IS_ENGLISH ? ['recipes', 'home cooking'] : ['retete romanesti']);
+      ? (PUBLIC_IS_ENGLISH ? ['ingredients', 'kitchen tips', 'cooking techniques'] : ['ingrediente', 'organizare', 'tehnici'])
+      : (PUBLIC_IS_ENGLISH ? ['recipes', 'home cooking'] : ['retete de casa']);
 
     seedTags.forEach((tag) => tagScores.set(tag, (tagScores.get(tag) || 0) + 1));
 
@@ -521,33 +522,31 @@
 
     const titleText = normalizeWords(title).join(' ');
     const quickTagMap = {
-      ciorba: ['ciorba'],
-      supa: ['supa'],
       soup: ['soup'],
       stew: ['stew', 'comfort food'],
       chicken: ['chicken', 'dinner'],
+      salmon: ['salmon', 'dinner'],
+      turkey: ['turkey', 'dinner'],
       pasta: ['pasta', 'dinner'],
-      rice: ['rice', 'side dish'],
-      papanasi: ['papanasi', 'desert'],
-      placinta: ['placinta', 'desert'],
+      rice: ['rice', 'quick dinner'],
+      skillet: ['skillet', 'quick dinner'],
+      curry: ['curry', 'quick dinner'],
       pie: ['pie', 'dessert'],
       cake: ['cake', 'dessert'],
+      loaf: ['loaf cake', 'dessert'],
+      crumble: ['crumble', 'dessert'],
       chocolate: ['chocolate', 'dessert'],
       cookies: ['cookies', 'dessert'],
       bread: ['bread', 'baking'],
-      cozonac: ['cozonac', 'aluat'],
-      zacusca: ['zacusca', 'conserve'],
-      muraturi: ['muraturi', 'conserve'],
-      ghid: ['ingrediente'],
       guide: ['ingredients', 'kitchen tips'],
-      meniu: ['meniu', 'familie'],
       menu: ['menu', 'family meals'],
-      aluat: ['aluat', 'patiserie'],
       dough: ['dough', 'baking'],
-      sezon: ['sezon'],
       season: ['seasonal'],
-      pastrare: ['pastrare', 'organizare'],
-      storage: ['storage', 'kitchen tips']
+      herbs: ['herbs', 'storage'],
+      storage: ['storage', 'kitchen tips'],
+      pantry: ['pantry', 'meal planning'],
+      seasoning: ['seasoning', 'cooking basics'],
+      salad: ['salad', 'fresh vegetables']
     };
 
     Object.keys(quickTagMap).forEach((keyword) => {
@@ -592,28 +591,28 @@
     const posts = (window.kepoliAuthorTools && window.kepoliAuthorTools.relatedPosts) || [];
     const categoryScores = new Map();
     const slugKeywords = {
-      'ciorbe-si-supe': ['ciorba', 'bors', 'supa', 'supa crema', 'zeama', 'galuste', 'galuste', 'radauteana'],
-      'feluri-principale': ['sarmale', 'tochitura', 'tocanita', 'friptura', 'mamaliga', 'ostropel', 'snitel', 'varza', 'pilaf', 'chiftele'],
-      'patiserie-si-deserturi': ['desert', 'prajitura', 'cozonac', 'placinta', 'clatite', 'papanasi', 'chec', 'cornulete', 'aluat', 'foi'],
-      'conserve-si-garnituri': ['zacusca', 'muraturi', 'salata', 'garnitura', 'borcan', 'compot', 'bulion', 'gem', 'dulceata', 'piure'],
-      'guides': ['ghid', 'cum', 'calendar', 'meniuri', 'tehnici', 'organizare', 'ingrediente', 'bucatarie', 'pastrare', 'explica']
+      'quick-recipes': ['quick', 'fast', 'weeknight', 'easy', 'one pan', 'one-pot', 'pasta', 'rice', 'skillet', 'busy'],
+      'main-dishes': ['main', 'dinner', 'lunch', 'chicken', 'salmon', 'turkey', 'stew', 'bake', 'comfort', 'family'],
+      'desserts': ['dessert', 'cake', 'loaf', 'pancake', 'crumble', 'cinnamon', 'berry', 'apple', 'plum', 'sweet', 'bake'],
+      'seasonal-cooking': ['seasonal', 'season', 'fresh', 'herb', 'vegetable', 'carrot', 'salad', 'summer', 'winter', 'produce'],
+      'guides': ['guide', 'how', 'tips', 'storage', 'pantry', 'seasoning', 'planning', 'ingredients', 'technique', 'salad']
     };
     const keywordGroups = [
       {
-        match: ['soup', 'soups', 'stew', 'broth', 'ciorbe', 'supe'],
-        terms: ['soup', 'soups', 'stew', 'broth', 'cream soup', 'comfort food']
+        match: ['quick', 'fast', 'weeknight'],
+        terms: ['quick dinner', 'fast meal', 'easy recipe', 'one pan', 'short prep']
       },
       {
-        match: ['main', 'dinner', 'lunch', 'entree', 'feluri', 'principale'],
+        match: ['main', 'dinner', 'lunch', 'entree'],
         terms: ['dinner', 'lunch', 'main dish', 'chicken', 'pasta', 'rice', 'stew', 'family meal']
       },
       {
-        match: ['dessert', 'desserts', 'baking', 'pastry', 'sweet', 'patiserie'],
+        match: ['dessert', 'desserts', 'baking', 'pastry', 'sweet'],
         terms: ['dessert', 'cake', 'chocolate', 'sweet', 'cookies', 'pie', 'pastry', 'baking', 'treat']
       },
       {
-        match: ['side', 'sides', 'salad', 'preserve', 'preserves', 'garnituri', 'conserve'],
-        terms: ['side dish', 'salad', 'preserves', 'pickle', 'jam', 'sauce', 'vegetables']
+        match: ['seasonal', 'season', 'fresh', 'produce'],
+        terms: ['seasonal', 'fresh herbs', 'vegetables', 'produce', 'salad', 'carrot', 'fruit']
       },
       {
         match: ['article', 'articles', 'guide', 'guides', 'tips', 'how-to', 'howto', 'guides'],

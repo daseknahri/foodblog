@@ -10,6 +10,7 @@ if (args.help || args.h) {
 const expectedPosts = optionalNumberArg('expected-posts');
 const expectedRecipes = optionalNumberArg('expected-recipes');
 const expectedArticles = optionalNumberArg('expected-articles');
+const siteProfile = JSON.parse(fs.readFileSync('content/site-profile.json', 'utf8'));
 const posts = JSON.parse(fs.readFileSync('content/posts.json', 'utf8'));
 const pages = JSON.parse(fs.readFileSync('content/pages.json', 'utf8'));
 const categories = JSON.parse(fs.readFileSync('content/categories.json', 'utf8'));
@@ -22,6 +23,15 @@ const seoTitles = new Set();
 const categorySlugs = new Set(categories.map((category) => category.slug));
 const imagePlanBySlug = new Map();
 const pageSlugs = new Set(pages.map((page) => page.slug));
+
+function profileValue(path) {
+  let value = siteProfile;
+  for (const key of path) {
+    if (!value || typeof value !== 'object' || !(key in value)) return '';
+    value = value[key];
+  }
+  return value;
+}
 
 function printHelp() {
   console.log(`Usage:
@@ -80,6 +90,32 @@ function hasAnyPage(...candidates) {
 
 function countPostsByCategory(...candidates) {
   return posts.filter((post) => candidates.includes(post.category)).length;
+}
+
+for (const path of [
+  ['brand', 'name'],
+  ['brand', 'tagline'],
+  ['brand', 'description'],
+  ['brand', 'site_email'],
+  ['locales', 'public'],
+  ['locales', 'admin'],
+  ['writer', 'name'],
+  ['writer', 'email'],
+  ['writer', 'bio'],
+]) {
+  if (!String(profileValue(path) || '').trim()) failures.push(`Missing site profile value: ${path.join('.')}`);
+}
+
+if (profileValue(['locales', 'admin']) !== 'en_US') failures.push('Site profile locales.admin must be en_US.');
+if (profileValue(['locales', 'force_admin']) !== true) failures.push('Site profile locales.force_admin must be true.');
+
+for (const key of ['home', 'recipes', 'guides', 'about', 'author', 'privacy', 'cookies', 'advertising', 'editorial', 'terms', 'disclaimer']) {
+  const slug = String(profileValue(['slugs', key]) || '').trim();
+  if (!slug) {
+    failures.push(`Missing site profile slug: ${key}`);
+  } else if (!pageSlugs.has(slug)) {
+    failures.push(`Site profile slug does not exist in content/pages.json: ${key}=${slug}`);
+  }
 }
 
 for (const post of posts) {

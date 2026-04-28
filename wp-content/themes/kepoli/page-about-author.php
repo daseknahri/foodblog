@@ -5,7 +5,7 @@
 get_header();
 $writer_name = kepoli_writer_name();
 $writer_email = kepoli_writer_email();
-$site_name = get_bloginfo('name') ?: 'kuchniatwist';
+$site_name = kepoli_site_name();
 $gravatar_profile_url = 'https://gravatar.com/isalunemerovik';
 ?>
 <section class="section">

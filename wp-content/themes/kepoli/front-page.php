@@ -17,6 +17,11 @@ $featured_article = kepoli_latest_post_by_kind('article');
 $recently_touched_articles = kepoli_recently_touched_posts_by_kind('article', 3, $featured_article ? [$featured_article->ID] : []);
 $writer_name = kepoli_writer_name();
 $site_name = kepoli_site_name();
+$front_page_content = '';
+$front_page_id = get_queried_object_id();
+if ($front_page_id) {
+    $front_page_content = trim((string) apply_filters('the_content', (string) get_post_field('post_content', $front_page_id)));
+}
 
 $recipe_list = new WP_Query([
     'post_type' => 'post',
@@ -38,13 +43,21 @@ $article_list = new WP_Query([
     <img class="home-hero__image" src="<?php echo esc_url($hero_image); ?>" alt=""<?php echo kepoli_asset_dimension_attributes('hero-homepage'); ?><?php echo $hero_srcset !== '' ? ' srcset="' . esc_attr($hero_srcset) . '" sizes="' . esc_attr($hero_sizes) . '"' : ''; ?> fetchpriority="high" loading="eager" decoding="async">
     <div class="home-hero__inner">
         <p class="eyebrow"><?php echo esc_html($site_name); ?></p>
-        <h1><?php echo esc_html(kepoli_ui_text('Retete romanesti si ghiduri pentru gatit acasa.', 'Recipes and guides for better home cooking.')); ?></h1>
-        <p><?php echo esc_html(kepoli_ui_text('Pagini clare, imagini utile si explicatii practice pentru cititorii care ajung direct din cautare, recomandari sau social.', 'Clear pages, useful images, and practical explanations for readers arriving from search, recommendations, or social.')); ?></p>
+        <h1><?php echo esc_html((string) kepoli_profile_value(['brand', 'tagline'], kepoli_ui_text('Retete pentru acasa si ghiduri practice.', 'Recipes and guides for better home cooking.'))); ?></h1>
+        <p><?php echo esc_html(kepoli_brand_description()); ?></p>
         <div class="button-row">
             <a class="button" href="<?php echo esc_url(kepoli_recipes_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Vezi retetele', 'View recipes')); ?></a>
         </div>
     </div>
 </section>
+
+<?php if ($front_page_content !== '') : ?>
+    <section class="section section--tight home-copy defer-section">
+        <div class="entry-content entry-content--page">
+            <?php echo $front_page_content; ?>
+        </div>
+    </section>
+<?php endif; ?>
 
 <section class="section section--tight home-proof defer-section">
     <div class="section__header section__header--compact">

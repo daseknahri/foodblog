@@ -17,7 +17,8 @@ function kepoli_seed_env(string $key, string $default = ''): string
 
 function kepoli_seed_public_contact_email(): string
 {
-    $email = sanitize_email(kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+    $profile = kepoli_seed_current_site_profile();
+    $email = sanitize_email((string) kepoli_seed_profile_value($profile, ['brand', 'site_email'], kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl')));
     $site_url = kepoli_seed_env('SITE_URL', home_url('/'));
     $host = wp_parse_url($site_url, PHP_URL_HOST);
     $host = is_string($host) ? preg_replace('/^www\./', '', strtolower($host)) : '';
@@ -49,9 +50,31 @@ function kepoli_seed_slug_to_title(string $slug): string
     return ucwords(str_replace('-', ' ', $slug));
 }
 
+function kepoli_seed_current_site_profile(): array
+{
+    $profile = $GLOBALS['kepoli_seed_site_profile'] ?? [];
+    return is_array($profile) ? $profile : [];
+}
+
+function kepoli_seed_profile_value(array $profile, array $path, $default = '')
+{
+    $value = $profile;
+    foreach ($path as $key) {
+        if (!is_array($value) || !array_key_exists($key, $value)) {
+            return $default;
+        }
+
+        $value = $value[$key];
+    }
+
+    return $value;
+}
+
 function kepoli_seed_is_english(): bool
 {
-    return str_starts_with(strtolower(kepoli_seed_env('WP_LOCALE', 'ro_RO')), 'en');
+    $profile = kepoli_seed_current_site_profile();
+    $locale = (string) kepoli_seed_profile_value($profile, ['locales', 'public'], kepoli_seed_env('WP_LOCALE', 'en_US'));
+    return str_starts_with(strtolower($locale), 'en');
 }
 
 function kepoli_seed_ui(string $ro, string $en): string
@@ -61,7 +84,9 @@ function kepoli_seed_ui(string $ro, string $en): string
 
 function kepoli_seed_admin_locale(): string
 {
-    return kepoli_seed_env('WP_ADMIN_LOCALE', 'en_US');
+    $profile = kepoli_seed_current_site_profile();
+    $locale = (string) kepoli_seed_profile_value($profile, ['locales', 'admin'], kepoli_seed_env('WP_ADMIN_LOCALE', 'en_US'));
+    return $locale !== '' ? $locale : 'en_US';
 }
 
 function kepoli_seed_find_page_slug(array $pages, array $candidates): string
@@ -122,7 +147,7 @@ function kepoli_seed_site_about_slug(array $pages): string
         return $slug;
     }
 
-    return kepoli_seed_is_english() ? 'about-kepoli' : 'about-kuchniatwist';
+    return 'about-kuchniatwist';
 }
 
 function kepoli_seed_home_page_slug(array $pages): string
@@ -155,7 +180,7 @@ function kepoli_seed_guides_page_slug(array $pages): string
     return kepoli_seed_is_english() ? 'guides' : 'guides';
 }
 
-function kepoli_seed_site_name(array $pages): string
+function kepoli_seed_legacy_site_name(array $pages): string
 {
     $about_slug = kepoli_seed_site_about_slug($pages);
     $about_title = kepoli_seed_page_title($pages, $about_slug);
@@ -167,13 +192,106 @@ function kepoli_seed_site_name(array $pages): string
     return $name !== '' ? $name : 'Food Blog';
 }
 
+function kepoli_seed_profile_slug(array $profile, string $key, string $fallback): string
+{
+    $slug = sanitize_title((string) kepoli_seed_profile_value($profile, ['slugs', $key], ''));
+    return $slug !== '' ? $slug : $fallback;
+}
+
+function kepoli_seed_site_name(array $pages): string
+{
+    $profile = kepoli_seed_current_site_profile();
+    $name = trim((string) kepoli_seed_profile_value($profile, ['brand', 'name'], ''));
+    return $name !== '' ? $name : kepoli_seed_legacy_site_name($pages);
+}
+
 function kepoli_seed_default_tagline(string $site_name): string
 {
+    $profile = kepoli_seed_current_site_profile();
+    $tagline = trim((string) kepoli_seed_profile_value($profile, ['brand', 'tagline'], ''));
+    if ($tagline !== '') {
+        return $tagline;
+    }
+
     if (kepoli_seed_is_english()) {
         return sprintf('%s publishes home-cooking recipes, food articles, and practical kitchen guides.', $site_name);
     }
 
-    return 'Retete romanesti si articole de bucatarie pentru acasa';
+    return 'Retete pentru acasa, articole culinare si ghiduri practice.';
+}
+
+function kepoli_seed_default_profile_description(string $site_name, bool $is_english): string
+{
+    if ($is_english) {
+        return sprintf('%s publishes practical recipes, food guides, and kitchen articles for home cooks.', $site_name);
+    }
+
+    return sprintf('%s publica retete pentru acasa, articole culinare si ghiduri practice.', $site_name);
+}
+
+function kepoli_seed_normalize_site_profile(array $profile, array $pages): array
+{
+    $public_locale = trim((string) kepoli_seed_profile_value($profile, ['locales', 'public'], kepoli_seed_env('WP_LOCALE', 'en_US')));
+    $public_locale = $public_locale !== '' ? $public_locale : 'en_US';
+    $is_english = str_starts_with(strtolower($public_locale), 'en');
+    $site_name = trim((string) kepoli_seed_profile_value($profile, ['brand', 'name'], kepoli_seed_legacy_site_name($pages)));
+    $site_name = $site_name !== '' ? $site_name : 'Food Blog';
+
+    $defaults = [
+        'brand' => [
+            'name' => $site_name,
+            'tagline' => $is_english
+                ? sprintf('%s publishes home-cooking recipes, food articles, and practical kitchen guides.', $site_name)
+                : 'Retete pentru acasa, articole culinare si ghiduri practice.',
+            'description' => kepoli_seed_default_profile_description($site_name, $is_english),
+            'site_email' => kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl'),
+        ],
+        'locales' => [
+            'public' => $public_locale,
+            'admin' => 'en_US',
+            'force_admin' => true,
+        ],
+        'writer' => [
+            'name' => 'Isalune Merovik',
+            'email' => kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'),
+            'bio' => $is_english
+                ? sprintf('Writes practical recipes and kitchen guides for %s.', $site_name)
+                : sprintf('Scrie retete si ghiduri practice pentru %s.', $site_name),
+        ],
+        'slugs' => [
+            'home' => kepoli_seed_home_page_slug($pages) ?: ($is_english ? 'home' : 'acasa'),
+            'recipes' => kepoli_seed_recipes_page_slug($pages),
+            'guides' => kepoli_seed_guides_page_slug($pages),
+            'about' => kepoli_seed_site_about_slug($pages),
+            'author' => kepoli_seed_author_page_slug($pages),
+            'privacy' => kepoli_seed_find_page_slug($pages, ['politica-de-confidentialitate', 'privacy-policy']) ?: ($is_english ? 'privacy-policy' : 'politica-de-confidentialitate'),
+            'cookies' => kepoli_seed_find_page_slug($pages, ['politica-de-cookies', 'cookie-policy']) ?: ($is_english ? 'cookie-policy' : 'politica-de-cookies'),
+            'advertising' => kepoli_seed_find_page_slug($pages, ['publicitate-si-consimtamant', 'advertising-and-consent']) ?: ($is_english ? 'advertising-and-consent' : 'publicitate-si-consimtamant'),
+            'editorial' => kepoli_seed_find_page_slug($pages, ['politica-editoriala', 'editorial-policy']) ?: ($is_english ? 'editorial-policy' : 'politica-editoriala'),
+            'terms' => kepoli_seed_find_page_slug($pages, ['termeni-si-conditii', 'terms-and-conditions']) ?: ($is_english ? 'terms-and-conditions' : 'termeni-si-conditii'),
+            'disclaimer' => kepoli_seed_find_page_slug($pages, ['disclaimer-culinar', 'culinary-disclaimer']) ?: ($is_english ? 'culinary-disclaimer' : 'disclaimer-culinar'),
+        ],
+    ];
+
+    $normalized = array_replace_recursive($defaults, $profile);
+    $normalized['locales']['admin'] = 'en_US';
+    $normalized['locales']['force_admin'] = true;
+
+    foreach ($normalized['slugs'] as $key => $slug) {
+        $normalized['slugs'][$key] = sanitize_title((string) $slug);
+    }
+
+    return $normalized;
+}
+
+function kepoli_seed_site_profile(string $path, array $pages): array
+{
+    $profile = [];
+    if (is_readable($path)) {
+        $profile = kepoli_seed_json($path);
+    }
+
+    return kepoli_seed_normalize_site_profile($profile, $pages);
 }
 
 function kepoli_seed_format_minutes(int $minutes): string
@@ -204,7 +322,9 @@ function kepoli_seed_format_minutes(int $minutes): string
 
 function kepoli_seed_is_editorial_category_slug(string $slug): bool
 {
-    return in_array($slug, ['guides', 'guides', 'articles'], true)
+    $profile = kepoli_seed_current_site_profile();
+    $guides_slug = sanitize_title((string) kepoli_seed_profile_value($profile, ['slugs', 'guides'], ''));
+    return in_array($slug, array_unique(array_filter(['guides', 'articles', 'articole', $guides_slug])), true)
         || str_contains($slug, 'guide')
         || str_contains($slug, 'article');
 }
@@ -239,6 +359,9 @@ function kepoli_seed_iso_duration(string $value): string
 function kepoli_seed_upsert_page(array $page, int $author_id): int
 {
     $existing = get_page_by_path($page['slug'], OBJECT, 'page');
+    $profile = kepoli_seed_current_site_profile();
+    $site_email = (string) kepoli_seed_profile_value($profile, ['brand', 'site_email'], kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+    $writer_email = (string) kepoli_seed_profile_value($profile, ['writer', 'email'], kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'));
     $postarr = [
         'post_type' => 'page',
         'post_status' => 'publish',
@@ -249,7 +372,7 @@ function kepoli_seed_upsert_page(array $page, int $author_id): int
         'ping_status' => 'closed',
         'post_content' => str_replace(
             ['{{SITE_EMAIL}}', '{{WRITER_EMAIL}}'],
-            [kepoli_seed_public_contact_email(), kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com')],
+            [$site_email, $writer_email],
             $page['content']
         ),
     ];
@@ -289,10 +412,17 @@ function kepoli_seed_ensure_category(array $category): int
     return (int) $term['term_id'];
 }
 
-function kepoli_seed_ensure_author(array $pages, string $site_name): int
+function kepoli_seed_ensure_author(array $pages, string $site_name, array $profile = []): int
 {
-    $email = kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com');
-    $username = 'isalune-merovik';
+    $profile = $profile !== [] ? $profile : kepoli_seed_current_site_profile();
+    $email = (string) kepoli_seed_profile_value($profile, ['writer', 'email'], kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'));
+    $display_name = trim((string) kepoli_seed_profile_value($profile, ['writer', 'name'], 'Isalune Merovik'));
+    $display_name = $display_name !== '' ? $display_name : 'Isalune Merovik';
+    $name_parts = preg_split('/\s+/', $display_name) ?: [];
+    $first_name = (string) ($name_parts[0] ?? $display_name);
+    $last_name = trim(implode(' ', array_slice($name_parts, 1)));
+    $username = sanitize_user(sanitize_title($display_name), true);
+    $username = $username !== '' ? $username : 'site-author';
     $user = get_user_by('email', $email);
 
     if (!$user) {
@@ -307,17 +437,20 @@ function kepoli_seed_ensure_author(array $pages, string $site_name): int
         throw new RuntimeException('Could not create author user.');
     }
 
-    $author_slug = kepoli_seed_author_page_slug($pages);
-    $description = kepoli_seed_is_english()
-        ? sprintf('Author at %s. Writes home-cooking recipes, food guides, and practical kitchen articles.', $site_name)
-        : sprintf('Autoare %s. Scrie retete romanesti, articole culinare si ghiduri practice pentru gatit acasa.', $site_name);
+    $author_slug = kepoli_seed_profile_slug($profile, 'author', kepoli_seed_author_page_slug($pages));
+    $description = trim((string) kepoli_seed_profile_value($profile, ['writer', 'bio'], ''));
+    if ($description === '') {
+        $description = kepoli_seed_is_english()
+            ? sprintf('Author at %s. Writes home-cooking recipes, food guides, and practical kitchen articles.', $site_name)
+            : sprintf('Autoare %s. Scrie retete si ghiduri practice pentru gatit acasa.', $site_name);
+    }
 
     wp_update_user([
         'ID' => $user->ID,
-        'display_name' => 'isalune merovik',
-        'nickname' => 'isalune merovik',
-        'first_name' => 'isalune',
-        'last_name' => 'merovik',
+        'display_name' => $display_name,
+        'nickname' => $display_name,
+        'first_name' => $first_name,
+        'last_name' => $last_name,
         'user_url' => home_url('/' . $author_slug . '/'),
         'description' => $description,
         'role' => 'administrator',
@@ -981,8 +1114,9 @@ function kepoli_seed_article_content(array $post, array $post_ids, array $catego
     $category_id = $category_ids[$post['category']] ?? 0;
     $category_link = $category_id ? get_category_link($category_id) : home_url('/');
     $site_name = kepoli_seed_site_name($pages);
-    $recipes_url = home_url('/' . kepoli_seed_recipes_page_slug($pages) . '/');
-    $guides_url = home_url('/' . kepoli_seed_guides_page_slug($pages) . '/');
+    $profile = kepoli_seed_current_site_profile();
+    $recipes_url = home_url('/' . kepoli_seed_profile_slug($profile, 'recipes', kepoli_seed_recipes_page_slug($pages)) . '/');
+    $guides_url = home_url('/' . kepoli_seed_profile_slug($profile, 'guides', kepoli_seed_guides_page_slug($pages)) . '/');
     $overview_heading = kepoli_seed_ui('Ce gasesti in ghid', 'What this guide helps with');
     $wrapup_heading = kepoli_seed_ui('Ce aplici mai intai', 'What to apply first');
     $related_heading = kepoli_seed_ui('Retete pe acelasi fir', 'Recipes that fit this guide');
@@ -1316,28 +1450,32 @@ kepoli_seed_activate_plugin('kepoli-author-tools/kepoli-author-tools.php');
 
 $categories = kepoli_seed_json('/content/categories.json');
 $pages = kepoli_seed_json('/content/pages.json');
+$site_profile = kepoli_seed_site_profile('/content/site-profile.json', $pages);
+$GLOBALS['kepoli_seed_site_profile'] = $site_profile;
 $posts = kepoli_seed_json('/content/posts.json');
 $image_plan = kepoli_seed_image_plan('/content/image-plan.json');
 $site_name = kepoli_seed_site_name($pages);
-$home_page_slug = kepoli_seed_home_page_slug($pages);
-$recipes_page_slug = kepoli_seed_recipes_page_slug($pages);
-$guides_page_slug = kepoli_seed_guides_page_slug($pages);
-$about_page_slug = kepoli_seed_site_about_slug($pages);
-$author_page_slug = kepoli_seed_author_page_slug($pages);
-$privacy_page_slug = kepoli_seed_find_page_slug($pages, ['politica-de-confidentialitate', 'privacy-policy']);
-$cookies_page_slug = kepoli_seed_find_page_slug($pages, ['politica-de-cookies', 'cookie-policy']);
-$advertising_page_slug = kepoli_seed_find_page_slug($pages, ['publicitate-si-consimtamant', 'advertising-and-consent']);
-$editorial_page_slug = kepoli_seed_find_page_slug($pages, ['politica-editoriala', 'editorial-policy']);
-$terms_page_slug = kepoli_seed_find_page_slug($pages, ['termeni-si-conditii', 'terms-and-conditions']);
-$disclaimer_page_slug = kepoli_seed_find_page_slug($pages, ['disclaimer-culinar', 'culinary-disclaimer']);
+$home_page_slug = kepoli_seed_profile_slug($site_profile, 'home', kepoli_seed_home_page_slug($pages));
+$recipes_page_slug = kepoli_seed_profile_slug($site_profile, 'recipes', kepoli_seed_recipes_page_slug($pages));
+$guides_page_slug = kepoli_seed_profile_slug($site_profile, 'guides', kepoli_seed_guides_page_slug($pages));
+$about_page_slug = kepoli_seed_profile_slug($site_profile, 'about', kepoli_seed_site_about_slug($pages));
+$author_page_slug = kepoli_seed_profile_slug($site_profile, 'author', kepoli_seed_author_page_slug($pages));
+$privacy_page_slug = kepoli_seed_profile_slug($site_profile, 'privacy', kepoli_seed_find_page_slug($pages, ['politica-de-confidentialitate', 'privacy-policy']));
+$cookies_page_slug = kepoli_seed_profile_slug($site_profile, 'cookies', kepoli_seed_find_page_slug($pages, ['politica-de-cookies', 'cookie-policy']));
+$advertising_page_slug = kepoli_seed_profile_slug($site_profile, 'advertising', kepoli_seed_find_page_slug($pages, ['publicitate-si-consimtamant', 'advertising-and-consent']));
+$editorial_page_slug = kepoli_seed_profile_slug($site_profile, 'editorial', kepoli_seed_find_page_slug($pages, ['politica-editoriala', 'editorial-policy']));
+$terms_page_slug = kepoli_seed_profile_slug($site_profile, 'terms', kepoli_seed_find_page_slug($pages, ['termeni-si-conditii', 'terms-and-conditions']));
+$disclaimer_page_slug = kepoli_seed_profile_slug($site_profile, 'disclaimer', kepoli_seed_find_page_slug($pages, ['disclaimer-culinar', 'culinary-disclaimer']));
 
+update_option('kepoli_site_profile', $site_profile);
+update_option('WPLANG', (string) kepoli_seed_profile_value($site_profile, ['locales', 'public'], kepoli_seed_env('WP_LOCALE', 'en_US')));
 update_option('blogname', $site_name);
 update_option('blogdescription', kepoli_seed_default_tagline($site_name));
-update_option('admin_email', kepoli_seed_public_contact_email());
+update_option('admin_email', (string) kepoli_seed_profile_value($site_profile, ['brand', 'site_email'], kepoli_seed_public_contact_email()));
 update_option('blog_public', '1');
-update_option('timezone_string', kepoli_seed_is_english() ? 'Europe/Warsaw' : 'Europe/Bucharest');
-update_option('date_format', kepoli_seed_is_english() ? 'F j, Y' : 'j F Y');
-update_option('time_format', kepoli_seed_is_english() ? 'g:i a' : 'H:i');
+update_option('timezone_string', kepoli_seed_env('TIMEZONE_STRING', kepoli_seed_is_english() ? 'Europe/Warsaw' : 'Europe/Bucharest'));
+update_option('date_format', kepoli_seed_env('DATE_FORMAT', kepoli_seed_is_english() ? 'F j, Y' : 'j F Y'));
+update_option('time_format', kepoli_seed_env('TIME_FORMAT', kepoli_seed_is_english() ? 'g:i a' : 'H:i'));
 update_option('posts_per_page', 9);
 update_option('default_role', 'subscriber');
 update_option('default_comment_status', 'closed');
@@ -1351,7 +1489,7 @@ if ($wp_rewrite instanceof WP_Rewrite) {
     $wp_rewrite->set_permalink_structure('/%category%/%postname%/');
 }
 
-$author_id = kepoli_seed_ensure_author($pages, $site_name);
+$author_id = kepoli_seed_ensure_author($pages, $site_name, $site_profile);
 kepoli_seed_delete_placeholder_posts(array_column($posts, 'slug'));
 
 $category_ids = [];

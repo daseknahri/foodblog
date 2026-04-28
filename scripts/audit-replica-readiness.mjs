@@ -54,12 +54,14 @@ const oldLaunchSlugs = new Set([
 ]);
 
 const env = readEnv('.env.example');
+const siteProfile = readJsonObject('content/site-profile.json');
 const categories = readJsonArray('content/categories.json');
 const pages = readJsonArray('content/pages.json');
 const posts = readJsonArray('content/posts.json');
 const imagePlan = readJsonArray('content/image-plan.json');
 
 checkEnv();
+checkSiteProfile();
 checkPages();
 checkCategories();
 checkPosts();
@@ -198,6 +200,33 @@ function readJsonArray(relativePath) {
   }
 }
 
+function readJsonObject(relativePath) {
+  const content = readFile(relativePath);
+  if (!content) return {};
+
+  try {
+    const value = JSON.parse(content);
+    if (!value || Array.isArray(value) || typeof value !== 'object') {
+      failures.push(`${relativePath} must contain a JSON object.`);
+      return {};
+    }
+
+    return value;
+  } catch (error) {
+    failures.push(`${relativePath} is invalid JSON: ${error.message}`);
+    return {};
+  }
+}
+
+function profileValue(path) {
+  let value = siteProfile;
+  for (const key of path) {
+    if (!value || typeof value !== 'object' || !(key in value)) return '';
+    value = value[key];
+  }
+  return value;
+}
+
 function envValue(key) {
   return String(env.get(key) || '').trim();
 }
@@ -239,9 +268,41 @@ function checkEnv() {
   if (!dbUser || dbUser === 'kepoli') failures.push('WORDPRESS_DB_USER should be changed for the clone.');
   if (!locale) warnings.push('WP_LOCALE is empty; set a real locale such as en_US or ro_RO.');
   if (adminLocale !== 'en_US') warnings.push('Keep WP_ADMIN_LOCALE=en_US so the WordPress admin stays English for beginner publishers.');
+  if (locale && profileValue(['locales', 'public']) && locale !== profileValue(['locales', 'public'])) {
+    failures.push(`WP_LOCALE should match content/site-profile.json locales.public (${profileValue(['locales', 'public'])}).`);
+  }
   if (!canonicalHosts) warnings.push('CANONICAL_REDIRECT_HOSTS is empty; include www/new legacy hosts that should redirect to SITE_URL.');
   if (envValue('ADSENSE_ENABLE') !== '0') warnings.push('Keep ADSENSE_ENABLE=0 until ad approval and consent setup are confirmed.');
   if (envValue('GA_ENABLE') !== '0') warnings.push('Keep GA_ENABLE=0 until consent setup is live and tested.');
+}
+
+function checkSiteProfile() {
+  for (const path of [
+    ['brand', 'name'],
+    ['brand', 'tagline'],
+    ['brand', 'description'],
+    ['brand', 'site_email'],
+    ['locales', 'public'],
+    ['locales', 'admin'],
+    ['writer', 'name'],
+    ['writer', 'email'],
+    ['writer', 'bio'],
+  ]) {
+    if (!String(profileValue(path) || '').trim()) failures.push(`Missing site profile value: ${path.join('.')}`);
+  }
+
+  if (profileValue(['locales', 'admin']) !== 'en_US') failures.push('content/site-profile.json must keep locales.admin=en_US.');
+  if (profileValue(['locales', 'force_admin']) !== true) failures.push('content/site-profile.json must keep locales.force_admin=true.');
+
+  const slugs = pageSlugs();
+  for (const key of ['home', 'recipes', 'guides', 'about', 'author', 'privacy', 'cookies', 'advertising', 'editorial', 'terms', 'disclaimer']) {
+    const slug = String(profileValue(['slugs', key]) || '').trim();
+    if (!slug) {
+      failures.push(`content/site-profile.json is missing slugs.${key}.`);
+    } else if (!slugs.has(slug)) {
+      failures.push(`content/site-profile.json slugs.${key} does not exist in content/pages.json: ${slug}`);
+    }
+  }
 }
 
 function checkPages() {

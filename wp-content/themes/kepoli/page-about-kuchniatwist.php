@@ -19,23 +19,6 @@ $site_name = kepoli_site_name();
                     <?php the_content(); ?>
                 </div>
                 <?php echo kepoli_newsletter_cta('newsletter-cta--compact newsletter-cta--about'); ?>
-                <div class="page-grid">
-                    <section class="page-panel">
-                        <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Ce publicam', 'What we publish')); ?></p>
-                        <h2><?php echo esc_html(kepoli_ui_text('Retete si articole pentru bucataria de acasa', 'Recipes and articles for everyday home cooking')); ?></h2>
-                        <p><?php echo esc_html(sprintf(kepoli_ui_text('%s combina retete romanesti, idei de sezon si ghiduri utile pentru cititorii care vor sa gateasca mai clar, mai linistit si cu mai putina risipa.', '%s combines practical recipes, seasonal ideas, and useful kitchen guides for readers who want to cook with more clarity and less waste.'), $site_name)); ?></p>
-                    </section>
-                    <section class="page-panel">
-                        <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Cum lucram', 'How we work')); ?></p>
-                        <h2><?php echo esc_html(kepoli_ui_text('Claritate, verificare si ajustari practice', 'Clarity, review, and practical adjustments')); ?></h2>
-                        <p><?php echo esc_html(kepoli_ui_text('Textele sunt scrise pentru uz casnic, cu pasi explicati, timpi orientativi si note despre gust, textura si pastrare. Cand o informatie trebuie corectata sau clarificata, actualizam continutul.', 'Our content is written for home use, with clear steps, realistic timings, and notes about taste, texture, and storage. When a detail needs correction or clarification, we update the article.')); ?></p>
-                    </section>
-                    <section class="page-panel">
-                        <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Corecturi', 'Corrections')); ?></p>
-                        <h2><?php echo esc_html(kepoli_ui_text('Ne poti scrie direct', 'Write to us directly')); ?></h2>
-                        <p><?php echo esc_html(sprintf(kepoli_ui_text('Pentru observatii, corecturi sau intrebari editoriale, foloseste pagina de contact sau scrie direct autoarei. %s trateaza corecturile ca parte normala dintr-o publicatie utila si responsabila.', 'For corrections, questions, or editorial feedback, use the contact page or write directly to the author. %s treats corrections as a normal part of running a useful and responsible publication.'), $site_name)); ?></p>
-                    </section>
-                </div>
                 <div class="page-links">
                     <a href="<?php echo esc_url(kepoli_author_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Despre autoare', 'About the author')); ?></a>
                     <a href="<?php echo esc_url(kepoli_contact_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Contact', 'Contact')); ?></a>

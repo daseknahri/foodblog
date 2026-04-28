@@ -12,7 +12,7 @@ cd /var/www/html
 : "${WP_ADMIN_EMAIL:?WP_ADMIN_EMAIL is required}"
 
 SITE_URL="${SITE_URL:-https://kuchniatwist.pl}"
-WP_LOCALE="${WP_LOCALE:-ro_RO}"
+WP_LOCALE="${WP_LOCALE:-en_US}"
 WP_ADMIN_LOCALE="${WP_ADMIN_LOCALE:-en_US}"
 SITE_EMAIL="${SITE_EMAIL:-contact@kuchniatwist.pl}"
 SITE_NAME="${SITE_NAME:-}"
@@ -36,7 +36,7 @@ case "$WP_LOCALE" in
     TIME_FORMAT="${TIME_FORMAT:-g:i a}"
     ;;
   *)
-    SITE_TAGLINE="${SITE_TAGLINE:-Retete romanesti si articole de bucatarie pentru acasa}"
+    SITE_TAGLINE="${SITE_TAGLINE:-Retete pentru acasa, articole culinare si ghiduri practice}"
     TIMEZONE_STRING="${TIMEZONE_STRING:-Europe/Bucharest}"
     DATE_FORMAT="${DATE_FORMAT:-j F Y}"
     TIME_FORMAT="${TIME_FORMAT:-H:i}"

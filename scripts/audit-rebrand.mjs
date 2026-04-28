@@ -51,6 +51,7 @@ const scanRoots = [
   'docker-compose.yml',
   'README.md',
   'docs',
+  'content/site-profile.json',
   'content/categories.json',
   'content/pages.json',
   'content/posts.json',

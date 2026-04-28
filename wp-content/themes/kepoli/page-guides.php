@@ -8,12 +8,16 @@ $featured_article = kepoli_latest_post_by_kind('article');
 $editorial_paths = kepoli_editorial_paths();
 $article_meta_items = kepoli_article_collection_meta_items(kepoli_post_count_by_kind('article'));
 $recently_touched_articles = kepoli_recently_touched_posts_by_kind('article', 3, $featured_article ? [$featured_article->ID] : []);
+$page_id = get_queried_object_id();
+$page_title = $page_id ? get_the_title($page_id) : '';
+$page_content = $page_id ? trim((string) apply_filters('the_content', (string) get_post_field('post_content', $page_id))) : '';
+$page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_content), 28, '') : '';
 ?>
 <header class="archive-header">
     <?php kepoli_breadcrumbs(); ?>
     <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Articole', 'Guides')); ?></p>
-    <h1><?php echo esc_html(kepoli_ui_text('Ghiduri de bucatarie', 'Kitchen guides')); ?></h1>
-    <p><?php echo esc_html(kepoli_ui_text('Organizare, ingrediente, tehnici si idei pentru mese romanesti bine asezate.', 'Organization, ingredients, techniques, and practical ideas for better home cooking.')); ?></p>
+    <h1><?php echo esc_html($page_title !== '' ? $page_title : kepoli_ui_text('Ghiduri de bucatarie', 'Kitchen guides')); ?></h1>
+    <p><?php echo esc_html($page_intro !== '' ? $page_intro : kepoli_ui_text('Organizare, ingrediente, tehnici si idei practice pentru gatit mai clar acasa.', 'Organization, ingredients, techniques, and practical ideas for better home cooking.')); ?></p>
     <?php if ($article_meta_items) : ?>
         <div class="meta-strip">
             <?php foreach ($article_meta_items as $item) : ?>
@@ -23,6 +27,13 @@ $recently_touched_articles = kepoli_recently_touched_posts_by_kind('article', 3,
     <?php endif; ?>
     <?php kepoli_render_reader_trust_links(); ?>
 </header>
+<?php if ($page_content !== '') : ?>
+    <section class="section section--tight">
+        <div class="entry-content entry-content--page">
+            <?php echo $page_content; ?>
+        </div>
+    </section>
+<?php endif; ?>
 <?php if ($featured_article) : ?>
     <section class="section section--tight">
         <div class="section__header section__header--compact">

@@ -28,15 +28,24 @@ const siteUrl = normalizeSiteUrl(domain);
 const hostname = new URL(siteUrl).hostname;
 const projectSlug = slugify(args['project-slug'] || brand);
 const projectUnderscore = projectSlug.replace(/-/g, '_');
-const writerSlug = slugify(args['writer-slug'] || writerName);
 const writerParts = splitName(writerName);
 const language = resolveLanguage(args.language || args.lang || '', args['wp-locale']);
 const wpLocale = args['wp-locale'] || (language === 'en' ? 'en_US' : 'ro_RO');
-const wpAdminLocale = args['wp-admin-locale'] || 'en_US';
+const wpAdminLocale = 'en_US';
+const homeSlug = slugify(args['home-slug'] || defaultHomeSlug(language));
 const authorSlug = slugify(args['author-slug'] || defaultAuthorSlug(language));
 const aboutSlug = slugify(args['about-slug'] || defaultAboutSlug(language, projectSlug));
 const recipesSlug = slugify(args['recipes-slug'] || defaultRecipesSlug(language));
 const guidesSlug = slugify(args['guides-slug'] || defaultGuidesSlug(language));
+const privacySlug = slugify(args['privacy-slug'] || defaultPrivacySlug(language));
+const cookiesSlug = slugify(args['cookies-slug'] || defaultCookiesSlug(language));
+const advertisingSlug = slugify(args['advertising-slug'] || defaultAdvertisingSlug(language));
+const editorialSlug = slugify(args['editorial-slug'] || defaultEditorialSlug(language));
+const termsSlug = slugify(args['terms-slug'] || defaultTermsSlug(language));
+const disclaimerSlug = slugify(args['disclaimer-slug'] || defaultDisclaimerSlug(language));
+const brandTagline = args['brand-tagline'] || defaultBrandTagline(language, brand);
+const brandDescription = args['brand-description'] || defaultBrandDescription(language, brand);
+const writerBio = args['writer-bio'] || defaultWriterBio(language, brand, writerName);
 const canonicalHosts = args['canonical-hosts'] || `www.${hostname}`;
 const adsenseClientId = args['adsense-client-id'] || '';
 const adsensePubId = args['adsense-pub-id'] || '';
@@ -48,12 +57,11 @@ const themeDescription = args['theme-description']
 
 const operations = [];
 
+updateSiteProfile();
 updateEnvExample();
 updateDockerCompose();
 updateThemeHeader();
 updatePublicIdentityFiles();
-updateSeedAuthor();
-renamePageTemplates();
 
 if (failures.length > 0) {
   console.error('Replica preparation could not continue:');
@@ -88,14 +96,24 @@ Required:
 
 Optional:
   --language          Language preset: en or ro. Defaults from --wp-locale, otherwise ro.
+  --brand-tagline     Public tagline written to content/site-profile.json
+  --brand-description Public brand description written to content/site-profile.json
+  --writer-bio        Public writer bio written to content/site-profile.json
   --project-slug      Internal project slug for Docker image, DB, and volume names
+  --home-slug         Home page slug, default: home or acasa
   --canonical-hosts   Extra hosts that should redirect to the canonical domain
   --about-slug        About-site page slug, default: about-{project-slug} for English or despre-{project-slug} for Romanian
   --author-slug       Author page slug, default: about-author for English or despre-autor for Romanian
   --recipes-slug      Recipes landing page slug, default: recipes or retete
   --guides-slug       Guides/articles landing page slug, default: guides or articole
-  --wp-locale         WordPress locale, default: en_US for English or ro_RO for Romanian
-  --wp-admin-locale   WordPress admin user locale, default: en_US
+  --privacy-slug      Privacy page slug, default: privacy-policy or politica-de-confidentialitate
+  --cookies-slug      Cookie page slug, default: cookie-policy or politica-de-cookies
+  --advertising-slug  Advertising/consent page slug
+  --editorial-slug    Editorial policy page slug
+  --terms-slug        Terms page slug
+  --disclaimer-slug   Culinary disclaimer page slug
+  --wp-locale         WordPress public locale, default: en_US for English or ro_RO for Romanian
+  --wp-admin-locale   Deprecated. Admin locale is always forced to en_US
   --adsense-client-id AdSense client ID, usually blank until the new site is ready
   --adsense-pub-id    AdSense publisher ID, usually blank until the new site is ready
   --ga-measurement-id GA4 measurement ID, usually blank until consent is ready
@@ -176,6 +194,10 @@ function defaultAuthorSlug(languageCode) {
   return languageCode === 'en' ? 'about-author' : 'despre-autor';
 }
 
+function defaultHomeSlug(languageCode) {
+  return languageCode === 'en' ? 'home' : 'acasa';
+}
+
 function defaultAboutSlug(languageCode, slug) {
   return languageCode === 'en' ? `about-${slug}` : `despre-${slug}`;
 }
@@ -186,6 +208,48 @@ function defaultRecipesSlug(languageCode) {
 
 function defaultGuidesSlug(languageCode) {
   return languageCode === 'en' ? 'guides' : 'articole';
+}
+
+function defaultPrivacySlug(languageCode) {
+  return languageCode === 'en' ? 'privacy-policy' : 'politica-de-confidentialitate';
+}
+
+function defaultCookiesSlug(languageCode) {
+  return languageCode === 'en' ? 'cookie-policy' : 'politica-de-cookies';
+}
+
+function defaultAdvertisingSlug(languageCode) {
+  return languageCode === 'en' ? 'advertising-and-consent' : 'publicitate-si-consimtamant';
+}
+
+function defaultEditorialSlug(languageCode) {
+  return languageCode === 'en' ? 'editorial-policy' : 'politica-editoriala';
+}
+
+function defaultTermsSlug(languageCode) {
+  return languageCode === 'en' ? 'terms-and-conditions' : 'termeni-si-conditii';
+}
+
+function defaultDisclaimerSlug(languageCode) {
+  return languageCode === 'en' ? 'culinary-disclaimer' : 'disclaimer-culinar';
+}
+
+function defaultBrandTagline(languageCode, siteName) {
+  return languageCode === 'en'
+    ? `${siteName} shares practical recipes and kitchen guides for home cooks.`
+    : `${siteName} publica retete pentru acasa si ghiduri practice de bucatarie.`;
+}
+
+function defaultBrandDescription(languageCode, siteName) {
+  return languageCode === 'en'
+    ? `${siteName} publishes recipes, food guides, and practical kitchen notes for readers who cook at home.`
+    : `${siteName} publica retete, articole culinare si ghiduri practice pentru cititori care gatesc acasa.`;
+}
+
+function defaultWriterBio(languageCode, siteName, authorName) {
+  return languageCode === 'en'
+    ? `${authorName} writes practical recipes and kitchen guides for ${siteName}.`
+    : `${authorName} scrie retete si ghiduri practice pentru ${siteName}.`;
 }
 
 function filePath(relativePath) {
@@ -209,6 +273,48 @@ function writeFile(relativePath, content, label) {
 
   operations.push(label || `Updated ${relativePath}`);
   if (write) fs.writeFileSync(absolutePath, content);
+}
+
+function writeJsonFile(relativePath, value, label) {
+  writeFile(relativePath, `${JSON.stringify(value, null, 2)}\n`, label);
+}
+
+function buildSiteProfile() {
+  return {
+    brand: {
+      name: brand,
+      tagline: brandTagline,
+      description: brandDescription,
+      site_email: siteEmail,
+    },
+    locales: {
+      public: wpLocale,
+      admin: 'en_US',
+      force_admin: true,
+    },
+    writer: {
+      name: writerName,
+      email: writerEmail,
+      bio: writerBio,
+    },
+    slugs: {
+      home: homeSlug,
+      recipes: recipesSlug,
+      guides: guidesSlug,
+      about: aboutSlug,
+      author: authorSlug,
+      privacy: privacySlug,
+      cookies: cookiesSlug,
+      advertising: advertisingSlug,
+      editorial: editorialSlug,
+      terms: termsSlug,
+      disclaimer: disclaimerSlug,
+    },
+  };
+}
+
+function updateSiteProfile() {
+  writeJsonFile('content/site-profile.json', buildSiteProfile(), 'Updated content/site-profile.json for public identity and locales');
 }
 
 function updateEnvExample() {
@@ -306,6 +412,10 @@ function updatePublicIdentityFiles() {
     'wp-content/themes/kepoli/archive.php',
     'wp-content/themes/kepoli/index.php',
     'wp-content/themes/kepoli/page.php',
+    'wp-content/themes/kepoli/page-about-kuchniatwist.php',
+    'wp-content/themes/kepoli/page-about-author.php',
+    'wp-content/themes/kepoli/page-recipes.php',
+    'wp-content/themes/kepoli/page-guides.php',
     'wp-content/themes/kepoli/page-despre-kepoli.php',
     'wp-content/themes/kepoli/page-despre-autor.php',
     'wp-content/themes/kepoli/page-retete.php',
@@ -346,44 +456,18 @@ function replaceIdentity(value) {
     .replace(/Isalune Merovik/g, writerName)
     .replace(/Isalune/g, writerParts.first)
     .replace(/Merovik/g, writerParts.last)
+    .replace(/about-kuchniatwist/g, aboutSlug)
+    .replace(/about-author/g, authorSlug)
+    .replace(/privacy-policy/g, privacySlug)
+    .replace(/cookie-policy/g, cookiesSlug)
+    .replace(/advertising-and-consent/g, advertisingSlug)
+    .replace(/editorial-policy/g, editorialSlug)
+    .replace(/terms-and-conditions/g, termsSlug)
+    .replace(/culinary-disclaimer/g, disclaimerSlug)
     .replace(/despre-kepoli/g, aboutSlug)
     .replace(/despre-autor/g, authorSlug)
     .replace(/\/retete\//g, `/${recipesSlug}/`)
     .replace(/\/articole\//g, `/${guidesSlug}/`)
     .replace(/(['"])retete\1/g, `$1${recipesSlug}$1`)
     .replace(/(['"])articole\1/g, `$1${guidesSlug}$1`);
-}
-
-function updateSeedAuthor() {
-  const relativePath = 'seed/bootstrap.php';
-  let seed = readFile(relativePath);
-  if (!seed) return;
-
-  seed = replaceIdentity(seed)
-    .replace(/\$username = '[^']+';/, `$username = '${writerSlug}';`)
-    .replace(/'display_name' => '[^']+',/, `'display_name' => '${writerName}',`)
-    .replace(/'nickname' => '[^']+',/, `'nickname' => '${writerName}',`)
-    .replace(/'first_name' => '[^']+',/, `'first_name' => '${writerParts.first}',`)
-    .replace(/'last_name' => '[^']*',/, `'last_name' => '${writerParts.last}',`);
-
-  writeFile(relativePath, seed, 'Updated seeded writer identity');
-}
-
-function renamePageTemplates() {
-  renamePageTemplate('wp-content/themes/kepoli/page-despre-kepoli.php', `wp-content/themes/kepoli/page-${aboutSlug}.php`);
-  renamePageTemplate('wp-content/themes/kepoli/page-despre-autor.php', `wp-content/themes/kepoli/page-${authorSlug}.php`);
-  renamePageTemplate('wp-content/themes/kepoli/page-retete.php', `wp-content/themes/kepoli/page-${recipesSlug}.php`);
-  renamePageTemplate('wp-content/themes/kepoli/page-articole.php', `wp-content/themes/kepoli/page-${guidesSlug}.php`);
-}
-
-function renamePageTemplate(oldRelativePath, newRelativePath) {
-  if (oldRelativePath === newRelativePath) return;
-
-  const oldPath = filePath(oldRelativePath);
-  const newPath = filePath(newRelativePath);
-
-  if (!fs.existsSync(oldPath) || fs.existsSync(newPath)) return;
-
-  operations.push(`Renamed ${oldRelativePath} to ${newRelativePath}`);
-  if (write) fs.renameSync(oldPath, newPath);
 }

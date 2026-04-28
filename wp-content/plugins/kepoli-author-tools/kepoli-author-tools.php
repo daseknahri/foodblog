@@ -70,25 +70,115 @@ final class kuchniatwist_Author_Tools
     ];
     private static $is_updating_post = false;
 
+    private static function site_profile(): array
+    {
+        static $profile = null;
+
+        if ($profile !== null) {
+            return $profile;
+        }
+
+        $public_locale = (string) get_option('WPLANG');
+        if ($public_locale === '') {
+            $public_locale = 'en_US';
+        }
+
+        $default = [
+            'brand' => [
+                'name' => get_bloginfo('name') ?: 'Food Blog',
+                'site_email' => get_option('admin_email') ?: 'contact@example.com',
+            ],
+            'locales' => [
+                'public' => $public_locale,
+                'admin' => 'en_US',
+                'force_admin' => true,
+            ],
+            'writer' => [
+                'name' => '',
+                'email' => '',
+                'bio' => '',
+            ],
+            'slugs' => [],
+        ];
+
+        $stored = get_option('kepoli_site_profile');
+        $profile = array_replace_recursive($default, is_array($stored) ? $stored : []);
+        $profile['locales']['admin'] = 'en_US';
+        $profile['locales']['force_admin'] = true;
+
+        return $profile;
+    }
+
+    private static function profile_value(array $path, $default = '')
+    {
+        $value = self::site_profile();
+        foreach ($path as $key) {
+            if (!is_array($value) || !array_key_exists($key, $value)) {
+                return $default;
+            }
+
+            $value = $value[$key];
+        }
+
+        return $value;
+    }
+
+    private static function public_locale(): string
+    {
+        $locale = trim((string) self::profile_value(['locales', 'public'], get_option('WPLANG') ?: 'en_US'));
+        return $locale !== '' ? $locale : 'en_US';
+    }
+
+    private static function admin_locale(): string
+    {
+        $locale = trim((string) self::profile_value(['locales', 'admin'], 'en_US'));
+        return $locale !== '' ? $locale : 'en_US';
+    }
+
+    private static function locale_is_english(string $locale): bool
+    {
+        return str_starts_with(strtolower($locale), 'en');
+    }
+
+    private static function public_is_english(): bool
+    {
+        return self::locale_is_english(self::public_locale());
+    }
+
+    private static function admin_is_english(): bool
+    {
+        return self::locale_is_english(self::admin_locale());
+    }
+
     private static function is_english(): bool
     {
-        return str_starts_with(strtolower((string) get_bloginfo('language')), 'en');
+        return self::public_is_english();
+    }
+
+    private static function admin_ui_text(string $ro, string $en): string
+    {
+        return self::admin_is_english() ? $en : $ro;
+    }
+
+    private static function public_content_text(string $ro, string $en): string
+    {
+        return self::public_is_english() ? $en : $ro;
     }
 
     private static function ui_text(string $ro, string $en): string
     {
-        unset($ro);
-        return $en;
+        return self::admin_ui_text($ro, $en);
     }
 
     private static function content_text(string $ro, string $en): string
     {
-        return self::is_english() ? $en : $ro;
+        return self::public_content_text($ro, $en);
     }
 
     private static function site_name(): string
     {
-        return get_bloginfo('name') ?: 'Food Blog';
+        $name = trim((string) self::profile_value(['brand', 'name'], ''));
+        return $name !== '' ? $name : (get_bloginfo('name') ?: 'Food Blog');
     }
 
     public static function init(): void
@@ -164,7 +254,9 @@ final class kuchniatwist_Author_Tools
             wp_localize_script('kepoli-author-tools-admin', 'kepoliAuthorTools', [
                 'currentPostId' => self::current_post_id(),
                 'siteName' => self::site_name(),
-                'isEnglish' => self::is_english(),
+                'isEnglish' => self::public_is_english(),
+                'adminIsEnglish' => self::admin_is_english(),
+                'publicIsEnglish' => self::public_is_english(),
                 'relatedPosts' => self::related_posts_payload(self::current_post_id()),
                 'categories' => self::category_payload(),
                 'strings' => [
@@ -353,11 +445,11 @@ final class kuchniatwist_Author_Tools
                 <div class="kepoli-post-setup__grid">
                     <label>
                         <span><?php echo esc_html(self::ui_text('Sluguri retete recomandate', 'Related recipe slugs')); ?></span>
-                        <textarea name="kepoli_related_recipe_slugs" rows="3" placeholder="sarmale-in-foi-de-varza, ciorba-radauteana"><?php echo esc_textarea($related_recipes); ?></textarea>
+                        <textarea name="kepoli_related_recipe_slugs" rows="3" placeholder="lemon-herb-chicken-tray-bake, creamy-tomato-spinach-pasta"><?php echo esc_textarea($related_recipes); ?></textarea>
                     </label>
                     <label>
                         <span><?php echo esc_html(self::ui_text('Sluguri articole recomandate', 'Related article slugs')); ?></span>
-                        <textarea name="kepoli_related_article_slugs" rows="3" placeholder="ghidul-camarii-romanesti"><?php echo esc_textarea($related_articles); ?></textarea>
+                        <textarea name="kepoli_related_article_slugs" rows="3" placeholder="how-to-plan-weeknight-dinners, pantry-staples-for-fast-meals"><?php echo esc_textarea($related_articles); ?></textarea>
                     </label>
                 </div>
             </details>
@@ -2021,7 +2113,7 @@ final class kuchniatwist_Author_Tools
     private static function primary_category_name(int $post_id): string
     {
         $categories = get_the_category($post_id);
-        return !empty($categories) ? $categories[0]->name : 'Retete romanesti';
+        return !empty($categories) ? $categories[0]->name : self::content_text('Retete', 'Recipes');
     }
 
     private static function primary_category_slug(int $post_id): string
