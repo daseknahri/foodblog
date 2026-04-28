@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Food Blog Author Tools
  * Description: Simplifies the post editor with split tools, excerpt and SEO helpers, internal-link suggestions, and featured-image metadata.
- * Version: 1.9.0
+ * Version: 1.9.1
  * Author: Site tools
  * Text Domain: kepoli-author-tools
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class Food_Blog_Author_Tools
 {
-    private const VERSION = '1.9.0';
+    private const VERSION = '1.9.1';
     private const AUTO_INTERNAL_LINKS_START = '<!-- kepoli-auto-internal-links:start -->';
     private const AUTO_INTERNAL_LINKS_END = '<!-- kepoli-auto-internal-links:end -->';
     private const AUTO_FAQ_START = '<!-- kepoli-auto-faq:start -->';
@@ -494,6 +494,10 @@ final class Food_Blog_Author_Tools
                     <label>
                         <span><?php echo esc_html(self::ui_text('Gatire minute', 'Cook minutes')); ?></span>
                         <input type="number" min="0" step="1" name="kepoli_recipe_cook_minutes" value="<?php echo esc_attr($recipe['cook_minutes']); ?>">
+                    </label>
+                    <label>
+                        <span><?php echo esc_html(self::ui_text('Total minute', 'Total minutes')); ?></span>
+                        <input type="number" min="0" step="1" name="kepoli_recipe_total_minutes" value="<?php echo esc_attr($recipe['total_minutes']); ?>">
                     </label>
                 </div>
                 <div class="kepoli-post-setup__grid">
@@ -1014,6 +1018,7 @@ final class Food_Blog_Author_Tools
             'servings' => isset($data['servings']) ? (string) $data['servings'] : '',
             'prep_minutes' => self::iso_to_minutes((string) ($data['prep_iso'] ?? '')),
             'cook_minutes' => self::iso_to_minutes((string) ($data['cook_iso'] ?? '')),
+            'total_minutes' => self::iso_to_minutes((string) ($data['total_iso'] ?? '')),
             'ingredients' => isset($data['ingredients']) && is_array($data['ingredients']) ? $data['ingredients'] : [],
             'steps' => isset($data['steps']) && is_array($data['steps']) ? $data['steps'] : [],
         ];
@@ -2093,6 +2098,10 @@ final class Food_Blog_Author_Tools
         $servings = isset($_POST['kepoli_recipe_servings']) ? sanitize_text_field(wp_unslash((string) $_POST['kepoli_recipe_servings'])) : '';
         $prep_minutes = isset($_POST['kepoli_recipe_prep_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_prep_minutes'])) : 0;
         $cook_minutes = isset($_POST['kepoli_recipe_cook_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_cook_minutes'])) : 0;
+        $total_minutes = isset($_POST['kepoli_recipe_total_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_total_minutes'])) : 0;
+        if ($total_minutes <= 0 && ($prep_minutes > 0 || $cook_minutes > 0)) {
+            $total_minutes = $prep_minutes + $cook_minutes;
+        }
 
         if (!$ingredients && !$steps && $servings === '') {
             delete_post_meta($post_id, '_kepoli_recipe_json');
@@ -2104,7 +2113,7 @@ final class Food_Blog_Author_Tools
             'servings' => $servings,
             'prep_iso' => self::minutes_to_iso($prep_minutes),
             'cook_iso' => self::minutes_to_iso($cook_minutes),
-            'total_iso' => self::minutes_to_iso($prep_minutes + $cook_minutes),
+            'total_iso' => self::minutes_to_iso($total_minutes),
             'ingredients' => $ingredients,
             'steps' => $steps,
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));

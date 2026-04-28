@@ -440,14 +440,44 @@
     return title ? shortSentence(title, 65).replace(/\.\.\.$/, '') : '';
   }
 
+  function currentSummaryText() {
+    if (currentKind() === 'recipe') {
+      const introLines = [];
+
+      recipeExtractionLines().some((line) => {
+        if (canonicalRecipeHeading(line) === 'ingredients') {
+          return true;
+        }
+
+        if (canonicalRecipeHeading(line) || looksLikeRecipeMetaLine(line)) {
+          return false;
+        }
+
+        const text = stripRecipeListMarker(line);
+        if (text) {
+          introLines.push(text);
+        }
+
+        return introLines.join(' ').length >= 260;
+      });
+
+      const intro = cleanText(introLines.join(' '));
+      if (intro) {
+        return intro;
+      }
+    }
+
+    return currentContentText();
+  }
+
   function generatedExcerpt() {
-    const text = currentContentText();
+    const text = currentSummaryText();
     const title = currentTitle();
     return shortSentence(text || title, 220);
   }
 
   function generatedMetaDescription() {
-    const text = currentContentText();
+    const text = currentSummaryText();
     const title = currentTitle();
     return shortSentence(text || title, 155);
   }
@@ -772,7 +802,7 @@
   function stripRecipeListMarker(line) {
     return cleanText(line)
       .replace(/^[\s>*•·-]+/, '')
-      .replace(/^\d{1,2}\s*[.)]\s*/, '')
+      .replace(/^\d{1,2}\s*[.)]\s+/, '')
       .replace(/^\([a-z0-9]+\)\s*/i, '')
       .trim();
   }
@@ -835,11 +865,13 @@
     const servingsMatch = compactText.match(/(?:servings?|serves|makes|yield|portii|porții|pentru|aproximativ|cam)\s*:?\s*(\d{1,2}\s*(?:servings?|portions?|people|persons|crepes?|pancakes?|pieces?|burgers?|sandwiches?|cookies?|muffins?|slices?|portii|porții|persoane)?)/i);
     const prepMatch = compactText.match(/(?:prep(?:aration)?(?:\s+time)?|pregatire|preparare|timp\s+de\s+preparare)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
     const cookMatch = compactText.match(/(?:cook(?:ing)?(?:\s+time)?|bake|baking|boil|simmer|gatire|coacere|fierbere|timp\s+de\s+gatire)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
+    const totalMatch = compactText.match(/(?:total(?:\s+time)?|timp\s+total)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
 
     return {
       servings: servingsMatch ? cleanText(servingsMatch[1]) : '',
       prepMinutes: prepMatch ? prepMatch[1] : '',
       cookMinutes: cookMatch ? cookMatch[1] : '',
+      totalMinutes: totalMatch ? totalMatch[1] : '',
       ingredients: extractRecipeSectionFromLines('ingredients'),
       steps: extractRecipeSectionFromLines('steps')
     };
@@ -852,6 +884,7 @@
     setter('input[name="kepoli_recipe_servings"]', data.servings);
     setter('input[name="kepoli_recipe_prep_minutes"]', data.prepMinutes);
     setter('input[name="kepoli_recipe_cook_minutes"]', data.cookMinutes);
+    setter('input[name="kepoli_recipe_total_minutes"]', data.totalMinutes);
     setter('textarea[name="kepoli_recipe_ingredients"]', data.ingredients.join('\n'));
     setter('textarea[name="kepoli_recipe_steps"]', data.steps.join('\n'));
 
@@ -944,7 +977,7 @@
     if (recipeButton) {
       recipeButton.addEventListener('click', () => {
         const data = fillRecipeSchema(false);
-        const hasData = data.ingredients.length || data.steps.length || data.servings || data.prepMinutes || data.cookMinutes;
+        const hasData = data.ingredients.length || data.steps.length || data.servings || data.prepMinutes || data.cookMinutes || data.totalMinutes;
         setStatus(
           hasData
             ? 'Recipe schema was extracted from the content. Review ingredients, steps, and times.'
