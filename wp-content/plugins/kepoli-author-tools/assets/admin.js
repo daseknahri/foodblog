@@ -224,7 +224,13 @@
     }
 
     const field = document.querySelector(selector);
-    if (!field || String(field.value || '').trim()) {
+    if (!field) {
+      return;
+    }
+
+    const currentValue = String(field.value || '').trim();
+    const numericZero = field.type === 'number' && Number.parseFloat(currentValue || '0') === 0;
+    if (currentValue && !numericZero) {
       return;
     }
 
@@ -717,90 +723,125 @@
       .trim();
   }
 
-  function extractRecipeSection(sectionName) {
+  function recipeExtractionText() {
     const html = currentContentHtml();
     if (!html) {
-      return [];
+      return '';
     }
 
     const container = document.createElement('div');
     container.innerHTML = html;
 
-    const sectionHeadings = {
-      ingredients: ['ingrediente', 'ingredients', 'ingredient list'],
-      steps: ['mod de preparare', 'preparare', 'pasi', 'pași']
-    };
+    container.querySelectorAll('br').forEach((node) => {
+      node.replaceWith('\n');
+    });
 
-    const targetHeadings = [...(sectionHeadings[sectionName] || [])];
-    if (sectionName === 'steps') {
-      targetHeadings.push('method', 'instructions', 'directions', 'preparation', 'steps');
+    container.querySelectorAll('li').forEach((node) => {
+      node.prepend('\n- ');
+      node.append('\n');
+    });
+
+    container.querySelectorAll('p, div, section, article, header, footer, ul, ol, blockquote, table, tr').forEach((node) => {
+      node.append('\n');
+    });
+
+    container.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((node) => {
+      node.prepend('\n');
+      node.append('\n');
+    });
+
+    const decoded = container.textContent || html;
+
+    return decoded
+      .replace(/\r/g, '\n')
+      .replace(/\u00a0/g, ' ')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n[ \t]+/g, '\n')
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
+  function recipeExtractionLines() {
+    return recipeExtractionText()
+      .split(/\n+/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+  }
+
+  function stripRecipeListMarker(line) {
+    return cleanText(line)
+      .replace(/^[\s>*•·-]+/, '')
+      .replace(/^\d{1,2}\s*[.)]\s*/, '')
+      .replace(/^\([a-z0-9]+\)\s*/i, '')
+      .trim();
+  }
+
+  function canonicalRecipeHeading(line) {
+    const heading = normalizedHeading(stripRecipeListMarker(line).replace(/:$/, ''));
+
+    if (/^(ingredients?|ingredient list|ingrediente|lista ingrediente)$/.test(heading)) {
+      return 'ingredients';
     }
+
+    if (/^(method|instructions?|directions?|preparation|steps?|mod de preparare|preparare|pasi|instructiuni)$/.test(heading)) {
+      return 'steps';
+    }
+
+    if (/^(serving ideas?|serving notes?|serving|how to serve|cum se serveste|cum servesti|success notes?|tips?|storage|storage and reheating|variations?|common mistakes?|faq|frequently asked questions?|conclusion|notes?|nutrition|nutritional values?|what to know first|pe scurt|cum pastrezi|variante|intrebari frecvente|concluzie)$/.test(heading)) {
+      return 'stop';
+    }
+
+    return '';
+  }
+
+  function looksLikeRecipeMetaLine(line) {
+    return /^(prep|preparation|rest|cook|cooking|bake|baking|total|servings?|serves|makes|yield|difficulty|timp|portii|nivel)\b/i.test(stripRecipeListMarker(line));
+  }
+
+  function extractRecipeSectionFromLines(sectionName) {
     const sectionItems = [];
     let active = false;
 
-    Array.from(container.childNodes).forEach((node) => {
-      if (node.nodeType !== Node.ELEMENT_NODE) {
+    recipeExtractionLines().forEach((line) => {
+      const canonicalHeading = canonicalRecipeHeading(line);
+
+      if (canonicalHeading === sectionName) {
+        active = true;
         return;
       }
 
-      const element = node;
-      const tag = element.tagName.toLowerCase();
-
-      if (/^h[1-6]$/.test(tag)) {
-        const heading = normalizedHeading(element.textContent || '');
-        active = targetHeadings.some((candidate) => heading === normalizedHeading(candidate));
-        return;
-      }
-
-      if (!active) {
-        return;
-      }
-
-      if (/^h[1-6]$/.test(tag)) {
+      if (active && canonicalHeading && canonicalHeading !== sectionName) {
         active = false;
         return;
       }
 
-      if (tag === 'ul' || tag === 'ol') {
-        Array.from(element.querySelectorAll('li')).forEach((item) => {
-          const text = cleanText(item.textContent || '');
-          if (text) {
-            sectionItems.push(text);
-          }
-        });
+      if (!active || looksLikeRecipeMetaLine(line)) {
         return;
       }
 
-      const text = cleanText(element.textContent || '');
-      if (!text) {
-        return;
-      }
-
-      if (sectionName === 'ingredients') {
-        text.split(/\s*[,;\n]\s*/).map((part) => part.trim()).filter(Boolean).forEach((part) => sectionItems.push(part));
-        return;
-      }
-
-      if (sectionName === 'steps') {
+      const text = stripRecipeListMarker(line);
+      if (text) {
         sectionItems.push(text);
       }
     });
 
-    return Array.from(new Set(sectionItems));
+    return Array.from(new Set(sectionItems)).slice(0, sectionName === 'ingredients' ? 40 : 30);
   }
 
   function extractRecipeMetaFromText() {
-    const text = currentContentText();
-    const servingsMatch = text.match(/(?:serves|servings|makes|yield|pentru|aproximativ|cam)?\s*(\d{1,2}\s*(?:servings?|people|persons|portii|porții|persoane))/i);
-    const prepMatch = text.match(/(?:prep|preparation|pregatire|preparare)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes|minute)/i);
-    const cookMatch = text.match(/(?:cook|cooking|bake|baking|boil|simmer|gatire|coacere|fierbere)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes|minute)/i);
+    const text = recipeExtractionText();
+    const compactText = text.replace(/\n+/g, ' ');
+    const servingsMatch = compactText.match(/(?:servings?|serves|makes|yield|portii|porții|pentru|aproximativ|cam)\s*:?\s*(\d{1,2}\s*(?:servings?|portions?|people|persons|crepes?|pancakes?|pieces?|burgers?|sandwiches?|cookies?|muffins?|slices?|portii|porții|persoane)?)/i);
+    const prepMatch = compactText.match(/(?:prep(?:aration)?(?:\s+time)?|pregatire|preparare|timp\s+de\s+preparare)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
+    const cookMatch = compactText.match(/(?:cook(?:ing)?(?:\s+time)?|bake|baking|boil|simmer|gatire|coacere|fierbere|timp\s+de\s+gatire)\s*:?\s*(\d{1,3})\s*(?:min|mins|minutes?|minute)/i);
 
     return {
-      servings: servingsMatch ? servingsMatch[1] : '',
+      servings: servingsMatch ? cleanText(servingsMatch[1]) : '',
       prepMinutes: prepMatch ? prepMatch[1] : '',
       cookMinutes: cookMatch ? cookMatch[1] : '',
-      ingredients: extractRecipeSection('ingredients'),
-      steps: extractRecipeSection('steps')
+      ingredients: extractRecipeSectionFromLines('ingredients'),
+      steps: extractRecipeSectionFromLines('steps')
     };
   }
 
