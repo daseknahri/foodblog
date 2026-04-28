@@ -2,16 +2,22 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
-const args = new Set(process.argv.slice(2));
+const args = parseArgs(process.argv.slice(2));
 
-if (args.has('--help') || args.has('-h')) {
+if (args.help || args.h) {
   console.log(`Usage: node scripts/audit-rebrand.mjs
+node scripts/audit-rebrand.mjs --old-brand kuchniatwist --old-domain kuchniatwist.pl --old-email contact@kuchniatwist.pl
 
-Checks a cloned blog for old Kepoli public identity and launch-content leftovers.
+Checks a cloned blog for old public identity and launch-content leftovers.
 Run it after changing the new site's brand, domain, author, legal pages, posts, and images.
 
 The script ignores internal function/class prefixes such as kepoli_ by default.
-It flags public-facing old names, emails, domains, AdSense IDs, seed content, and old launch slugs.`);
+It flags public-facing old names, emails, domains, AdSense IDs, seed content, and old launch slugs.
+
+Options:
+  --old-brand   Previous public brand to scan for, for example kuchniatwist
+  --old-domain  Previous public domain to scan for, for example kuchniatwist.pl
+  --old-email   Previous public contact email to scan for`);
   process.exit(0);
 }
 
@@ -70,6 +76,18 @@ const identityPatterns = [
   ['old AdSense publisher ID', /pub-8166411196603757/g],
 ];
 
+if (args['old-brand']) {
+  identityPatterns.push(['previous brand name', new RegExp(escapeRegExp(args['old-brand']), 'gi')]);
+}
+
+if (args['old-domain']) {
+  identityPatterns.push(['previous domain', new RegExp(escapeRegExp(args['old-domain']), 'gi')]);
+}
+
+if (args['old-email']) {
+  identityPatterns.push(['previous contact email', new RegExp(escapeRegExp(args['old-email']), 'gi')]);
+}
+
 const infrastructurePatterns = [
   ['old WordPress image tag', /\bkepoli-wordpress\b/i],
   ['old WP-CLI image tag', /\bkepoli-wp-cli\b/i],
@@ -115,6 +133,37 @@ const oldLaunchSlugs = new Set([
 
 const failures = [];
 const warnings = [];
+
+function parseArgs(argv) {
+  const parsed = {};
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const item = argv[index];
+    if (!item.startsWith('--')) continue;
+
+    const raw = item.slice(2);
+    const equalIndex = raw.indexOf('=');
+    if (equalIndex !== -1) {
+      parsed[raw.slice(0, equalIndex)] = raw.slice(equalIndex + 1);
+      continue;
+    }
+
+    const next = argv[index + 1];
+    if (!next || next.startsWith('--')) {
+      parsed[raw] = true;
+      continue;
+    }
+
+    parsed[raw] = next;
+    index += 1;
+  }
+
+  return parsed;
+}
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 function normalizePath(value) {
   return value.replace(/\\/g, '/');

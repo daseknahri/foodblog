@@ -7,9 +7,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
 const liveUrl = (process.argv[2] || process.env.SITE_URL || 'https://kuchniatwist.pl').replace(/\/+$/, '');
+const siteProfile = readJsonFile('content/site-profile.json', {});
+const categories = readJsonFile('content/categories.json', []);
+const posts = readJsonFile('content/posts.json', []);
 
 const versionFiles = [
   'seed/bootstrap.php',
+  'content/site-profile.json',
   'content/categories.json',
   'content/pages.json',
   'content/posts.json',
@@ -56,7 +60,7 @@ function extractMetaByName(html) {
 async function fetchHtml(url) {
   const response = await fetch(url, {
     headers: {
-      'user-agent': 'KepoliLiveDeployCheck/1.0',
+      'user-agent': 'FoodBlogLiveDeployCheck/1.0',
     },
     redirect: 'follow',
   });
@@ -66,6 +70,37 @@ async function fetchHtml(url) {
   }
 
   return response.text();
+}
+
+function readJsonFile(relativePath, fallback) {
+  const absoluteFile = path.join(repoRoot, relativePath);
+  if (!fs.existsSync(absoluteFile)) return fallback;
+
+  try {
+    return JSON.parse(fs.readFileSync(absoluteFile, 'utf8'));
+  } catch {
+    return fallback;
+  }
+}
+
+function profileValue(keys, fallback = '') {
+  let value = siteProfile;
+  for (const key of keys) {
+    if (!value || typeof value !== 'object' || !(key in value)) return fallback;
+    value = value[key];
+  }
+  return value;
+}
+
+function expectedPublicMarkers() {
+  const markers = [
+    profileValue(['brand', 'name'], ''),
+    profileValue(['writer', 'name'], ''),
+    categories[0]?.name || '',
+    posts[0]?.title || '',
+  ];
+
+  return markers.map((marker) => String(marker || '').trim()).filter(Boolean);
 }
 
 async function main() {
@@ -85,18 +120,13 @@ async function main() {
       throw new Error('Live site is missing deploy fingerprint meta and still exposes old Kepoli public identity.');
     }
 
-    const requiredMarkers = [
-      'contact@kuchniatwist.pl',
-      'Quick Recipes',
-      'Cook this week',
-      'About kuchniatwist',
-    ];
+    const requiredMarkers = expectedPublicMarkers();
     const missingMarkers = requiredMarkers.filter((marker) => !html.includes(marker));
     if (missingMarkers.length > 0) {
       throw new Error(`Live site is missing deploy fingerprint meta and expected public markers: ${missingMarkers.join(', ')}`);
     }
 
-    console.log('Deploy fingerprint meta is disabled, but public homepage markers match the current kuchniatwist build.');
+    console.log('Deploy fingerprint meta is disabled, but public homepage markers match the current site profile.');
     return;
   }
 

@@ -1,7 +1,7 @@
 <?php
 /**
- * Plugin Name: kuchniatwist Ad and Verification Helpers
- * Description: Handles ads.txt and lightweight verification output for the kuchniatwist Docker deployment.
+ * Plugin Name: Food Blog Ad and Verification Helpers
+ * Description: Handles ads.txt, canonical redirects, manifests, and lightweight verification output.
  */
 
 if (!defined('ABSPATH')) {
@@ -14,15 +14,75 @@ function kepoli_mu_env(string $key, string $default = ''): string
     return $value === false || $value === '' ? $default : trim((string) $value);
 }
 
+function kepoli_mu_site_profile(): array
+{
+    $profile = get_option('kepoli_site_profile');
+    return is_array($profile) ? $profile : [];
+}
+
+function kepoli_mu_profile_value(array $path, $default = '')
+{
+    $value = kepoli_mu_site_profile();
+    foreach ($path as $key) {
+        if (!is_array($value) || !array_key_exists($key, $value)) {
+            return $default;
+        }
+
+        $value = $value[$key];
+    }
+
+    return $value;
+}
+
+function kepoli_mu_site_name(): string
+{
+    $name = trim((string) kepoli_mu_profile_value(['brand', 'name'], get_bloginfo('name')));
+    return $name !== '' ? $name : 'Food Blog';
+}
+
+function kepoli_mu_brand_description(): string
+{
+    $description = trim((string) kepoli_mu_profile_value(['brand', 'description'], get_bloginfo('description')));
+    return $description !== '' ? $description : 'Recipes, kitchen guides, and practical home cooking notes.';
+}
+
+function kepoli_mu_public_locale(): string
+{
+    $locale = trim((string) kepoli_mu_profile_value(['locales', 'public'], get_bloginfo('language') ?: 'en_US'));
+    return $locale !== '' ? str_replace('_', '-', $locale) : 'en-US';
+}
+
+function kepoli_mu_asset_basename(string $key, string $fallback): string
+{
+    $asset = sanitize_file_name((string) kepoli_mu_profile_value(['assets', $key], ''));
+    return $asset !== '' ? pathinfo($asset, PATHINFO_FILENAME) : $fallback;
+}
+
+function kepoli_mu_asset_uri(string $key, string $fallback, string $fallback_extension = 'svg'): string
+{
+    $basename = kepoli_mu_asset_basename($key, $fallback);
+    $dir = get_template_directory();
+    $uri = get_template_directory_uri();
+
+    foreach (['svg', 'png', 'jpg', 'jpeg', 'webp'] as $extension) {
+        $path = "/assets/img/{$basename}.{$extension}";
+        if (file_exists($dir . $path)) {
+            return $uri . $path;
+        }
+    }
+
+    return $uri . "/assets/img/{$basename}.{$fallback_extension}";
+}
+
 function kepoli_mu_public_contact_email(): string
 {
-    $email = sanitize_email(kepoli_mu_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+    $email = sanitize_email((string) kepoli_mu_profile_value(['brand', 'site_email'], kepoli_mu_env('SITE_EMAIL')));
     $site_url = kepoli_mu_env('SITE_URL', home_url('/'));
     $host = wp_parse_url($site_url, PHP_URL_HOST);
     $host = is_string($host) ? preg_replace('/^www\./', '', strtolower($host)) : '';
 
     if ($email === '' || str_contains(strtolower($email), '@' . 'kepoli' . '.com')) {
-        return $host !== '' ? 'contact@' . $host : 'contact@kuchniatwist.pl';
+        return $host !== '' ? 'contact@' . $host : sanitize_email((string) get_option('admin_email'));
     }
 
     return $email;
@@ -66,7 +126,7 @@ add_action('template_redirect', static function (): void {
     $request_uri = (string) ($_SERVER['REQUEST_URI'] ?? '/');
     $request_uri = str_starts_with($request_uri, '/') ? $request_uri : '/';
 
-    wp_redirect($scheme . '://' . $canonical_host . $request_uri, 301, 'kuchniatwist');
+    wp_redirect($scheme . '://' . $canonical_host . $request_uri, 301, kepoli_mu_site_name());
     exit;
 }, 0);
 
@@ -87,7 +147,7 @@ add_action('template_redirect', static function (): void {
     }
 
     if ($ezoic_ads_txt_url !== '') {
-        wp_redirect(esc_url_raw($ezoic_ads_txt_url), 301, 'kuchniatwist');
+        wp_redirect(esc_url_raw($ezoic_ads_txt_url), 301, kepoli_mu_site_name());
         exit;
     }
 
@@ -122,7 +182,7 @@ add_action('template_redirect', static function (): void {
     echo 'Contact: mailto:' . esc_html($contact_email) . "\n";
     echo 'Contact: ' . esc_url_raw($contact_page) . "\n";
     echo 'Canonical: ' . esc_url_raw($site_url . '.well-known/security.txt') . "\n";
-    echo "Preferred-Languages: en, pl\n";
+    echo 'Preferred-Languages: ' . esc_html(strtolower(substr(kepoli_mu_public_locale(), 0, 2))) . ", en\n";
     echo 'Expires: ' . esc_html($expires) . "\n";
 
     exit;
@@ -137,11 +197,20 @@ add_action('template_redirect', static function (): void {
     status_header(200);
     header('Content-Type: application/manifest+json; charset=utf-8');
 
+    $site_name = kepoli_mu_site_name();
+    $icon_uri = kepoli_mu_asset_uri('icon', 'kuchniatwist-icon');
+    $icon_extension = strtolower(pathinfo((string) wp_parse_url($icon_uri, PHP_URL_PATH), PATHINFO_EXTENSION));
+    $icon_type = match ($icon_extension) {
+        'png' => 'image/png',
+        'jpg', 'jpeg' => 'image/jpeg',
+        'webp' => 'image/webp',
+        default => 'image/svg+xml',
+    };
     $manifest = [
-        'name' => 'kuchniatwist',
-        'short_name' => 'kuchniatwist',
-        'description' => 'Recipes, kitchen guides, and practical home cooking notes.',
-        'lang' => get_bloginfo('language') ?: 'en-US',
+        'name' => $site_name,
+        'short_name' => $site_name,
+        'description' => kepoli_mu_brand_description(),
+        'lang' => kepoli_mu_public_locale(),
         'start_url' => home_url('/'),
         'scope' => home_url('/'),
         'display' => 'standalone',
@@ -149,9 +218,9 @@ add_action('template_redirect', static function (): void {
         'theme_color' => '#252416',
         'icons' => [
             [
-                'src' => get_template_directory_uri() . '/assets/img/kuchniatwist-icon.svg',
+                'src' => $icon_uri,
                 'sizes' => 'any',
-                'type' => 'image/svg+xml',
+                'type' => $icon_type,
                 'purpose' => 'any',
             ],
         ],

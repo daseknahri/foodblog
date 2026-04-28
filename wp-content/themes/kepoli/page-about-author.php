@@ -6,7 +6,7 @@ get_header();
 $writer_name = kepoli_writer_name();
 $writer_email = kepoli_writer_email();
 $site_name = kepoli_site_name();
-$gravatar_profile_url = 'https://gravatar.com/isalunemerovik';
+$gravatar_profile_url = kepoli_writer_gravatar_url();
 ?>
 <section class="section">
     <div class="author-strip">

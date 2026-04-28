@@ -15,7 +15,7 @@ kuchniatwist is a GitHub-driven WordPress food blog for English recipes and prac
 ## Content Status
 
 - 20 original English launch posts: 15 recipes and 5 guides.
-- Site identity, public locale, admin locale, writer identity, and canonical slugs are stored in `content/site-profile.json`.
+- Site identity, public locale, admin locale, writer identity, identity asset basenames, and canonical slugs are stored in `content/site-profile.json`.
 - 12 public pages: home, recipes, guides, about, author, contact, privacy, cookies, advertising/consent, editorial policy, terms, and culinary disclaimer.
 - 20 matching featured-image files in `content/images/`.
 - Image metadata and generation prompts are stored in `content/image-plan.json`.
@@ -88,3 +88,5 @@ The current repo includes SVG logo assets and generated starter featured images.
 - `wp-content/themes/kepoli/assets/img/writer-photo.jpg`
 
 The theme automatically prefers those filenames when present.
+
+For future clones, `content/site-profile.json` can point `assets.wordmark`, `assets.icon`, and `assets.social_cover` to different basenames.

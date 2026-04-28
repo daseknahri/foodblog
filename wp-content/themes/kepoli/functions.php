@@ -55,7 +55,7 @@ function kepoli_default_site_profile(): array
 
     return [
         'brand' => [
-            'name' => get_bloginfo('name') ?: 'kuchniatwist',
+            'name' => get_bloginfo('name') ?: 'Food Blog',
             'tagline' => get_bloginfo('description') ?: $default_tagline,
             'description' => get_bloginfo('description') ?: '',
             'site_email' => kepoli_env('SITE_EMAIL', get_option('admin_email') ?: 'contact@kuchniatwist.pl'),
@@ -69,6 +69,11 @@ function kepoli_default_site_profile(): array
             'name' => 'Isalune Merovik',
             'email' => kepoli_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'),
             'bio' => '',
+        ],
+        'assets' => [
+            'wordmark' => 'kuchniatwist-wordmark',
+            'icon' => 'kuchniatwist-icon',
+            'social_cover' => 'kuchniatwist-social-cover',
         ],
         'slugs' => [
             'home' => $is_english ? 'home' : 'acasa',
@@ -212,6 +217,27 @@ function kepoli_asset_uri(string $basename, string $fallback_extension = 'svg'):
     return $uri . "/assets/img/{$basename}.{$fallback_extension}";
 }
 
+function kepoli_profile_asset(string $key, string $fallback): string
+{
+    $asset = sanitize_file_name((string) kepoli_profile_value(['assets', $key], ''));
+    return $asset !== '' ? pathinfo($asset, PATHINFO_FILENAME) : $fallback;
+}
+
+function kepoli_wordmark_asset(): string
+{
+    return kepoli_profile_asset('wordmark', 'kuchniatwist-wordmark');
+}
+
+function kepoli_icon_asset(): string
+{
+    return kepoli_profile_asset('icon', 'kuchniatwist-icon');
+}
+
+function kepoli_social_cover_asset(): string
+{
+    return kepoli_profile_asset('social_cover', 'kuchniatwist-social-cover');
+}
+
 function kepoli_asset_dimensions(string $basename): array
 {
     $dimensions = [
@@ -331,7 +357,7 @@ function kepoli_ui_text(string $ro, string $en): string
 function kepoli_site_name(): string
 {
     $name = trim((string) kepoli_profile_value(['brand', 'name'], ''));
-    return $name !== '' ? $name : (get_bloginfo('name') ?: 'kuchniatwist');
+    return $name !== '' ? $name : (get_bloginfo('name') ?: 'Food Blog');
 }
 
 function kepoli_find_page_by_candidates(array $slugs): ?WP_Post
@@ -553,6 +579,12 @@ function kepoli_writer_email(): string
     return $writer instanceof WP_User ? (string) $writer->user_email : '';
 }
 
+function kepoli_writer_gravatar_url(): string
+{
+    $email = strtolower(trim(kepoli_writer_email()));
+    return $email !== '' ? 'https://gravatar.com/' . md5($email) : 'https://gravatar.com/';
+}
+
 function kepoli_writer_description(): string
 {
     $profile_bio = trim((string) kepoli_profile_value(['writer', 'bio'], ''));
@@ -738,9 +770,10 @@ function kepoli_social_image_url(): string
         }
     }
 
-    $social_cover = get_template_directory() . '/assets/img/kuchniatwist-social-cover.jpg';
+    $social_cover_asset = kepoli_social_cover_asset();
+    $social_cover = get_template_directory() . '/assets/img/' . $social_cover_asset . '.jpg';
     if (file_exists($social_cover)) {
-        return kepoli_asset_uri('kuchniatwist-social-cover', 'jpg');
+        return kepoli_asset_uri($social_cover_asset, 'jpg');
     }
 
     return kepoli_asset_uri('writer-photo', 'jpg');
@@ -771,7 +804,7 @@ function kepoli_social_image_dimensions(): array
         }
     }
 
-    return kepoli_asset_dimensions('kuchniatwist-social-cover');
+    return kepoli_asset_dimensions(kepoli_social_cover_asset());
 }
 
 function kepoli_schema_image_object(string $url, array $dimensions = [], string $caption = ''): array
@@ -819,7 +852,7 @@ function kepoli_social_image_schema_object(): array
         }
     }
 
-    return kepoli_schema_asset_image_object('kuchniatwist-social-cover', 'jpg', kepoli_current_description());
+    return kepoli_schema_asset_image_object(kepoli_social_cover_asset(), 'jpg', kepoli_current_description());
 }
 
 function kepoli_schema_publisher(): array
@@ -840,7 +873,7 @@ function kepoli_schema_publisher(): array
             'availableLanguage' => kepoli_available_languages(),
         ],
         'publishingPrinciples' => kepoli_editorial_policy_url(),
-        'logo' => kepoli_schema_asset_image_object('kuchniatwist-icon', 'svg', $site_name),
+        'logo' => kepoli_schema_asset_image_object(kepoli_icon_asset(), 'svg', $site_name),
     ];
 }
 
@@ -1189,17 +1222,33 @@ function kepoli_render_reader_trust_links(string $class = 'browse-links browse-l
 
 function kepoli_official_page_slugs(): array
 {
-    return [
+    return array_values(array_unique(array_filter([
+        kepoli_profile_slug('about', kepoli_is_english() ? 'about-kuchniatwist' : 'despre-kuchniatwist'),
+        kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor'),
+        kepoli_profile_slug('privacy', kepoli_is_english() ? 'privacy-policy' : 'politica-de-confidentialitate'),
+        kepoli_profile_slug('cookies', kepoli_is_english() ? 'cookie-policy' : 'politica-de-cookies'),
+        kepoli_profile_slug('advertising', kepoli_is_english() ? 'advertising-and-consent' : 'publicitate-si-consimtamant'),
+        kepoli_profile_slug('editorial', kepoli_is_english() ? 'editorial-policy' : 'politica-editoriala'),
+        kepoli_profile_slug('terms', kepoli_is_english() ? 'terms-and-conditions' : 'termeni-si-conditii'),
+        kepoli_profile_slug('disclaimer', kepoli_is_english() ? 'culinary-disclaimer' : 'disclaimer-culinar'),
         'about-kuchniatwist',
+        'despre-kuchniatwist',
         'about-author',
+        'despre-autor',
         'contact',
         'privacy-policy',
+        'politica-de-confidentialitate',
         'cookie-policy',
+        'politica-de-cookies',
         'advertising-and-consent',
+        'publicitate-si-consimtamant',
         'editorial-policy',
+        'politica-editoriala',
         'terms-and-conditions',
+        'termeni-si-conditii',
         'culinary-disclaimer',
-    ];
+        'disclaimer-culinar',
+    ]));
 }
 
 function kepoli_is_official_page(): bool
@@ -1229,11 +1278,11 @@ function kepoli_official_page_header_items(): array
         ],
     ];
 
-    if (kepoli_current_page_slug() === 'about-author') {
+    if (kepoli_current_page_slug() === kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor')) {
         $items[2] = [
             'label' => kepoli_ui_text('Profil', 'Profile'),
             'value' => 'Gravatar',
-            'url' => 'https://gravatar.com/isalunemerovik',
+            'url' => kepoli_writer_gravatar_url(),
         ];
     }
 
@@ -1749,7 +1798,7 @@ function kepoli_post_card_media_markup(int $post_id = 0, string $context = 'card
         return sprintf(
             '%1$s<span class="post-media__shade"></span><img class="post-media__mark" src="%2$s" alt="" loading="lazy" decoding="async">',
             $featured_image,
-            esc_url(kepoli_asset_uri('kuchniatwist-icon'))
+            esc_url(kepoli_asset_uri(kepoli_icon_asset()))
         );
     }
 
@@ -1780,7 +1829,7 @@ function kepoli_post_media_url(int $post_id = 0, string $size = 'large'): string
         return kepoli_asset_uri('writer-photo', 'svg');
     }
 
-    return kepoli_asset_uri('kuchniatwist-icon');
+    return kepoli_asset_uri(kepoli_icon_asset());
 }
 
 function kepoli_post_media_markup(int $post_id = 0, string $context = 'card', bool $priority = false): string
@@ -1799,7 +1848,7 @@ function kepoli_post_media_markup(int $post_id = 0, string $context = 'card', bo
                 '<div class="%1$s">%2$s<span class="post-media__shade"></span><img class="post-media__mark" src="%3$s" alt="" loading="lazy" decoding="async"></div>',
                 esc_attr($media_class),
                 $featured_image,
-                esc_url(kepoli_asset_uri('kuchniatwist-icon'))
+                esc_url(kepoli_asset_uri(kepoli_icon_asset()))
             );
         }
 
@@ -1810,7 +1859,7 @@ function kepoli_post_media_markup(int $post_id = 0, string $context = 'card', bo
             esc_url($image),
             esc_attr($image_alt),
             $priority_attributes,
-            esc_url(kepoli_asset_uri('kuchniatwist-icon'))
+            esc_url(kepoli_asset_uri(kepoli_icon_asset()))
         );
     }
 
@@ -2453,7 +2502,7 @@ function kepoli_meta_description(): void
         printf("<meta name=\"google-site-verification\" content=\"%s\">\n", esc_attr($verification));
     }
 
-    printf("<link rel=\"icon\" href=\"%s\" type=\"image/svg+xml\">\n", esc_url(kepoli_asset_uri('kuchniatwist-icon')));
+    printf("<link rel=\"icon\" href=\"%s\" type=\"image/svg+xml\">\n", esc_url(kepoli_asset_uri(kepoli_icon_asset())));
 }
 add_action('wp_head', 'kepoli_meta_description', 2);
 
@@ -3106,7 +3155,7 @@ function kepoli_site_json_ld(): void
         return;
     }
 
-    $site_name = get_bloginfo('name') ?: 'kuchniatwist';
+    $site_name = kepoli_site_name();
     $site_host = (string) wp_parse_url(home_url('/'), PHP_URL_HOST);
     $writer_name = kepoli_writer_name();
 
@@ -3128,7 +3177,7 @@ function kepoli_site_json_ld(): void
                     'availableLanguage' => kepoli_available_languages(),
                 ],
                 'publishingPrinciples' => kepoli_editorial_policy_url(),
-                'logo' => kepoli_schema_asset_image_object('kuchniatwist-wordmark', 'svg', $site_name),
+                'logo' => kepoli_schema_asset_image_object(kepoli_wordmark_asset(), 'svg', $site_name),
             ],
             [
                 '@type' => 'WebSite',
@@ -3171,6 +3220,27 @@ function kepoli_static_page_json_ld(): void
 
     $schema = null;
     $about_page = kepoli_about_page();
+    $current_slug = kepoli_current_page_slug();
+    $policy_page_types = [
+        kepoli_profile_slug('privacy', kepoli_is_english() ? 'privacy-policy' : 'politica-de-confidentialitate') => 'WebPage',
+        kepoli_profile_slug('cookies', kepoli_is_english() ? 'cookie-policy' : 'politica-de-cookies') => 'WebPage',
+        kepoli_profile_slug('advertising', kepoli_is_english() ? 'advertising-and-consent' : 'publicitate-si-consimtamant') => 'WebPage',
+        kepoli_profile_slug('editorial', kepoli_is_english() ? 'editorial-policy' : 'politica-editoriala') => 'AboutPage',
+        kepoli_profile_slug('terms', kepoli_is_english() ? 'terms-and-conditions' : 'termeni-si-conditii') => 'WebPage',
+        kepoli_profile_slug('disclaimer', kepoli_is_english() ? 'culinary-disclaimer' : 'disclaimer-culinar') => 'WebPage',
+        'privacy-policy' => 'WebPage',
+        'politica-de-confidentialitate' => 'WebPage',
+        'cookie-policy' => 'WebPage',
+        'politica-de-cookies' => 'WebPage',
+        'advertising-and-consent' => 'WebPage',
+        'publicitate-si-consimtamant' => 'WebPage',
+        'editorial-policy' => 'AboutPage',
+        'politica-editoriala' => 'AboutPage',
+        'terms-and-conditions' => 'WebPage',
+        'termeni-si-conditii' => 'WebPage',
+        'culinary-disclaimer' => 'WebPage',
+        'disclaimer-culinar' => 'WebPage',
+    ];
 
     if ($about_page instanceof WP_Post && is_page($about_page->ID)) {
         $schema = [
@@ -3212,18 +3282,10 @@ function kepoli_static_page_json_ld(): void
                 'availableLanguage' => kepoli_available_languages(),
             ],
         ];
-    } elseif (is_page(['privacy-policy', 'cookie-policy', 'advertising-and-consent', 'editorial-policy', 'terms-and-conditions', 'culinary-disclaimer'])) {
-        $page_slug = kepoli_current_page_slug();
-        $page_type = match ($page_slug) {
-            'privacy-policy', 'cookie-policy', 'advertising-and-consent', 'terms-and-conditions' => 'WebPage',
-            'editorial-policy' => 'AboutPage',
-            'culinary-disclaimer' => 'WebPage',
-            default => 'WebPage',
-        };
-
+    } elseif (isset($policy_page_types[$current_slug])) {
         $schema = [
             '@context' => 'https://schema.org',
-            '@type' => $page_type,
+            '@type' => $policy_page_types[$current_slug],
             'name' => get_the_title(),
             'url' => get_permalink(),
             'description' => kepoli_current_description(),

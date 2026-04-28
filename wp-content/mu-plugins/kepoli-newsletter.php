@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: kuchniatwist Newsletter Signups
+ * Plugin Name: Food Blog Newsletter Signups
  * Description: Stores lightweight newsletter signups inside WordPress admin.
  */
 
@@ -15,7 +15,7 @@ function kepoli_newsletter_post_type(): string
 
 function kepoli_newsletter_is_english(): bool
 {
-    return str_starts_with(strtolower((string) get_bloginfo('language')), 'en');
+    return true;
 }
 
 function kepoli_newsletter_text(string $ro, string $en): string
@@ -25,7 +25,9 @@ function kepoli_newsletter_text(string $ro, string $en): string
 
 function kepoli_newsletter_site_name(): string
 {
-    return get_bloginfo('name') ?: kepoli_newsletter_text('kuchniatwist', 'Food Blog');
+    $profile = get_option('kepoli_site_profile');
+    $profile_name = is_array($profile) ? trim((string) ($profile['brand']['name'] ?? '')) : '';
+    return $profile_name !== '' ? $profile_name : (get_bloginfo('name') ?: 'Food Blog');
 }
 
 function kepoli_newsletter_normalize_email(string $email): string

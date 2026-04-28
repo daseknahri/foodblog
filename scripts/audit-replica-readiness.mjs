@@ -287,6 +287,9 @@ function checkSiteProfile() {
     ['writer', 'name'],
     ['writer', 'email'],
     ['writer', 'bio'],
+    ['assets', 'wordmark'],
+    ['assets', 'icon'],
+    ['assets', 'social_cover'],
   ]) {
     if (!String(profileValue(path) || '').trim()) failures.push(`Missing site profile value: ${path.join('.')}`);
   }
@@ -450,11 +453,15 @@ function checkImages() {
 
 function checkThemeAssets() {
   const assetsDir = path.join(root, 'wp-content/themes/kepoli/assets/img');
-    const required = [
-      'hero-homepage.jpg',
-      'kuchniatwist-social-cover.jpg',
-      'writer-photo.jpg',
-    ];
+  const required = [
+    'hero-homepage.jpg',
+    'writer-photo.jpg',
+    `${assetBasename('social_cover', 'kuchniatwist-social-cover')}.jpg`,
+  ];
+  const identityAssets = [
+    assetBasename('wordmark', 'kuchniatwist-wordmark'),
+    assetBasename('icon', 'kuchniatwist-icon'),
+  ];
 
   for (const filename of required) {
     if (!fs.existsSync(path.join(assetsDir, filename))) {
@@ -462,9 +469,20 @@ function checkThemeAssets() {
     }
   }
 
+  for (const basename of identityAssets) {
+    const exists = ['svg', 'png', 'jpg', 'jpeg', 'webp'].some((extension) => fs.existsSync(path.join(assetsDir, `${basename}.${extension}`)));
+    if (!exists) warnings.push(`Theme identity asset missing or not replaced: ${basename}.svg/png/jpg/webp`);
+  }
+
   if (fs.existsSync(path.join(assetsDir, 'kepoli-wordmark.svg'))) {
     warnings.push('Logo filename is still kepoli-wordmark.svg. This can work, but make sure the artwork itself is rebranded.');
   }
+}
+
+function assetBasename(key, fallback) {
+  const configured = String(profileValue(['assets', key]) || '').trim();
+  const value = configured || fallback;
+  return path.basename(value, path.extname(value));
 }
 
 function checkOldIdentity() {

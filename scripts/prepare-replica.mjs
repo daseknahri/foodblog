@@ -62,6 +62,7 @@ updateEnvExample();
 updateDockerCompose();
 updateThemeHeader();
 updatePublicIdentityFiles();
+updateThemeAssetNames();
 
 if (failures.length > 0) {
   console.error('Replica preparation could not continue:');
@@ -297,6 +298,11 @@ function buildSiteProfile() {
       email: writerEmail,
       bio: writerBio,
     },
+    assets: {
+      wordmark: `${projectSlug}-wordmark`,
+      icon: `${projectSlug}-icon`,
+      social_cover: `${projectSlug}-social-cover`,
+    },
     slugs: {
       home: homeSlug,
       recipes: recipesSlug,
@@ -444,6 +450,28 @@ function updatePublicIdentityFiles() {
     }
 
     writeFile(relativePath, content, `Updated public identity in ${relativePath}`);
+  }
+}
+
+function updateThemeAssetNames() {
+  const assetRenames = [
+    ['kuchniatwist-wordmark', `${projectSlug}-wordmark`],
+    ['kuchniatwist-icon', `${projectSlug}-icon`],
+    ['kuchniatwist-social-cover', `${projectSlug}-social-cover`],
+  ];
+  const extensions = ['svg', 'png', 'jpg', 'jpeg', 'webp'];
+
+  for (const [fromBase, toBase] of assetRenames) {
+    if (fromBase === toBase) continue;
+
+    for (const extension of extensions) {
+      const from = filePath(`wp-content/themes/kepoli/assets/img/${fromBase}.${extension}`);
+      const to = filePath(`wp-content/themes/kepoli/assets/img/${toBase}.${extension}`);
+      if (!fs.existsSync(from) || fs.existsSync(to)) continue;
+
+      operations.push(`Renamed theme asset ${fromBase}.${extension} to ${toBase}.${extension}`);
+      if (write) fs.renameSync(from, to);
+    }
   }
 }
 

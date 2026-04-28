@@ -15,6 +15,11 @@
     "email": "isalunemerovik@gmail.com",
     "bio": "Writes approachable recipes and kitchen guides for kuchniatwist."
   },
+  "assets": {
+    "wordmark": "kuchniatwist-wordmark",
+    "icon": "kuchniatwist-icon",
+    "social_cover": "kuchniatwist-social-cover"
+  },
   "slugs": {
     "home": "home",
     "recipes": "recipes",

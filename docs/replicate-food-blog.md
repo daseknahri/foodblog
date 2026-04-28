@@ -34,7 +34,7 @@ Then generate fresh starter pages and categories:
 node scripts/generate-replica-shell.mjs --brand "New Blog" --domain https://new-domain.com --site-email contact@new-domain.com --writer-name "Writer Name" --writer-email writer@example.com --project-slug new-blog --language en --monetization ezoic --write
 ```
 
-These commands create or rewrite `content/site-profile.json` too. The profile is the canonical source for brand name, public locale, admin locale, writer identity, and canonical page slugs. Admin stays English through `locales.admin=en_US` and `locales.force_admin=true`; public generated text follows `locales.public`.
+These commands create or rewrite `content/site-profile.json` too. The profile is the canonical source for brand name, public locale, admin locale, writer identity, identity asset basenames, and canonical page slugs. Admin stays English through `locales.admin=en_US` and `locales.force_admin=true`; public generated text follows `locales.public`.
 
 These pages are a starter shell. Review them before launch, especially privacy, cookies, advertising, editorial, terms, and disclaimer pages. The shell generator supports both Romanian and English starter sets.
 
@@ -77,17 +77,17 @@ If the new site will use AdSense after approval, fill `ADSENSE_CLIENT_ID` and `A
 
 ## Files To Rebrand
 
-- `content/site-profile.json`: replace brand name, tagline, description, public locale, writer identity, email, and canonical slugs. This is the first file to check.
+- `content/site-profile.json`: replace brand name, tagline, description, public locale, writer identity, email, identity asset basenames, and canonical slugs. This is the first file to check.
 - `.env.example`: replace domain, emails, database names, AdSense IDs, and canonical hosts. Keep `WP_LOCALE` equal to `content/site-profile.json` `locales.public`.
 - `WP_ADMIN_LOCALE`: keep this as `en_US` so WordPress admin and beginner-publisher tools stay in English, even if a future public site uses another language.
 - `docker-compose.yml`: replace default domain/email values and rename the image tags from `kepoli-wordpress` and `kepoli-wp-cli` to the new project name. This avoids image-name collisions if both blogs run on the same server.
 - `README.md` and `docs/*.md`: replace project name and old operational notes.
 - `wp-content/themes/kepoli/style.css`: change the public theme header: theme name, URI, author, author URI, and description.
-- `wp-content/themes/kepoli/assets/img/`: replace logo, social cover, homepage hero, icon, and writer photo.
+- `wp-content/themes/kepoli/assets/img/`: replace logo, social cover, homepage hero, icon, and writer photo. If you rename logo/icon/social-cover files, update `content/site-profile.json` `assets`.
 - `wp-content/themes/kepoli/functions.php`: this should read public identity from `kepoli_site_profile`; avoid adding new brand-specific fallback copy here.
 - `wp-content/themes/kepoli/header.php`, `footer.php`, `front-page.php`, `page-about-kuchniatwist.php`, `page-about-author.php`, `page-recipes.php`, and `page-guides.php`: keep these as layout templates. Public authenticity copy should come from `content/pages.json`; template labels can stay structural and locale-aware.
-- `wp-content/mu-plugins/kepoli-adtech.php`: replace manifest name, short name, description, and icon if needed.
-- `wp-content/mu-plugins/kepoli-newsletter.php`: replace visible fallback source labels for the next brand; internal function names can stay.
+- `wp-content/mu-plugins/kepoli-adtech.php`: manifest name, short name, description, locale, email, and icon are profile-driven; only review this file for host/ads behavior.
+- `wp-content/mu-plugins/kepoli-newsletter.php`: admin labels stay English and visible fallback source labels read the site profile; internal function names can stay.
 - `seed/bootstrap.php`: imports `content/site-profile.json` into the `kepoli_site_profile` option and seeds title, tagline, page slugs, locale, and writer identity from that profile. A quick manual review is still wise, but new clones should not need direct seed-code identity edits.
 
 The folder name `wp-content/themes/kepoli`, PHP function prefixes like `kepoli_`, CSS classes, and text domain can stay for the first clone. Renaming all internal handles is cosmetic and riskier than useful. Rebrand the visible text first.
@@ -128,6 +128,7 @@ node scripts/audit-replica-readiness.mjs --min-posts 20
 node scripts/verify-content.mjs
 node scripts/image-status.mjs
 node scripts/audit-rebrand.mjs
+node scripts/audit-rebrand.mjs --old-brand kuchniatwist --old-domain kuchniatwist.pl --old-email contact@kuchniatwist.pl
 git diff --check
 ```
 

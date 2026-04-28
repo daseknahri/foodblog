@@ -309,6 +309,11 @@ function buildSiteProfile() {
       email: writerEmail,
       bio: writerBio,
     },
+    assets: {
+      wordmark: `${projectSlug}-wordmark`,
+      icon: `${projectSlug}-icon`,
+      social_cover: `${projectSlug}-social-cover`,
+    },
     slugs: {
       home: homeSlug,
       recipes: recipesSlug,

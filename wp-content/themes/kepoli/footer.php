@@ -20,7 +20,7 @@ $site_name = kepoli_site_name();
 <footer class="site-footer">
     <div class="site-footer__inner">
         <div class="site-footer__brand">
-            <img src="<?php echo esc_url(kepoli_asset_uri('kuchniatwist-wordmark')); ?>" alt="<?php echo esc_attr($site_name); ?>"<?php echo kepoli_asset_dimension_attributes('kuchniatwist-wordmark'); ?> loading="lazy" decoding="async">
+            <img src="<?php echo esc_url(kepoli_asset_uri(kepoli_wordmark_asset())); ?>" alt="<?php echo esc_attr($site_name); ?>"<?php echo kepoli_asset_dimension_attributes(kepoli_wordmark_asset()); ?> loading="lazy" decoding="async">
             <p><?php echo esc_html(kepoli_brand_description()); ?></p>
             <?php $public_contact_email = kepoli_public_contact_email(); ?>
             <p><a href="mailto:<?php echo esc_attr($public_contact_email); ?>"><?php echo esc_html($public_contact_email); ?></a></p>

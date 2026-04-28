@@ -6,6 +6,7 @@ const failures = [];
 const warnings = [];
 const args = parseArgs(process.argv.slice(2));
 const env = readEnv('.env.example');
+const siteProfile = readJsonObject('content/site-profile.json');
 const pages = readJson('content/pages.json');
 const posts = readJson('content/posts.json');
 const categories = readJson('content/categories.json');
@@ -82,6 +83,22 @@ function readJson(relativePath) {
   }
 }
 
+function readJsonObject(relativePath) {
+  const content = readFile(relativePath);
+  if (!content) return {};
+  try {
+    const value = JSON.parse(content);
+    if (!value || Array.isArray(value) || typeof value !== 'object') {
+      failures.push(`${relativePath} must contain a JSON object.`);
+      return {};
+    }
+    return value;
+  } catch (error) {
+    failures.push(`${relativePath} is invalid JSON: ${error.message}`);
+    return {};
+  }
+}
+
 function readFile(relativePath) {
   const absolutePath = path.join(root, relativePath);
   if (!fs.existsSync(absolutePath)) {
@@ -95,6 +112,19 @@ function envValue(key) {
   return String(env.get(key) || '').trim();
 }
 
+function profileValue(keys, fallback = '') {
+  let value = siteProfile;
+  for (const key of keys) {
+    if (!value || typeof value !== 'object' || !(key in value)) return fallback;
+    value = value[key];
+  }
+  return value;
+}
+
+function profileSlug(key, fallback) {
+  return String(profileValue(['slugs', key], fallback) || fallback).trim().replace(/^\/+|\/+$/g, '');
+}
+
 function checkEnv() {
   const siteUrl = envValue('SITE_URL');
   if (!/^https:\/\/[^/]+/i.test(siteUrl)) failures.push('SITE_URL must be an https:// URL.');
@@ -102,6 +132,9 @@ function checkEnv() {
   if (envValue('GA_ENABLE') !== '0') warnings.push('Keep GA_ENABLE=0 until consent is configured.');
   if (envValue('EZOIC_PLUGIN_ENABLE') !== '0') warnings.push('Keep EZOIC_PLUGIN_ENABLE=0 until you intentionally enable Ezoic integration.');
   if (envValue('WP_ADMIN_LOCALE') !== 'en_US') warnings.push('Keep WP_ADMIN_LOCALE=en_US for a simple English admin workflow.');
+  if (envValue('WP_LOCALE') && profileValue(['locales', 'public']) && envValue('WP_LOCALE') !== profileValue(['locales', 'public'])) {
+    failures.push(`WP_LOCALE should match content/site-profile.json locales.public (${profileValue(['locales', 'public'])}).`);
+  }
   if (!envValue('CANONICAL_REDIRECT_HOSTS').includes('www.')) warnings.push('CANONICAL_REDIRECT_HOSTS should include the www host.');
 }
 
@@ -128,15 +161,15 @@ function checkContentDepth() {
 function checkPolicyPages() {
   const slugs = new Set(pages.map((page) => String(page.slug || '')));
   const required = [
-    'about-kuchniatwist',
-    'about-author',
+    profileSlug('about', 'about-kuchniatwist'),
+    profileSlug('author', 'about-author'),
     'contact',
-    'privacy-policy',
-    'cookie-policy',
-    'advertising-and-consent',
-    'editorial-policy',
-    'terms-and-conditions',
-    'culinary-disclaimer',
+    profileSlug('privacy', 'privacy-policy'),
+    profileSlug('cookies', 'cookie-policy'),
+    profileSlug('advertising', 'advertising-and-consent'),
+    profileSlug('editorial', 'editorial-policy'),
+    profileSlug('terms', 'terms-and-conditions'),
+    profileSlug('disclaimer', 'culinary-disclaimer'),
   ];
 
   for (const slug of required) {
@@ -170,14 +203,16 @@ function checkPublicCode() {
 }
 
 async function checkLive(baseUrl) {
+  const recipeCategory = categories.find((category) => String(category.slug || '') !== profileSlug('guides', 'guides')) || categories[0] || {};
+  const recipeCategorySlug = String(recipeCategory.slug || 'quick-recipes').replace(/^\/+|\/+$/g, '');
   const urls = [
     '/',
     '/contact/',
-    '/privacy-policy/',
-    '/cookie-policy/',
-    '/advertising-and-consent/',
-    '/editorial-policy/',
-    '/category/quick-recipes/',
+    `/${profileSlug('privacy', 'privacy-policy')}/`,
+    `/${profileSlug('cookies', 'cookie-policy')}/`,
+    `/${profileSlug('advertising', 'advertising-and-consent')}/`,
+    `/${profileSlug('editorial', 'editorial-policy')}/`,
+    `/category/${recipeCategorySlug}/`,
     '/ads.txt',
     '/robots.txt',
     '/wp-sitemap.xml',
@@ -194,7 +229,7 @@ async function checkLive(baseUrl) {
     }
   }
 
-  for (const suffix of ['/', '/contact/', '/about-kuchniatwist/']) {
+  for (const suffix of ['/', '/contact/', `/${profileSlug('about', 'about-kuchniatwist')}/`]) {
     const url = `${baseUrl}${suffix}`;
     try {
       const response = await fetch(url);
