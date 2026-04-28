@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Food Blog Author Tools
  * Description: Simplifies the post editor with split tools, excerpt and SEO helpers, internal-link suggestions, and featured-image metadata.
- * Version: 1.8.8
+ * Version: 1.8.9
  * Author: Site tools
  * Text Domain: kepoli-author-tools
  */
@@ -11,9 +11,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-final class kuchniatwist_Author_Tools
+final class Food_Blog_Author_Tools
 {
-    private const VERSION = '1.8.8';
+    private const VERSION = '1.8.9';
     private const AUTO_INTERNAL_LINKS_START = '<!-- kepoli-auto-internal-links:start -->';
     private const AUTO_INTERNAL_LINKS_END = '<!-- kepoli-auto-internal-links:end -->';
     private const AUTO_FAQ_START = '<!-- kepoli-auto-faq:start -->';
@@ -2157,4 +2157,4 @@ final class kuchniatwist_Author_Tools
     }
 }
 
-kuchniatwist_Author_Tools::init();
+Food_Blog_Author_Tools::init();

@@ -2344,7 +2344,7 @@ function kepoli_redirect_attachment_pages(): void
         return;
     }
 
-    wp_safe_redirect($target, 301, 'kuchniatwist');
+    wp_safe_redirect($target, 301, kepoli_site_name());
     exit;
 }
 add_action('template_redirect', 'kepoli_redirect_attachment_pages', 1);
@@ -2360,7 +2360,7 @@ function kepoli_redirect_author_archives(): void
         return;
     }
 
-    wp_safe_redirect($target, 301, 'kuchniatwist');
+    wp_safe_redirect($target, 301, kepoli_site_name());
     exit;
 }
 add_action('template_redirect', 'kepoli_redirect_author_archives', 2);
@@ -2768,10 +2768,10 @@ function kepoli_admin_adsense_notice(): void
     $consent_link = kepoli_advertising_page_url();
 
     echo '<div class="notice notice-warning"><p>';
-    echo esc_html__('AdSense este configurat, dar codul de reclame ramane oprit pana cand finalizezi consimtamantul pentru vizitatorii din Romania/EEA.', 'kepoli');
+    echo esc_html__('AdSense is configured, but ad code stays disabled until consent is ready for EEA/UK visitors.', 'kepoli');
     echo ' ';
     echo wp_kses_post(sprintf(
-        __('Configureaza Google Privacy & Messaging sau un CMP certificat, apoi seteaza <code>ADSENSE_ENABLE=1</code> in Coolify. Vezi si pagina <a href="%s">Publicitate si consimtamant</a>.', 'kepoli'),
+        __('Configure Google Privacy & Messaging or a certified CMP, then set <code>ADSENSE_ENABLE=1</code> in Coolify. See the <a href="%s">Advertising and consent</a> page too.', 'kepoli'),
         esc_url($consent_link)
     ));
     echo '</p></div>';

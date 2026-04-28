@@ -250,9 +250,17 @@
       'acest', 'aceasta', 'aceste', 'acasa', 'aici', 'ale', 'are', 'care', 'cand', 'cum',
       'din', 'este', 'fara', 'mai', 'mult', 'pentru', 'prin', 'sau', 'sunt', 'unde',
       'un', 'una', 'unei', 'unui', 'reteta', 'romanesc', 'romaneasca', 'kepoli',
-      'the', 'and', 'with', 'from', 'this', 'that', 'your', 'into', 'kuchniatwist',
+      'the', 'and', 'with', 'from', 'this', 'that', 'your', 'into',
       'recipe', 'recipes', 'guide', 'guides', 'food', 'cooking', 'kitchen'
     ]);
+    String(SITE_NAME || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, ' ')
+      .split(/\s+/)
+      .filter((word) => word.length > 3)
+      .forEach((word) => stopwords.add(word));
 
     return cleanText(text)
       .toLowerCase()
@@ -1423,7 +1431,7 @@
     });
   }
 
-  function initkuchniatwistAuthorTools() {
+  function initFoodBlogAuthorTools() {
     addQuicktagsButtons();
     bindAutomationButtons();
     bindTemplateButtons();
@@ -1436,8 +1444,8 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initkuchniatwistAuthorTools);
+    document.addEventListener('DOMContentLoaded', initFoodBlogAuthorTools);
   } else {
-    initkuchniatwistAuthorTools();
+    initFoodBlogAuthorTools();
   }
 })();

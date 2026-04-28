@@ -9,13 +9,13 @@ This repo includes a small `kepoli-author-tools` plugin for writing posts. The p
 - The post editor toolbar includes `Break`, `2 parts`, and `3 parts` buttons for WordPress post pagination.
 - The split buttons try to break long posts at clean section boundaries, especially around `H2` and `H3` headings.
 - The setup box includes `Auto split`, so a writer can choose 2 or 3 parts and let the tool apply the split on save. If manual `nextpage` breaks already exist, the plugin leaves them alone.
-- The `kuchniatwist post setup` box lets the writer choose `Recipe` or `Article`, then review excerpt, SEO, related links, image metadata, and recipe structured data.
+- The `Post setup` box lets the writer choose `Recipe` or `Article`, then review excerpt, SEO, related links, image metadata, and recipe structured data.
 - The main action is `Auto fill`. Extra helper actions stay under `More tools` so the editor remains simple.
 - Manual SEO title, meta description, and related-link slugs stay inside `SEO and links`.
 - Image and recipe fields are tucked into expandable blocks. Recipe details open automatically for recipe posts.
 - The editorial checklist is tucked into a compact expandable block so the writer sees a short status first.
 - The plugin can fill empty setup fields after the writer adds a title, pastes enough content, chooses a post type, or inserts a built-in template.
-- The Posts list includes kuchniatwist type/readiness columns for quick editorial checks.
+- The Posts list includes type/readiness columns for quick editorial checks.
 
 ## Automation Included
 
@@ -35,7 +35,7 @@ This repo includes a small `kepoli-author-tools` plugin for writing posts. The p
 1. Go to `Posts` > `Add New`.
 2. Add the title in the top field.
 3. Write or paste the article or recipe in the main content field.
-4. In `kuchniatwist post setup`, choose `Recipe` or `Article`.
+4. In `Post setup`, choose `Recipe` or `Article`.
 5. Click `Auto fill` when you want the main setup pass: SEO title, excerpt, meta description, internal links, image metadata, suggested category, suggested tags, and recipe schema when possible.
 6. Open `More tools` only when you want a specific helper, like category suggestions, tag suggestions, recipe schema extraction, or image meta generation.
 7. Open `SEO and links` only when you want to override the SEO title, review the meta description, or manually edit related slugs.
