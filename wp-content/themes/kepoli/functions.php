@@ -695,6 +695,78 @@ function kepoli_trim_meta_text(string $text, int $words = 28): string
     return wp_trim_words($text, $words, '...');
 }
 
+function kepoli_trim_document_title_text(string $title, string $site_name): string
+{
+    $title = trim(wp_strip_all_tags($title));
+    if ($title === '') {
+        return '';
+    }
+
+    $title = preg_replace('/\s+/', ' ', $title) ?: $title;
+    $site_suffix = ' | ' . $site_name;
+    $has_site_suffix = $site_suffix !== '' && substr($title, -strlen($site_suffix)) === $site_suffix;
+    $title_without_site = $has_site_suffix
+        ? trim(substr($title, 0, -strlen($site_suffix)))
+        : $title;
+    $max_without_site = 58;
+
+    if (function_exists('mb_strlen') && function_exists('mb_substr')) {
+        if (mb_strlen($title_without_site) > $max_without_site) {
+            $title_without_site = rtrim((string) mb_substr($title_without_site, 0, $max_without_site - 1), " \t\n\r\0\x0B,.-") . '...';
+        }
+    } elseif (strlen($title_without_site) > $max_without_site) {
+        $title_without_site = rtrim(substr($title_without_site, 0, $max_without_site - 1), " \t\n\r\0\x0B,.-") . '...';
+    }
+
+    return $title_without_site;
+}
+
+function kepoli_clean_tag_name(string $tag): string
+{
+    $tag = trim(wp_strip_all_tags($tag));
+    $tag = preg_replace('/\s+/', ' ', $tag) ?: $tag;
+    $tag = trim($tag, " \t\n\r\0\x0B,.;:");
+
+    if ($tag === '') {
+        return '';
+    }
+
+    $length = function_exists('mb_strlen') ? mb_strlen($tag) : strlen($tag);
+    if ($length > 70) {
+        return '';
+    }
+
+    return $tag;
+}
+
+function kepoli_clean_post_tag_names(int $post_id = 0): array
+{
+    $post_id = $post_id ?: get_the_ID();
+    $tags = wp_get_post_tags($post_id, ['fields' => 'names']);
+    if (!is_array($tags)) {
+        return [];
+    }
+
+    $clean = [];
+    $seen = [];
+    foreach ($tags as $tag) {
+        $tag = kepoli_clean_tag_name((string) $tag);
+        if ($tag === '') {
+            continue;
+        }
+
+        $key = strtolower($tag);
+        if (isset($seen[$key])) {
+            continue;
+        }
+
+        $seen[$key] = true;
+        $clean[] = $tag;
+    }
+
+    return $clean;
+}
+
 function kepoli_current_seo_title(): string
 {
     $site_name = kepoli_site_name();
@@ -747,6 +819,8 @@ function kepoli_current_seo_title(): string
     if ($paged > 1) {
         $title .= kepoli_is_english() ? ' - Page ' . $paged : ' - Pagina ' . $paged;
     }
+
+    $title = kepoli_trim_document_title_text($title, $site_name);
 
     if (!str_contains($title, $site_name)) {
         $title .= ' | ' . $site_name;
@@ -1811,9 +1885,10 @@ function kepoli_post_card_media_markup(int $post_id = 0, string $context = 'card
 
     if ($featured_image !== '') {
         return sprintf(
-            '%1$s<span class="post-media__shade"></span><img class="post-media__mark" src="%2$s" alt="" loading="lazy" decoding="async">',
+            '%1$s<span class="post-media__shade"></span><img class="post-media__mark" src="%2$s" alt="%3$s" loading="lazy" decoding="async">',
             $featured_image,
-            esc_url(kepoli_asset_uri(kepoli_icon_asset()))
+            esc_url(kepoli_asset_uri(kepoli_icon_asset())),
+            esc_attr(kepoli_site_name())
         );
     }
 
@@ -1855,33 +1930,39 @@ function kepoli_post_media_markup(int $post_id = 0, string $context = 'card', bo
     $size = $context === 'related' ? 'medium_large' : 'medium_large';
     $image = kepoli_post_media_url($post_id, $size);
     $image_alt = $mode === 'photo' && kepoli_post_featured_image_id($post_id) ? kepoli_post_featured_image_alt($post_id) : '';
+    if ($image_alt === '') {
+        $image_alt = trim(sprintf('%s - %s', get_the_title($post_id), kepoli_site_name()), ' -');
+    }
 
     if ($mode === 'photo') {
         $featured_image = kepoli_post_featured_image_markup($post_id, $size, kepoli_post_media_image_attrs($context, 'post-media__image', $priority));
         if ($featured_image !== '') {
             return sprintf(
-                '<div class="%1$s">%2$s<span class="post-media__shade"></span><img class="post-media__mark" src="%3$s" alt="" loading="lazy" decoding="async"></div>',
+                '<div class="%1$s">%2$s<span class="post-media__shade"></span><img class="post-media__mark" src="%3$s" alt="%4$s" loading="lazy" decoding="async"></div>',
                 esc_attr($media_class),
                 $featured_image,
-                esc_url(kepoli_asset_uri(kepoli_icon_asset()))
+                esc_url(kepoli_asset_uri(kepoli_icon_asset())),
+                esc_attr(kepoli_site_name())
             );
         }
 
         $priority_attributes = $priority ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"';
         return sprintf(
-            '<div class="%1$s"><img class="post-media__image" src="%2$s" alt="%3$s"%4$s decoding="async"><span class="post-media__shade"></span><img class="post-media__mark" src="%5$s" alt="" loading="lazy" decoding="async"></div>',
+            '<div class="%1$s"><img class="post-media__image" src="%2$s" alt="%3$s"%4$s decoding="async"><span class="post-media__shade"></span><img class="post-media__mark" src="%5$s" alt="%6$s" loading="lazy" decoding="async"></div>',
             esc_attr($media_class),
             esc_url($image),
             esc_attr($image_alt),
             $priority_attributes,
-            esc_url(kepoli_asset_uri(kepoli_icon_asset()))
+            esc_url(kepoli_asset_uri(kepoli_icon_asset())),
+            esc_attr(kepoli_site_name())
         );
     }
 
     return sprintf(
-        '<div class="%1$s"><span class="post-media__fill"></span><img class="post-media__icon" src="%2$s" alt="" loading="lazy" decoding="async"></div>',
+        '<div class="%1$s"><span class="post-media__fill"></span><img class="post-media__icon" src="%2$s" alt="%3$s" loading="lazy" decoding="async"></div>',
         esc_attr($media_class),
-        esc_url($image)
+        esc_url($image),
+        esc_attr($image_alt)
     );
 }
 
@@ -2495,7 +2576,6 @@ function kepoli_meta_description(): void
     $description = kepoli_current_description();
     $canonical_url = kepoli_current_url();
     $language = kepoli_language_tag();
-    $short_language = strtolower(substr($language, 0, 2));
 
     if ($description !== '') {
         printf("<meta name=\"description\" content=\"%s\">\n", esc_attr(kepoli_trim_meta_text($description, 28)));
@@ -2504,8 +2584,6 @@ function kepoli_meta_description(): void
     printf("<meta name=\"robots\" content=\"%s\">\n", esc_attr(kepoli_robots_content()));
     printf("<link rel=\"canonical\" href=\"%s\">\n", esc_url($canonical_url));
     printf("<link rel=\"alternate\" hreflang=\"%s\" href=\"%s\">\n", esc_attr($language), esc_url($canonical_url));
-    printf("<link rel=\"alternate\" hreflang=\"%s\" href=\"%s\">\n", esc_attr($short_language), esc_url($canonical_url));
-    printf("<link rel=\"alternate\" hreflang=\"x-default\" href=\"%s\">\n", esc_url($canonical_url));
     printf("<meta name=\"theme-color\" content=\"#252416\">\n");
     printf("<link rel=\"manifest\" href=\"%s\">\n", esc_url(home_url('/site.webmanifest')));
 
@@ -2604,7 +2682,7 @@ function kepoli_social_meta(): void
             printf("<meta property=\"article:section\" content=\"%s\">\n", esc_attr($category->name));
         }
 
-        foreach (wp_get_post_tags(get_the_ID(), ['fields' => 'names']) as $tag) {
+        foreach (kepoli_clean_post_tag_names(get_the_ID()) as $tag) {
             printf("<meta property=\"article:tag\" content=\"%s\">\n", esc_attr($tag));
         }
     }
@@ -2907,17 +2985,7 @@ function kepoli_recipe_step_name(string $step): string
 function kepoli_recipe_keywords(int $post_id = 0): string
 {
     $post_id = $post_id ?: get_the_ID();
-    $keywords = wp_get_post_tags($post_id, ['fields' => 'names']);
-
-    if (!is_array($keywords)) {
-        return '';
-    }
-
-    $keywords = array_values(array_unique(array_filter(array_map(static function ($keyword): string {
-        return trim((string) $keyword);
-    }, $keywords))));
-
-    return implode(', ', $keywords);
+    return implode(', ', kepoli_clean_post_tag_names($post_id));
 }
 
 function kepoli_article_snapshot_data(int $post_id = 0): array

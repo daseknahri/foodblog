@@ -437,7 +437,7 @@
 
   function generatedSeoTitle() {
     const title = currentTitle();
-    return title ? shortSentence(title, 65).replace(/\.\.\.$/, '') : '';
+    return title ? shortSentence(title, 58).replace(/\.\.\.$/, '') : '';
   }
 
   function currentSummaryText() {
@@ -515,17 +515,24 @@
     };
   }
 
+  function cleanTagValue(tag) {
+    const clean = cleanText(tag).replace(/\s+/g, ' ').replace(/^[,.;:\s]+|[,.;:\s]+$/g, '');
+    return clean && clean.length <= 70 ? clean : '';
+  }
+
   function dedupeTags(tags) {
     const seen = new Set();
-    return tags.filter((tag) => {
-      const key = tag.toLowerCase();
-      if (!tag || seen.has(key)) {
-        return false;
-      }
+    return tags
+      .map(cleanTagValue)
+      .filter((tag) => {
+        const key = tag.toLowerCase();
+        if (!tag || seen.has(key)) {
+          return false;
+        }
 
-      seen.add(key);
-      return true;
-    });
+        seen.add(key);
+        return true;
+      });
   }
 
   function suggestedTags() {
@@ -629,6 +636,25 @@
 
   function suggestedCategory() {
     const categories = (window.kepoliAuthorTools && window.kepoliAuthorTools.categories) || [];
+    const isArticleCategory = (category) => {
+      if (!category) {
+        return false;
+      }
+
+      if (category.isArticle) {
+        return true;
+      }
+
+      const categoryLabel = normalizeWords([category.slug, category.name, category.description].join(' ')).join(' ');
+      return ['guides', 'articles', 'articole'].includes(category.slug) || categoryLabel.includes('article') || categoryLabel.includes('guide');
+    };
+
+    const articleCategory = categories.find(isArticleCategory) || null;
+    if (currentKind() === 'article') {
+      return articleCategory;
+    }
+
+    const candidateCategories = categories.filter((category) => !isArticleCategory(category));
     const text = `${currentTitle()} ${currentContentText()}`;
     const titleWords = normalizeWords(currentTitle());
     const sourceWords = normalizeWords(text);
@@ -664,7 +690,7 @@
       }
     ];
 
-    categories.forEach((category) => {
+    candidateCategories.forEach((category) => {
       let score = 0;
       const haystack = normalizeWords([category.name, category.description].join(' '));
       const categoryLabel = normalizeWords([category.slug, category.name, category.description].join(' ')).join(' ');
@@ -693,14 +719,6 @@
         }
       });
 
-      if (currentKind() === 'article' && (category.slug === 'guides' || categoryLabel.includes('article') || categoryLabel.includes('guide'))) {
-        score += 12;
-      }
-
-      if (currentKind() === 'recipe' && (category.slug === 'guides' || categoryLabel.includes('article') || categoryLabel.includes('guide'))) {
-        score -= 10;
-      }
-
       posts.forEach((post) => {
         const postWords = normalizeWords([post.title, post.excerpt, (post.tags || []).join(' ')].join(' '));
         const overlap = titleWords.filter((word) => postWords.includes(word)).length;
@@ -719,7 +737,7 @@
       categoryScores.set(category.id, score);
     });
 
-    return categories
+    return candidateCategories
       .map((category) => ({ ...category, score: categoryScores.get(category.id) || 0 }))
       .sort((a, b) => b.score - a.score || a.name.localeCompare(b.name))[0] || null;
   }

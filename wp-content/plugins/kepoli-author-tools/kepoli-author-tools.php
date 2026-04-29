@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Food Blog Author Tools
  * Description: Simplifies the post editor with split tools, excerpt and SEO helpers, internal-link suggestions, and featured-image metadata.
- * Version: 1.9.2
+ * Version: 1.9.3
  * Author: Site tools
  * Text Domain: kepoli-author-tools
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class Food_Blog_Author_Tools
 {
-    private const VERSION = '1.9.2';
+    private const VERSION = '1.9.3';
     private const AUTO_INTERNAL_LINKS_START = '<!-- kepoli-auto-internal-links:start -->';
     private const AUTO_INTERNAL_LINKS_END = '<!-- kepoli-auto-internal-links:end -->';
     private const AUTO_FAQ_START = '<!-- kepoli-auto-faq:start -->';
@@ -179,6 +179,62 @@ final class Food_Blog_Author_Tools
     {
         $name = trim((string) self::profile_value(['brand', 'name'], ''));
         return $name !== '' ? $name : (get_bloginfo('name') ?: 'Food Blog');
+    }
+
+    private static function profile_slug(string $key, string $fallback): string
+    {
+        $slug = sanitize_title((string) self::profile_value(['slugs', $key], ''));
+        return $slug !== '' ? $slug : $fallback;
+    }
+
+    private static function article_category_slugs(): array
+    {
+        return array_values(array_unique(array_filter([
+            self::profile_slug('guides', 'guides'),
+            'guides',
+            'articles',
+            'articole',
+        ])));
+    }
+
+    private static function clean_tag_name(string $tag): string
+    {
+        $tag = trim(wp_strip_all_tags($tag));
+        $tag = preg_replace('/\s+/', ' ', $tag) ?: $tag;
+        $tag = trim($tag, " \t\n\r\0\x0B,.;:");
+
+        if ($tag === '') {
+            return '';
+        }
+
+        $length = function_exists('mb_strlen') ? mb_strlen($tag) : strlen($tag);
+        if ($length > 70) {
+            return '';
+        }
+
+        return $tag;
+    }
+
+    private static function clean_tag_list(array $tags): array
+    {
+        $clean = [];
+        $seen = [];
+        foreach ($tags as $tag) {
+            $tag = self::clean_tag_name((string) $tag);
+            if ($tag === '') {
+                continue;
+            }
+
+            $key = strtolower($tag);
+            if (isset($seen[$key])) {
+                continue;
+            }
+
+            $seen[$key] = true;
+            $clean[] = $tag;
+        }
+
+        return array_slice($clean, 0, 8);
     }
 
     public static function init(): void
@@ -565,8 +621,10 @@ final class Food_Blog_Author_Tools
         self::maybe_normalize_content_structure($post_id, $post);
 
         self::save_post_excerpt($post_id, $post);
-        self::save_text_meta($post_id, '_kepoli_seo_title', 'kepoli_seo_title', 70);
+        self::save_text_meta($post_id, '_kepoli_seo_title', 'kepoli_seo_title', 58);
         self::save_meta_description($post_id, $post);
+        self::maybe_apply_suggested_category($post_id, $kind);
+        self::maybe_clean_post_tags($post_id);
 
         $related_recipes = self::posted_slugs('kepoli_related_recipe_slugs');
         $related_articles = self::posted_slugs('kepoli_related_article_slugs');
@@ -817,6 +875,154 @@ final class Food_Blog_Author_Tools
         return $counts;
     }
 
+    private static function article_category_id(): int
+    {
+        foreach (self::article_category_slugs() as $slug) {
+            $term = get_term_by('slug', $slug, 'category');
+            if ($term instanceof WP_Term) {
+                return (int) $term->term_id;
+            }
+        }
+
+        $name = self::content_text('Articole', 'Guides');
+        $slug = self::article_category_slugs()[0] ?? 'guides';
+        $created = wp_insert_term($name, 'category', ['slug' => $slug]);
+
+        if (is_wp_error($created)) {
+            $fallback = get_term_by('slug', 'guides', 'category') ?: get_term_by('slug', 'articles', 'category');
+            return $fallback instanceof WP_Term ? (int) $fallback->term_id : 0;
+        }
+
+        return (int) ($created['term_id'] ?? 0);
+    }
+
+    private static function is_article_category_term(WP_Term $term): bool
+    {
+        if (in_array((string) $term->slug, self::article_category_slugs(), true)) {
+            return true;
+        }
+
+        $label = strtolower((string) $term->name . ' ' . (string) $term->description);
+        return str_contains($label, 'article') || str_contains($label, 'guide') || str_contains($label, 'articol') || str_contains($label, 'ghid');
+    }
+
+    private static function posted_category_ids(): array
+    {
+        if (!isset($_POST['post_category'])) {
+            return [];
+        }
+
+        $posted = wp_unslash($_POST['post_category']);
+        if (!is_array($posted)) {
+            return [];
+        }
+
+        return array_values(array_unique(array_filter(array_map('absint', $posted))));
+    }
+
+    private static function maybe_apply_suggested_category(int $post_id, string $kind): void
+    {
+        if ($kind === 'article') {
+            $article_category_id = self::article_category_id();
+            if ($article_category_id > 0) {
+                wp_set_post_categories($post_id, [$article_category_id], false);
+            }
+            return;
+        }
+
+        $selected_ids = self::posted_category_ids();
+        foreach ($selected_ids as $term_id) {
+            $term = get_term($term_id, 'category');
+            if ($term instanceof WP_Term && !self::is_article_category_term($term) && (int) $term->term_id !== 1) {
+                wp_set_post_categories($post_id, [$term_id], false);
+                return;
+            }
+        }
+
+        $current_terms = get_the_category($post_id);
+        foreach ($current_terms as $term) {
+            if ($term instanceof WP_Term && !self::is_article_category_term($term) && (int) $term->term_id !== 1) {
+                return;
+            }
+        }
+
+        $suggested_category_id = self::suggest_recipe_category_id($post_id);
+        if ($suggested_category_id > 0) {
+            wp_set_post_categories($post_id, [$suggested_category_id], false);
+        }
+    }
+
+    private static function suggest_recipe_category_id(int $post_id): int
+    {
+        $post = get_post($post_id);
+        if (!$post instanceof WP_Post) {
+            return 0;
+        }
+
+        $terms = get_terms([
+            'taxonomy' => 'category',
+            'hide_empty' => false,
+        ]);
+
+        if (!is_array($terms)) {
+            return 0;
+        }
+
+        $text = strtolower(self::plain_text($post->post_title . ' ' . $post->post_content));
+        $keyword_map = [
+            'quick-recipes' => ['quick', 'fast', 'easy', 'weeknight', 'one pan', 'one-pot', 'skillet', 'pasta', 'rice'],
+            'main-dishes' => ['main', 'dinner', 'lunch', 'chicken', 'salmon', 'turkey', 'beef', 'burger', 'stew', 'pizza'],
+            'desserts' => ['dessert', 'cake', 'cookie', 'cookies', 'crepe', 'pancake', 'chocolate', 'strawberry', 'sweet'],
+            'seasonal-cooking' => ['seasonal', 'fresh', 'summer', 'winter', 'spring', 'autumn', 'herb', 'vegetable', 'salad'],
+        ];
+        $best_id = 0;
+        $best_score = 0;
+
+        foreach ($terms as $term) {
+            if (!$term instanceof WP_Term || (int) $term->term_id === 1 || self::is_article_category_term($term)) {
+                continue;
+            }
+
+            $score = 0;
+            $keywords = $keyword_map[(string) $term->slug] ?? [];
+            $keywords[] = (string) $term->slug;
+            $keywords[] = (string) $term->name;
+
+            foreach ($keywords as $keyword) {
+                $keyword = strtolower(self::plain_text($keyword));
+                if ($keyword !== '' && str_contains($text, $keyword)) {
+                    $score += 4;
+                }
+            }
+
+            if ($score > $best_score) {
+                $best_score = $score;
+                $best_id = (int) $term->term_id;
+            }
+        }
+
+        return $best_score > 0 ? $best_id : 0;
+    }
+
+    private static function maybe_clean_post_tags(int $post_id): void
+    {
+        $posted_tags = [];
+        if (isset($_POST['tax_input']) && is_array($_POST['tax_input'])) {
+            $tax_input = wp_unslash($_POST['tax_input']);
+            if (is_array($tax_input) && isset($tax_input['post_tag'])) {
+                $raw = $tax_input['post_tag'];
+                $posted_tags = is_array($raw) ? $raw : explode(',', (string) $raw);
+            }
+        }
+
+        if (!$posted_tags) {
+            $existing = wp_get_post_terms($post_id, 'post_tag', ['fields' => 'names']);
+            $posted_tags = is_array($existing) ? $existing : [];
+        }
+
+        wp_set_post_terms($post_id, self::clean_tag_list($posted_tags), 'post_tag', false);
+    }
+
     private static function category_payload(): array
     {
         $terms = get_terms([
@@ -839,6 +1045,7 @@ final class Food_Blog_Author_Tools
                 'slug' => (string) $term->slug,
                 'name' => (string) $term->name,
                 'description' => (string) $term->description,
+                'isArticle' => self::is_article_category_term($term),
             ];
         }
 
