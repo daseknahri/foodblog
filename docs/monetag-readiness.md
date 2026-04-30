@@ -20,6 +20,7 @@ MONETAG_VERIFY_META_NAME=
 MONETAG_VERIFY_META_CONTENT=
 MONETAG_SCRIPT_SRC=
 MONETAG_POST_ONLY=1
+MONETAG_SW_JS_BASE64=
 ```
 
 Use this sequence:
@@ -27,10 +28,17 @@ Use this sequence:
 1. Set only `MONETAG_VERIFY_META_NAME` and `MONETAG_VERIFY_META_CONTENT`.
 2. Redeploy and verify the site in Monetag.
 3. Add the Multitag script URL to `MONETAG_SCRIPT_SRC`.
-4. Set `MONETAG_ENABLE=1` only when the channel is ready.
-5. Redeploy and test one public post on mobile.
+4. If Monetag gives you a `sw.js` file, encode it and add the value to `MONETAG_SW_JS_BASE64`.
+5. Set `MONETAG_ENABLE=1` only when the channel is ready.
+6. Redeploy and test one public post on mobile.
 
-The theme renders the Monetag verification meta tag in the public `<head>` when both verification values exist. The ad script renders only on public single posts. It does not render for logged-in admins, homepage, search, 404, feeds, static pages, or legal/policy pages.
+The theme renders the Monetag verification meta tag in the public `<head>` when both verification values exist. The ad script renders only on public single posts. It does not render for logged-in admins, homepage, search, 404, feeds, static pages, or legal/policy pages. The MU plugin can also serve Monetag's HTTPS service-worker file at `/sw.js` when `MONETAG_ENABLE=1`.
+
+PowerShell command to encode a downloaded `sw.js` file:
+
+```powershell
+[Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\to\sw.js"))
+```
 
 ## Monetag dashboard setup
 
@@ -98,6 +106,7 @@ Manual checks after deploy:
 1. With `MONETAG_ENABLE=0`, view source on the homepage and a post. No Monetag script should appear.
 2. With verification env values set, view source on the homepage. The verification meta tag should appear.
 3. With `MONETAG_ENABLE=1` and `MONETAG_SCRIPT_SRC` set, view source on one public recipe/article post. The Monetag script should appear.
-4. Check homepage, search, 404, feeds, About, Contact, Privacy, Cookies, Advertising, Editorial, Terms, and Disclaimer pages. The Monetag script should not appear.
-5. Log in as admin and view a post. The Monetag script should not appear for the admin session.
-6. Check the first 3 days for counted impressions, no obvious mobile layout break, no Facebook reach collapse, and no payment or traffic-quality warning.
+4. With `MONETAG_ENABLE=1`, open `https://kuchniatwist.pl/sw.js`. It should return JavaScript, not an HTML page.
+5. Check homepage, search, 404, feeds, About, Contact, Privacy, Cookies, Advertising, Editorial, Terms, and Disclaimer pages. The Monetag script should not appear.
+6. Log in as admin and view a post. The Monetag script should not appear for the admin session.
+7. Check the first 3 days for counted impressions, no obvious mobile layout break, no Facebook reach collapse, and no payment or traffic-quality warning.

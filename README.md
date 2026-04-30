@@ -46,9 +46,10 @@ This clone is currently the controlled instant-monetization test site. Monetag i
 ADSENSE_ENABLE=0
 MONETAG_ENABLE=0
 MONETAG_POST_ONLY=1
+MONETAG_SW_JS_BASE64=
 ```
 
-When Monetag is enabled, the theme renders the script only on public single posts and never for logged-in admins, homepage, search, 404, feeds, static pages, or legal/policy pages. Use `docs/monetag-readiness.md` for the exact dashboard setup, traffic ramp, and acceptance checks.
+When Monetag is enabled, the theme renders the script only on public single posts and never for logged-in admins, homepage, search, 404, feeds, static pages, or legal/policy pages. The MU plugin can serve Monetag's optional HTTPS service worker at `/sw.js` from `MONETAG_SW_JS_BASE64`. Use `docs/monetag-readiness.md` for the exact dashboard setup, traffic ramp, and acceptance checks.
 
 ## Ezoic Notes
 

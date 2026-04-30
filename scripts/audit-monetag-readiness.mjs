@@ -8,6 +8,7 @@ const warnings = [];
 const env = readEnv('.env.example');
 const compose = readFile('docker-compose.yml');
 const themeFunctions = readFile('wp-content/themes/kepoli/functions.php');
+const adtechMuPlugin = readFile('wp-content/mu-plugins/kepoli-adtech.php');
 const docs = readFile('docs/monetag-readiness.md');
 const siteProfile = readJsonObject('content/site-profile.json');
 const pages = readJsonArray('content/pages.json');
@@ -15,6 +16,7 @@ const pages = readJsonArray('content/pages.json');
 checkEnvContract();
 checkComposeContract();
 checkThemeGate();
+checkServiceWorkerGate();
 checkPolicyPages();
 checkDocs();
 
@@ -124,6 +126,7 @@ function checkEnvContract() {
     ['MONETAG_VERIFY_META_CONTENT', ''],
     ['MONETAG_SCRIPT_SRC', ''],
     ['MONETAG_POST_ONLY', '1'],
+    ['MONETAG_SW_JS_BASE64', ''],
   ]);
 
   for (const [key, expected] of monetagDefaults.entries()) {
@@ -146,6 +149,7 @@ function checkComposeContract() {
     'MONETAG_VERIFY_META_CONTENT',
     'MONETAG_SCRIPT_SRC',
     'MONETAG_POST_ONLY',
+    'MONETAG_SW_JS_BASE64',
   ]) {
     if (occurrences(compose, key) < 2) {
       failures.push(`docker-compose.yml must pass ${key} to both wordpress and wp-init.`);
@@ -194,6 +198,18 @@ function checkThemeGate() {
   }
 }
 
+function checkServiceWorkerGate() {
+  requireIncludes('MU plugin Monetag service worker gate', adtechMuPlugin, [
+    /\/sw\.js/,
+    /MONETAG_ENABLE/,
+    /MONETAG_SW_JS_BASE64/,
+    /base64_decode\(\$encoded_script,\s*true\)/,
+    /Content-Type:\s*application\/javascript/,
+    /Service-Worker-Allowed:\s*\//,
+    /Cache-Control:\s*no-store/,
+  ]);
+}
+
 function checkPolicyPages() {
   const pageBySlug = new Map(pages.map((page) => [String(page.slug || ''), page]));
   const required = [
@@ -236,6 +252,8 @@ function checkDocs() {
   requireIncludes('docs/monetag-readiness.md', docs, [
     /MONETAG_ENABLE=0/,
     /MONETAG_SCRIPT_SRC=/,
+    /MONETAG_SW_JS_BASE64=/,
+    /sw\.js/,
     /ADSENSE_ENABLE=0/,
     /In-Page Push/i,
     /Vignette Banner/i,

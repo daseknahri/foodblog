@@ -14,6 +14,12 @@ function kepoli_mu_env(string $key, string $default = ''): string
     return $value === false || $value === '' ? $default : trim((string) $value);
 }
 
+function kepoli_mu_env_bool(string $key, bool $default = false): bool
+{
+    $value = strtolower(kepoli_mu_env($key, $default ? '1' : '0'));
+    return in_array($value, ['1', 'true', 'yes', 'on'], true);
+}
+
 function kepoli_mu_site_profile(): array
 {
     $profile = get_option('kepoli_site_profile');
@@ -127,6 +133,34 @@ add_action('template_redirect', static function (): void {
     $request_uri = str_starts_with($request_uri, '/') ? $request_uri : '/';
 
     wp_redirect($scheme . '://' . $canonical_host . $request_uri, 301, kepoli_mu_site_name());
+    exit;
+}, 0);
+
+add_action('template_redirect', static function (): void {
+    $path = parse_url((string) ($_SERVER['REQUEST_URI'] ?? ''), PHP_URL_PATH);
+    if ($path !== '/sw.js') {
+        return;
+    }
+
+    if (!kepoli_mu_env_bool('MONETAG_ENABLE', false)) {
+        return;
+    }
+
+    $script = '';
+    $encoded_script = kepoli_mu_env('MONETAG_SW_JS_BASE64');
+    if ($encoded_script !== '') {
+        $decoded_script = base64_decode($encoded_script, true);
+        if (is_string($decoded_script) && trim($decoded_script) !== '') {
+            $script = $decoded_script;
+        }
+    }
+
+    status_header(200);
+    header('Content-Type: application/javascript; charset=utf-8');
+    header('Cache-Control: no-store, max-age=0');
+    header('Service-Worker-Allowed: /');
+
+    echo $script !== '' ? $script : "/* Monetag service worker placeholder. Set MONETAG_SW_JS_BASE64 after the dashboard provides sw.js. */\n";
     exit;
 }, 0);
 
