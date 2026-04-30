@@ -10,7 +10,7 @@ kuchniatwist is a GitHub-driven WordPress food blog for English recipes and prac
 - A one-shot `wp-init` seed profile for manual reseeding, plus a self-seeding MU plugin for platforms that skip the profile service.
 - A compact authoring plugin that keeps the WordPress admin in English and helps fill SEO, image, recipe, internal-link, and split-post fields.
 - Google Site Kit installation for later Search Console, Analytics, or AdSense connection from WordPress admin.
-- Ezoic-first monetization defaults: direct ad rendering stays off unless explicit environment variables enable it.
+- Env-gated monetization defaults: AdSense, Ezoic, and Monetag stay off unless explicit environment variables enable them.
 
 ## Content Status
 
@@ -38,9 +38,21 @@ If you need to manually reseed after launch, run:
 docker compose --profile seed run --rm wp-init
 ```
 
+## Monetag Notes
+
+This clone is currently the controlled instant-monetization test site. Monetag is disabled by default and should be enabled only from Coolify:
+
+```env
+ADSENSE_ENABLE=0
+MONETAG_ENABLE=0
+MONETAG_POST_ONLY=1
+```
+
+When Monetag is enabled, the theme renders the script only on public single posts and never for logged-in admins, homepage, search, 404, feeds, static pages, or legal/policy pages. Use `docs/monetag-readiness.md` for the exact dashboard setup, traffic ramp, and acceptance checks.
+
 ## Ezoic Notes
 
-This clone is set up for Ezoic review first. Keep direct AdSense placements disabled during review:
+Ezoic support remains available for a later test. Keep direct AdSense placements disabled during any third-party network review:
 
 ```env
 ADSENSE_ENABLE=0

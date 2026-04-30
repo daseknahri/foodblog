@@ -992,6 +992,39 @@ function kepoli_ga_enabled(): bool
     return kepoli_env_bool('GA_ENABLE', false);
 }
 
+function kepoli_monetag_enabled(): bool
+{
+    return kepoli_env_bool('MONETAG_ENABLE', false);
+}
+
+function kepoli_monetag_meta_name(): string
+{
+    $name = kepoli_env('MONETAG_VERIFY_META_NAME');
+    $name = preg_replace('/[^A-Za-z0-9:_-]/', '', $name);
+    return is_string($name) ? trim($name) : '';
+}
+
+function kepoli_monetag_script_src(): string
+{
+    $src = kepoli_env('MONETAG_SCRIPT_SRC');
+    if ($src === '') {
+        return '';
+    }
+
+    $url = esc_url_raw($src, ['https']);
+    if ($url === '') {
+        return '';
+    }
+
+    $scheme = strtolower((string) wp_parse_url($url, PHP_URL_SCHEME));
+    $host = (string) wp_parse_url($url, PHP_URL_HOST);
+    if ($scheme !== 'https' || $host === '') {
+        return '';
+    }
+
+    return $url;
+}
+
 function kepoli_primary_category(int $post_id = 0): ?WP_Term
 {
     $post_id = $post_id ?: get_the_ID();
@@ -2741,6 +2774,22 @@ function kepoli_adsense_head(): void
 }
 add_action('wp_head', 'kepoli_adsense_head', 8);
 
+function kepoli_monetag_verification_meta(): void
+{
+    if (is_admin()) {
+        return;
+    }
+
+    $name = kepoli_monetag_meta_name();
+    $content = kepoli_env('MONETAG_VERIFY_META_CONTENT');
+    if ($name === '' || $content === '') {
+        return;
+    }
+
+    printf("<meta name=\"%s\" content=\"%s\">\n", esc_attr($name), esc_attr($content));
+}
+add_action('wp_head', 'kepoli_monetag_verification_meta', 7);
+
 function kepoli_ga_head(): void
 {
     $measurement_id = kepoli_env('GA_MEASUREMENT_ID');
@@ -2758,6 +2807,42 @@ function kepoli_ga_head(): void
     <?php
 }
 add_action('wp_head', 'kepoli_ga_head', 9);
+
+function kepoli_monetag_should_render(): bool
+{
+    if (!kepoli_monetag_enabled()) {
+        return false;
+    }
+
+    if (is_admin() || wp_doing_ajax() || is_feed() || is_search() || is_404() || is_front_page()) {
+        return false;
+    }
+
+    if (is_user_logged_in() && current_user_can('manage_options')) {
+        return false;
+    }
+
+    if (kepoli_env_bool('MONETAG_POST_ONLY', true)) {
+        return is_singular('post');
+    }
+
+    return is_singular('post');
+}
+
+function kepoli_monetag_head(): void
+{
+    if (!kepoli_monetag_should_render()) {
+        return;
+    }
+
+    $src = kepoli_monetag_script_src();
+    if ($src === '') {
+        return;
+    }
+
+    printf("<script async src=\"%s\"></script>\n", esc_url($src));
+}
+add_action('wp_head', 'kepoli_monetag_head', 11);
 
 function kepoli_newsletter_cta(string $class = ''): string
 {
