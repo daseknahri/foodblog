@@ -1025,6 +1025,17 @@ function kepoli_monetag_script_src(): string
     return $url;
 }
 
+function kepoli_monetag_zone_id(): string
+{
+    $zone_id = preg_replace('/[^0-9]/', '', kepoli_env('MONETAG_ZONE_ID'));
+    return is_string($zone_id) ? trim($zone_id) : '';
+}
+
+function kepoli_monetag_cfasync(): string
+{
+    return kepoli_env_bool('MONETAG_CFASYNC', false) ? 'true' : 'false';
+}
+
 function kepoli_primary_category(int $post_id = 0): ?WP_Term
 {
     $post_id = $post_id ?: get_the_ID();
@@ -2840,7 +2851,17 @@ function kepoli_monetag_head(): void
         return;
     }
 
-    printf("<script async src=\"%s\"></script>\n", esc_url($src));
+    $zone_id = kepoli_monetag_zone_id();
+    if ($zone_id === '') {
+        return;
+    }
+
+    printf(
+        "<script src=\"%s\" data-zone=\"%s\" async data-cfasync=\"%s\"></script>\n",
+        esc_url($src),
+        esc_attr($zone_id),
+        esc_attr(kepoli_monetag_cfasync())
+    );
 }
 add_action('wp_head', 'kepoli_monetag_head', 11);
 

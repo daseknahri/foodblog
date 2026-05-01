@@ -45,6 +45,9 @@ This clone is currently the controlled instant-monetization test site. Monetag i
 ```env
 ADSENSE_ENABLE=0
 MONETAG_ENABLE=0
+MONETAG_SCRIPT_SRC=
+MONETAG_ZONE_ID=
+MONETAG_CFASYNC=false
 MONETAG_POST_ONLY=1
 MONETAG_SW_JS_BASE64=
 ```

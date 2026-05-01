@@ -19,6 +19,8 @@ MONETAG_ENABLE=0
 MONETAG_VERIFY_META_NAME=
 MONETAG_VERIFY_META_CONTENT=
 MONETAG_SCRIPT_SRC=
+MONETAG_ZONE_ID=
+MONETAG_CFASYNC=false
 MONETAG_POST_ONLY=1
 MONETAG_SW_JS_BASE64=
 ```
@@ -27,7 +29,7 @@ Use this sequence:
 
 1. Set only `MONETAG_VERIFY_META_NAME` and `MONETAG_VERIFY_META_CONTENT`.
 2. Redeploy and verify the site in Monetag.
-3. Add the Multitag script URL to `MONETAG_SCRIPT_SRC`.
+3. Add the Multitag script URL to `MONETAG_SCRIPT_SRC` and the `data-zone` number to `MONETAG_ZONE_ID`.
 4. If Monetag gives you a `sw.js` file, encode it and add the value to `MONETAG_SW_JS_BASE64`.
 5. Set `MONETAG_ENABLE=1` only when the channel is ready.
 6. Redeploy and test one public post on mobile.
@@ -38,6 +40,20 @@ PowerShell command to encode a downloaded `sw.js` file:
 
 ```powershell
 [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\to\sw.js"))
+```
+
+Example from a Monetag Multitag snippet:
+
+```html
+<script src="https://quge5.com/88/tag.min.js" data-zone="235077" async data-cfasync="false"></script>
+```
+
+Coolify values:
+
+```env
+MONETAG_SCRIPT_SRC=https://quge5.com/88/tag.min.js
+MONETAG_ZONE_ID=235077
+MONETAG_CFASYNC=false
 ```
 
 ## Monetag dashboard setup
@@ -105,7 +121,7 @@ Manual checks after deploy:
 
 1. With `MONETAG_ENABLE=0`, view source on the homepage and a post. No Monetag script should appear.
 2. With verification env values set, view source on the homepage. The verification meta tag should appear.
-3. With `MONETAG_ENABLE=1` and `MONETAG_SCRIPT_SRC` set, view source on one public recipe/article post. The Monetag script should appear.
+3. With `MONETAG_ENABLE=1`, `MONETAG_SCRIPT_SRC`, and `MONETAG_ZONE_ID` set, view source on one public recipe/article post. The Monetag script should appear with the expected `data-zone`.
 4. With `MONETAG_ENABLE=1`, open `https://kuchniatwist.pl/sw.js`. It should return JavaScript, not an HTML page.
 5. Check homepage, search, 404, feeds, About, Contact, Privacy, Cookies, Advertising, Editorial, Terms, and Disclaimer pages. The Monetag script should not appear.
 6. Log in as admin and view a post. The Monetag script should not appear for the admin session.

@@ -125,6 +125,8 @@ function checkEnvContract() {
     ['MONETAG_VERIFY_META_NAME', ''],
     ['MONETAG_VERIFY_META_CONTENT', ''],
     ['MONETAG_SCRIPT_SRC', ''],
+    ['MONETAG_ZONE_ID', ''],
+    ['MONETAG_CFASYNC', 'false'],
     ['MONETAG_POST_ONLY', '1'],
     ['MONETAG_SW_JS_BASE64', ''],
   ]);
@@ -148,6 +150,8 @@ function checkComposeContract() {
     'MONETAG_VERIFY_META_NAME',
     'MONETAG_VERIFY_META_CONTENT',
     'MONETAG_SCRIPT_SRC',
+    'MONETAG_ZONE_ID',
+    'MONETAG_CFASYNC',
     'MONETAG_POST_ONLY',
     'MONETAG_SW_JS_BASE64',
   ]) {
@@ -173,9 +177,13 @@ function checkThemeGate() {
     /MONETAG_VERIFY_META_NAME/,
     /MONETAG_VERIFY_META_CONTENT/,
     /MONETAG_SCRIPT_SRC/,
+    /MONETAG_ZONE_ID/,
+    /MONETAG_CFASYNC/,
     /MONETAG_POST_ONLY/,
     /esc_url_raw\(\$src,\s*\['https'\]\)/,
     /wp_parse_url\(\$url,\s*PHP_URL_SCHEME\)/,
+    /data-zone/,
+    /data-cfasync/,
   ]);
 
   requireIncludes('theme public-only Monetag gate', themeFunctions, [
@@ -252,6 +260,8 @@ function checkDocs() {
   requireIncludes('docs/monetag-readiness.md', docs, [
     /MONETAG_ENABLE=0/,
     /MONETAG_SCRIPT_SRC=/,
+    /MONETAG_ZONE_ID=/,
+    /MONETAG_CFASYNC=false/,
     /MONETAG_SW_JS_BASE64=/,
     /sw\.js/,
     /ADSENSE_ENABLE=0/,
