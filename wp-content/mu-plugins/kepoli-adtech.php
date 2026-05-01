@@ -155,6 +155,16 @@ add_action('template_redirect', static function (): void {
         }
     }
 
+    if ($script === '') {
+        $bundled_script_path = '/content/monetag/sw.js';
+        if (is_readable($bundled_script_path)) {
+            $bundled_script = file_get_contents($bundled_script_path);
+            if (is_string($bundled_script) && trim($bundled_script) !== '') {
+                $script = $bundled_script;
+            }
+        }
+    }
+
     status_header(200);
     header('Content-Type: application/javascript; charset=utf-8');
     header('Cache-Control: no-store, max-age=0');

@@ -9,6 +9,7 @@ const env = readEnv('.env.example');
 const compose = readFile('docker-compose.yml');
 const themeFunctions = readFile('wp-content/themes/kepoli/functions.php');
 const adtechMuPlugin = readFile('wp-content/mu-plugins/kepoli-adtech.php');
+const bundledSw = readFile('content/monetag/sw.js');
 const docs = readFile('docs/monetag-readiness.md');
 const siteProfile = readJsonObject('content/site-profile.json');
 const pages = readJsonArray('content/pages.json');
@@ -211,10 +212,18 @@ function checkServiceWorkerGate() {
     /\/sw\.js/,
     /MONETAG_ENABLE/,
     /MONETAG_SW_JS_BASE64/,
+    /\/content\/monetag\/sw\.js/,
+    /file_get_contents\(\$bundled_script_path\)/,
     /base64_decode\(\$encoded_script,\s*true\)/,
     /Content-Type:\s*application\/javascript/,
     /Service-Worker-Allowed:\s*\//,
     /Cache-Control:\s*no-store/,
+  ]);
+
+  requireIncludes('bundled Monetag service worker', bundledSw, [
+    /self\.options/,
+    /zoneId/,
+    /importScripts\('https:\/\//,
   ]);
 }
 
@@ -264,6 +273,7 @@ function checkDocs() {
     /MONETAG_CFASYNC=false/,
     /MONETAG_SW_JS_BASE64=/,
     /sw\.js/,
+    /content\/monetag\/sw\.js/,
     /ADSENSE_ENABLE=0/,
     /In-Page Push/i,
     /Vignette Banner/i,
