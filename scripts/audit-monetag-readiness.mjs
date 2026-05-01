@@ -129,6 +129,7 @@ function checkEnvContract() {
     ['MONETAG_ZONE_ID', ''],
     ['MONETAG_CFASYNC', 'false'],
     ['MONETAG_POST_ONLY', '1'],
+    ['MONETAG_INSTALL_CHECK', '0'],
     ['MONETAG_SW_JS_BASE64', ''],
   ]);
 
@@ -154,6 +155,7 @@ function checkComposeContract() {
     'MONETAG_ZONE_ID',
     'MONETAG_CFASYNC',
     'MONETAG_POST_ONLY',
+    'MONETAG_INSTALL_CHECK',
     'MONETAG_SW_JS_BASE64',
   ]) {
     if (occurrences(compose, key) < 2) {
@@ -181,6 +183,7 @@ function checkThemeGate() {
     /MONETAG_ZONE_ID/,
     /MONETAG_CFASYNC/,
     /MONETAG_POST_ONLY/,
+    /MONETAG_INSTALL_CHECK/,
     /esc_url_raw\(\$src,\s*\['https'\]\)/,
     /wp_parse_url\(\$url,\s*PHP_URL_SCHEME\)/,
     /data-zone/,
@@ -194,6 +197,7 @@ function checkThemeGate() {
     /is_search\(\)/,
     /is_404\(\)/,
     /is_front_page\(\)/,
+    /is_home\(\)/,
     /is_user_logged_in\(\)\s*&&\s*current_user_can\('manage_options'\)/,
     /is_singular\('post'\)/,
   ]);
@@ -271,10 +275,12 @@ function checkDocs() {
     /MONETAG_SCRIPT_SRC=/,
     /MONETAG_ZONE_ID=/,
     /MONETAG_CFASYNC=false/,
+    /MONETAG_INSTALL_CHECK=0/,
     /MONETAG_SW_JS_BASE64=/,
     /sw\.js/,
     /content\/monetag\/sw\.js/,
     /ADSENSE_ENABLE=0/,
+    /installation check/i,
     /In-Page Push/i,
     /Vignette Banner/i,
     /Popunder/i,

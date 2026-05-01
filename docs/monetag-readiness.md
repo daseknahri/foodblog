@@ -22,6 +22,7 @@ MONETAG_SCRIPT_SRC=
 MONETAG_ZONE_ID=
 MONETAG_CFASYNC=false
 MONETAG_POST_ONLY=1
+MONETAG_INSTALL_CHECK=0
 MONETAG_SW_JS_BASE64=
 ```
 
@@ -32,9 +33,10 @@ Use this sequence:
 3. Add the Multitag script URL to `MONETAG_SCRIPT_SRC` and the `data-zone` number to `MONETAG_ZONE_ID`.
 4. If Monetag gives you a `sw.js` file, place it at `content/monetag/sw.js` in the repo, or encode it and add the value to `MONETAG_SW_JS_BASE64`.
 5. Set `MONETAG_ENABLE=1` only when the channel is ready.
-6. Redeploy and test one public post on mobile.
+6. If Monetag's installation checker still fails, temporarily set `MONETAG_INSTALL_CHECK=1`, redeploy, run the checker, then set `MONETAG_INSTALL_CHECK=0` again after the checker passes.
+7. Redeploy and test one public post on mobile.
 
-The theme renders the Monetag verification meta tag in the public `<head>` when both verification values exist. The ad script renders only on public single posts. It does not render for logged-in admins, homepage, search, 404, feeds, static pages, or legal/policy pages. The MU plugin serves Monetag's HTTPS service-worker file at `/sw.js` when `MONETAG_ENABLE=1`, first from `MONETAG_SW_JS_BASE64` if set, otherwise from the bundled `content/monetag/sw.js` file.
+The theme renders the Monetag verification meta tag in the public `<head>` when both verification values exist. The ad script renders only on public single posts. It does not render for logged-in admins, search, 404, feeds, static pages, or legal/policy pages. The homepage remains clean unless temporary installation-check mode is enabled with `MONETAG_INSTALL_CHECK=1`. The MU plugin serves Monetag's HTTPS service-worker file at `/sw.js` when `MONETAG_ENABLE=1`, first from `MONETAG_SW_JS_BASE64` if set, otherwise from the bundled `content/monetag/sw.js` file.
 
 PowerShell command to encode a downloaded `sw.js` file:
 
@@ -54,6 +56,7 @@ Coolify values:
 MONETAG_SCRIPT_SRC=https://quge5.com/88/tag.min.js
 MONETAG_ZONE_ID=235077
 MONETAG_CFASYNC=false
+MONETAG_INSTALL_CHECK=0
 ```
 
 ## Monetag dashboard setup
@@ -99,7 +102,8 @@ Supporting KPIs:
 ## Safety rules
 
 - Do not enable AdSense at the same time during this Monetag test.
-- Do not place Monetag on legal, policy, About, Contact, homepage, search, 404, or feeds.
+- Do not place Monetag on legal, policy, About, Contact, search, 404, or feeds.
+- Use homepage rendering only as a temporary Monetag installation check, then turn `MONETAG_INSTALL_CHECK=0` again.
 - Do not use fake buttons, fake download actions, misleading CTAs, or forced navigation.
 - Do not send Facebook traffic directly to SmartLink at first.
 - If KuchniaTwist later applies to AdSense, remove aggressive Monetag formats and run clean for 30-60 days before submitting.
@@ -122,7 +126,9 @@ Manual checks after deploy:
 1. With `MONETAG_ENABLE=0`, view source on the homepage and a post. No Monetag script should appear.
 2. With verification env values set, view source on the homepage. The verification meta tag should appear.
 3. With `MONETAG_ENABLE=1`, `MONETAG_SCRIPT_SRC`, and `MONETAG_ZONE_ID` set, view source on one public recipe/article post. The Monetag script should appear with the expected `data-zone`.
-4. With `MONETAG_ENABLE=1`, open `https://kuchniatwist.pl/sw.js`. It should return JavaScript, not an HTML page.
-5. Check homepage, search, 404, feeds, About, Contact, Privacy, Cookies, Advertising, Editorial, Terms, and Disclaimer pages. The Monetag script should not appear.
-6. Log in as admin and view a post. The Monetag script should not appear for the admin session.
-7. Check the first 3 days for counted impressions, no obvious mobile layout break, no Facebook reach collapse, and no payment or traffic-quality warning.
+4. With `MONETAG_ENABLE=1` and `MONETAG_INSTALL_CHECK=1`, view source on the homepage. The Monetag script should appear for the checker.
+5. After Monetag passes the installation check, set `MONETAG_INSTALL_CHECK=0`, redeploy, and confirm the homepage script disappears.
+6. With `MONETAG_ENABLE=1`, open `https://kuchniatwist.pl/sw.js`. It should return JavaScript, not an HTML page.
+7. Check search, 404, feeds, About, Contact, Privacy, Cookies, Advertising, Editorial, Terms, and Disclaimer pages. The Monetag script should not appear.
+8. Log in as admin and view a post. The Monetag script should not appear for the admin session.
+9. Check the first 3 days for counted impressions, no obvious mobile layout break, no Facebook reach collapse, and no payment or traffic-quality warning.

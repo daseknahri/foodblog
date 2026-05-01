@@ -1036,6 +1036,11 @@ function kepoli_monetag_cfasync(): string
     return kepoli_env_bool('MONETAG_CFASYNC', false) ? 'true' : 'false';
 }
 
+function kepoli_monetag_install_check_enabled(): bool
+{
+    return kepoli_env_bool('MONETAG_INSTALL_CHECK', false);
+}
+
 function kepoli_primary_category(int $post_id = 0): ?WP_Term
 {
     $post_id = $post_id ?: get_the_ID();
@@ -2825,12 +2830,16 @@ function kepoli_monetag_should_render(): bool
         return false;
     }
 
-    if (is_admin() || wp_doing_ajax() || is_feed() || is_search() || is_404() || is_front_page()) {
+    if (is_admin() || wp_doing_ajax() || is_feed() || is_search() || is_404()) {
         return false;
     }
 
     if (is_user_logged_in() && current_user_can('manage_options')) {
         return false;
+    }
+
+    if (is_front_page() || is_home()) {
+        return kepoli_monetag_install_check_enabled();
     }
 
     if (kepoli_env_bool('MONETAG_POST_ONLY', true)) {

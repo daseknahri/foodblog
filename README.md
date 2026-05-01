@@ -49,10 +49,11 @@ MONETAG_SCRIPT_SRC=
 MONETAG_ZONE_ID=
 MONETAG_CFASYNC=false
 MONETAG_POST_ONLY=1
+MONETAG_INSTALL_CHECK=0
 MONETAG_SW_JS_BASE64=
 ```
 
-When Monetag is enabled, the theme renders the script only on public single posts and never for logged-in admins, homepage, search, 404, feeds, static pages, or legal/policy pages. The MU plugin serves Monetag's optional HTTPS service worker at `/sw.js` from `MONETAG_SW_JS_BASE64` or the bundled `content/monetag/sw.js` file. Use `docs/monetag-readiness.md` for the exact dashboard setup, traffic ramp, and acceptance checks.
+When Monetag is enabled, the theme renders the script only on public single posts and never for logged-in admins, search, 404, feeds, static pages, or legal/policy pages. The homepage remains clean unless `MONETAG_INSTALL_CHECK=1` is temporarily enabled for Monetag's checker. The MU plugin serves Monetag's optional HTTPS service worker at `/sw.js` from `MONETAG_SW_JS_BASE64` or the bundled `content/monetag/sw.js` file. Use `docs/monetag-readiness.md` for the exact dashboard setup, traffic ramp, and acceptance checks.
 
 ## Ezoic Notes
 
