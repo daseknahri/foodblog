@@ -36,6 +36,10 @@ const checks = [
     label: 'Ad operations readiness',
     command: ['node', 'scripts/audit-ad-ops-readiness.mjs'],
   },
+  {
+    label: 'Pre-lander readiness',
+    command: ['node', 'scripts/audit-prelander-readiness.mjs'],
+  },
 ];
 
 if (liveUrl !== '') {
@@ -125,6 +129,7 @@ Default checks:
 - Monetag readiness
 - Display ads readiness
 - Ad operations readiness
+- Pre-lander readiness
 
 With --live:
 - live Ezoic readiness

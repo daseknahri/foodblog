@@ -8,6 +8,8 @@ Use this as the default stack while the site is young:
 
 ```env
 ADSENSE_ENABLE=0
+KT_AD_MODE=baseline
+KT_PRELANDER_ENABLE=0
 DISPLAY_ADS_ENABLE=1
 DISPLAY_ADS_PROVIDER=adsterra
 MONETAG_ENABLE=1
@@ -37,6 +39,16 @@ Recommended Monetag stack:
 - Keep Vignette active only if it does not create bad user reports or Facebook reach collapse.
 - Keep OnClick/Popunder off until after the first payout.
 - Keep Push Notifications off unless there is a clear long-term reason to build subscribers.
+
+## Mode switch
+
+Use `KT_AD_MODE` as the simple operating mode:
+
+- `baseline`: default. Display/native ads plus light Monetag formats only.
+- `medium`: action-triggered OnClick can fire only after a real recipe intent click.
+- `aggressive`: small traffic tests only. Never use it as the whole-site default.
+
+Use `KT_PRELANDER_ENABLE=1` only when testing Facebook comment funnels. The pre-lander route is `/prelander/{post-slug}/`, keeps UTM parameters, and should point to the real recipe page with one honest CTA.
 
 ## Quality controls
 
@@ -88,10 +100,11 @@ Use this order. Do not jump to the bottom early.
 
 1. Baseline: Adsterra after-intro + mid-content, Monetag In-Page Push, Monetag Vignette every 5 minutes.
 2. Cleaner mode: pause Vignette if adult/redirect-heavy ads appear, keep In-Page Push plus display.
-3. More display: add below-content 320x50 or native only if readability remains good.
-4. Desktop sidebar: add sidebar only if desktop traffic is meaningful.
-5. Aggressive test: add OnClick/Popunder only after first payout, with provider cap plus `MONETAG_ONCLICK_MINUTES=60`.
-6. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.
+3. Pre-lander test: set `KT_PRELANDER_ENABLE=1` and send Facebook links to `/prelander/{post-slug}/`.
+4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64`; OnClick fires only after a recipe intent click.
+5. More display: add below-content 320x50 or native only if readability remains good.
+6. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
+7. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.
 
 ## Coolify controls
 
@@ -99,6 +112,27 @@ To pause Monetag instantly:
 
 ```env
 MONETAG_ENABLE=0
+```
+
+To return to the safest mode:
+
+```env
+KT_AD_MODE=baseline
+KT_PRELANDER_ENABLE=0
+MONETAG_ONCLICK_BASE64=
+MONETAG_PUSH_BASE64=
+```
+
+To test same-domain Facebook pre-landers:
+
+```env
+KT_PRELANDER_ENABLE=1
+```
+
+Then use this URL shape:
+
+```text
+https://kuchniatwist.pl/prelander/post-slug/?utm_source=facebook&utm_medium=social&utm_campaign=kuchnia_monetag_test&utm_content=hook_name
 ```
 
 To pause only Vignette:

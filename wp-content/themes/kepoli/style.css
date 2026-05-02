@@ -1745,6 +1745,62 @@ a.page-header-meta__value:focus-visible {
   grid-template-columns: minmax(0, var(--measure));
 }
 
+.prelander-layout {
+  width: var(--content);
+  min-height: calc(100svh - 72px);
+  margin: 0 auto;
+  padding: clamp(44px, 8vw, 86px) 0;
+  display: grid;
+  place-items: center;
+}
+
+.prelander-card {
+  width: min(100%, 760px);
+  padding: clamp(18px, 4vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(255, 253, 248, 0.86);
+  box-shadow: var(--shadow-lift);
+}
+
+.prelander-card h1 {
+  max-width: 680px;
+  margin: 0 0 14px;
+  font-size: clamp(2.35rem, 5vw, 4.1rem);
+  text-wrap: balance;
+}
+
+.prelander-card__media {
+  margin: 20px 0;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--paper-soft);
+}
+
+.prelander-card__image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.prelander-card__teaser {
+  max-width: 44rem;
+  margin: 0 0 20px;
+  color: var(--muted);
+  font-size: 1.08rem;
+}
+
+.prelander-card__cta {
+  min-width: 190px;
+}
+
+.prelander-card__note {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.9rem;
+}
+
 .entry {
   min-width: 0;
 }

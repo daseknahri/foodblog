@@ -1012,6 +1012,22 @@ function kepoli_monetag_enabled(): bool
     return kepoli_env_bool('MONETAG_ENABLE', false);
 }
 
+function kepoli_ad_mode(): string
+{
+    $mode = strtolower(kepoli_env('KT_AD_MODE', 'baseline'));
+    return in_array($mode, ['baseline', 'medium', 'aggressive'], true) ? $mode : 'baseline';
+}
+
+function kepoli_prelander_enabled(): bool
+{
+    return kepoli_env_bool('KT_PRELANDER_ENABLE', false);
+}
+
+function kepoli_ad_mode_allows_action_onclick(): bool
+{
+    return in_array(kepoli_ad_mode(), ['medium', 'aggressive'], true);
+}
+
 function kepoli_monetag_meta_name(): string
 {
     $name = kepoli_env('MONETAG_VERIFY_META_NAME');
@@ -1090,6 +1106,14 @@ function kepoli_monetag_snippets(): array
 {
     $snippets = [];
     foreach (kepoli_monetag_snippet_keys() as $format => $env_key) {
+        if ($format === 'onclick') {
+            continue;
+        }
+
+        if ($format === 'push' && kepoli_ad_mode() !== 'aggressive') {
+            continue;
+        }
+
         $code = kepoli_monetag_snippet_code($env_key);
         if ($code !== '') {
             $snippets[$format] = $code;
@@ -1097,6 +1121,15 @@ function kepoli_monetag_snippets(): array
     }
 
     return $snippets;
+}
+
+function kepoli_monetag_action_onclick_code(): string
+{
+    if (!kepoli_ad_mode_allows_action_onclick()) {
+        return '';
+    }
+
+    return kepoli_monetag_snippet_code('MONETAG_ONCLICK_BASE64');
 }
 
 function kepoli_monetag_frequency_minutes(string $format): int
@@ -1130,7 +1163,7 @@ function kepoli_monetag_render_snippet(string $format, string $code): void
         window.localStorage.setItem(key, String(now));
       } catch (error) {}
 
-      var html = <?php echo wp_json_encode($code, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
+      var html = <?php echo wp_json_encode($code, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
       var holder = document.createElement('div');
       holder.innerHTML = html;
       Array.prototype.slice.call(holder.childNodes).forEach(function (node) {
@@ -2628,6 +2661,128 @@ function kepoli_redirect_author_archives(): void
 }
 add_action('template_redirect', 'kepoli_redirect_author_archives', 2);
 
+function kepoli_prelander_request_slug(): string
+{
+    $request_uri = isset($_SERVER['REQUEST_URI']) ? wp_unslash((string) $_SERVER['REQUEST_URI']) : '';
+    $path = wp_parse_url($request_uri, PHP_URL_PATH);
+    $path = is_string($path) ? trim($path, '/') : '';
+
+    if (!preg_match('#^prelander/([^/]+)/?$#', $path, $matches)) {
+        return '';
+    }
+
+    return sanitize_title($matches[1]);
+}
+
+function kepoli_prelander_post_from_request(): ?WP_Post
+{
+    $slug = kepoli_prelander_request_slug();
+    if ($slug === '') {
+        return null;
+    }
+
+    $post = get_page_by_path($slug, OBJECT, 'post');
+    if (!$post instanceof WP_Post || $post->post_status !== 'publish') {
+        return null;
+    }
+
+    return $post;
+}
+
+function kepoli_prelander_target_url(WP_Post $post): string
+{
+    $target = get_permalink($post);
+    if (!is_string($target) || $target === '') {
+        $target = home_url('/');
+    }
+
+    $allowed_params = [];
+    foreach (['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'] as $key) {
+        if (isset($_GET[$key])) {
+            $value = sanitize_text_field(wp_unslash((string) $_GET[$key]));
+            if ($value !== '') {
+                $allowed_params[$key] = $value;
+            }
+        }
+    }
+
+    return $allowed_params ? add_query_arg($allowed_params, $target) : $target;
+}
+
+function kepoli_render_prelander(WP_Post $post): void
+{
+    status_header(200);
+    $GLOBALS['post'] = $post;
+    setup_postdata($post);
+
+    $target_url = kepoli_prelander_target_url($post);
+    $featured_image = kepoli_post_featured_image_markup($post->ID, 'large', [
+        'class' => 'prelander-card__image',
+        'loading' => 'eager',
+        'fetchpriority' => 'high',
+        'decoding' => 'async',
+        'sizes' => '(max-width: 760px) 100vw, 760px',
+    ]);
+    $teaser = has_excerpt($post) ? get_the_excerpt($post) : wp_trim_words(wp_strip_all_tags($post->post_content), 34, '...');
+
+    get_header();
+    ?>
+    <main id="primary" class="prelander-layout" data-kepoli-prelander>
+        <article class="prelander-card">
+            <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Reteta completa', 'Full recipe')); ?></p>
+            <h1><?php echo esc_html(get_the_title($post)); ?></h1>
+            <?php if ($featured_image !== '') : ?>
+                <figure class="prelander-card__media">
+                    <?php echo $featured_image; ?>
+                </figure>
+            <?php endif; ?>
+            <p class="prelander-card__teaser"><?php echo esc_html($teaser); ?></p>
+            <a class="button prelander-card__cta" href="<?php echo esc_url($target_url); ?>" data-prelander-cta data-prelander-target="<?php echo esc_attr(get_post_field('post_name', $post)); ?>">
+                <?php echo esc_html(kepoli_ui_text('Vezi reteta completa', 'See the full recipe')); ?>
+            </a>
+            <p class="prelander-card__note"><?php echo esc_html(kepoli_ui_text('Ingrediente, pasi, sfaturi si idei de servire pe pagina retetei.', 'Ingredients, steps, tips, and serving ideas are on the full recipe page.')); ?></p>
+        </article>
+    </main>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    document.querySelectorAll('[data-prelander-cta]').forEach(function (link) {
+      link.addEventListener('click', function () {
+        window.dataLayer.push({
+          event: 'prelander_cta_click',
+          target: link.getAttribute('data-prelander-target') || ''
+        });
+      });
+    });
+    </script>
+    <?php
+    get_footer();
+    wp_reset_postdata();
+}
+
+function kepoli_maybe_render_prelander(): void
+{
+    if (kepoli_prelander_request_slug() === '') {
+        return;
+    }
+
+    if (!kepoli_prelander_enabled()) {
+        status_header(404);
+        include get_404_template();
+        exit;
+    }
+
+    $post = kepoli_prelander_post_from_request();
+    if (!$post instanceof WP_Post) {
+        status_header(404);
+        include get_404_template();
+        exit;
+    }
+
+    kepoli_render_prelander($post);
+    exit;
+}
+add_action('template_redirect', 'kepoli_maybe_render_prelander', 3);
+
 function kepoli_scripts(): void
 {
     $style_path = get_template_directory() . '/style.min.css';
@@ -2671,6 +2826,16 @@ function kepoli_scripts(): void
                 [],
                 (string) filemtime($article_script),
                 true
+            );
+            wp_add_inline_script(
+                'kepoli-article',
+                'window.kepoliAdStrategy = ' . wp_json_encode([
+                    'mode' => kepoli_ad_mode(),
+                    'onclickHtml' => kepoli_monetag_action_onclick_code(),
+                    'onclickCooldownMinutes' => max(30, kepoli_monetag_frequency_minutes('onclick')),
+                    'avoidVignetteMinutes' => 2,
+                ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) . ';',
+                'before'
             );
             wp_script_add_data('kepoli-article', 'strategy', 'defer');
         }
@@ -2730,6 +2895,10 @@ add_action('widgets_init', 'kepoli_register_sidebars');
 
 function kepoli_robots_content(): string
 {
+    if (kepoli_prelander_request_slug() !== '') {
+        return 'noindex,follow,max-image-preview:large';
+    }
+
     if (is_search() || is_404()) {
         return 'noindex,follow,max-image-preview:large';
     }

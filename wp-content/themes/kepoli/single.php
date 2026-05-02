@@ -127,8 +127,8 @@ get_header();
                 <?php if ($is_recipe) : ?>
                     <nav class="entry-jumpnav" aria-label="<?php echo esc_attr(kepoli_ui_text('Navigatie reteta', 'Recipe navigation')); ?>">
                         <a href="#<?php echo esc_attr($recipe_jump_ids['highlights']); ?>"><?php echo kepoli_icon('tips'); ?><span><?php echo esc_html(kepoli_ui_text('Repere', 'Highlights')); ?></span></a>
-                        <a href="#<?php echo esc_attr($recipe_jump_ids['ingredients']); ?>"><?php echo kepoli_icon('ingredients'); ?><span><?php echo esc_html(kepoli_ui_text('Ingrediente', 'Ingredients')); ?></span></a>
-                        <a href="#<?php echo esc_attr($recipe_jump_ids['method']); ?>"><?php echo kepoli_icon('steps'); ?><span><?php echo esc_html(kepoli_ui_text('Preparare', 'Method')); ?></span></a>
+                        <a href="#<?php echo esc_attr($recipe_jump_ids['ingredients']); ?>" data-ad-intent-action="show_ingredients"><?php echo kepoli_icon('ingredients'); ?><span><?php echo esc_html(kepoli_ui_text('Ingrediente', 'Ingredients')); ?></span></a>
+                        <a href="#<?php echo esc_attr($recipe_jump_ids['method']); ?>" data-ad-intent-action="show_steps"><?php echo kepoli_icon('steps'); ?><span><?php echo esc_html(kepoli_ui_text('Preparare', 'Method')); ?></span></a>
                         <a href="#<?php echo esc_attr($recipe_jump_ids['before']); ?>"><?php echo kepoli_icon('prep'); ?><span><?php echo esc_html(kepoli_ui_text('Inainte', 'Before')); ?></span></a>
                         <a href="#<?php echo esc_attr($recipe_jump_ids['tips']); ?>"><?php echo kepoli_icon('tips'); ?><span><?php echo esc_html(kepoli_ui_text('Sfaturi', 'Tips')); ?></span></a>
                         <a href="#<?php echo esc_attr($recipe_jump_ids['storage']); ?>"><?php echo kepoli_icon('storage'); ?><span><?php echo esc_html(kepoli_ui_text('Pastrare', 'Storage')); ?></span></a>
@@ -173,7 +173,7 @@ get_header();
                     </div>
                     <div class="page-grid entry-next-grid">
                         <?php foreach ($post_next_steps['items'] as $item) : ?>
-                            <a class="page-panel entry-next-card <?php echo esc_attr($item['class']); ?>" href="<?php echo esc_url($item['url']); ?>">
+                            <a class="page-panel entry-next-card <?php echo esc_attr($item['class']); ?>" href="<?php echo esc_url($item['url']); ?>" data-ad-event="related_recipe_click">
                                 <span class="eyebrow"><?php echo esc_html($item['eyebrow']); ?></span>
                                 <strong><?php echo esc_html($item['label']); ?></strong>
                                 <span><?php echo esc_html($item['meta']); ?></span>
@@ -200,7 +200,7 @@ get_header();
                             $show_related_category = $related_category && !kepoli_is_editorial_category_slug($related_category->slug);
                             ?>
                             <article <?php post_class('related-card ' . kepoli_post_tone_class($related->ID), $related->ID); ?>>
-                                <a class="related-card__media" href="<?php echo esc_url(get_permalink($related)); ?>">
+                                <a class="related-card__media" href="<?php echo esc_url(get_permalink($related)); ?>" data-ad-event="related_recipe_click">
                                     <?php echo kepoli_post_card_media_markup($related->ID, 'related'); ?>
                                 </a>
                                 <div class="related-card__body">
@@ -215,7 +215,7 @@ get_header();
                                     <?php if ($related_reason !== '') : ?>
                                         <p class="related-card__reason"><?php echo esc_html($related_reason); ?></p>
                                     <?php endif; ?>
-                                    <h3><a href="<?php echo esc_url(get_permalink($related)); ?>"><?php echo esc_html(get_the_title($related)); ?></a></h3>
+                                    <h3><a href="<?php echo esc_url(get_permalink($related)); ?>" data-ad-event="related_recipe_click"><?php echo esc_html(get_the_title($related)); ?></a></h3>
                                     <p><?php echo esc_html(wp_trim_words(get_the_excerpt($related), 24, '...')); ?></p>
                                 </div>
                             </article>

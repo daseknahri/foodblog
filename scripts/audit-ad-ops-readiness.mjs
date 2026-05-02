@@ -51,6 +51,9 @@ function checkPlaybook() {
     /MONETAG_INPAGE_PUSH_MINUTES=0/,
     /MONETAG_VIGNETTE_MINUTES=5/,
     /MONETAG_ONCLICK_MINUTES=60/,
+    /KT_AD_MODE=baseline/,
+    /KT_PRELANDER_ENABLE=0/,
+    /\/prelander\/\{post-slug\}\//,
     /Adult and sexual intent/i,
     /Change one thing at a time/i,
     /48 hours|2,000-5,000 Facebook clicks/,
@@ -77,5 +80,6 @@ function checkPreflight() {
   requireIncludes('scripts/preflight-launch.mjs', preflight, [
     /Ad operations readiness/,
     /audit-ad-ops-readiness\.mjs/,
+    /audit-prelander-readiness\.mjs/,
   ]);
 }

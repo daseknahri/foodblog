@@ -15,6 +15,8 @@ ADSENSE_PUB_ID=
 Add Monetag only after the dashboard gives the exact values:
 
 ```env
+KT_AD_MODE=baseline
+KT_PRELANDER_ENABLE=0
 MONETAG_ENABLE=0
 MONETAG_VERIFY_META_NAME=
 MONETAG_VERIFY_META_CONTENT=
@@ -93,6 +95,8 @@ MONETAG_ZONE_ID=
 
 Frequency values are optional client-side guards for individual base64 snippets. `0` means no extra guard. `5` means the format is injected at most once every five minutes per browser. Use provider dashboard frequency caps first when they exist; use these variables as an extra safety belt for formats like Vignette or OnClick.
 
+`MONETAG_ONCLICK_BASE64` is action-triggered. It should not render on page load. It is injected only after a real recipe intent click when `KT_AD_MODE=medium` or `KT_AD_MODE=aggressive`.
+
 ## Monetag dashboard setup
 
 1. Add `kuchniatwist.pl`.
@@ -102,6 +106,7 @@ Frequency values are optional client-side guards for individual base64 snippets.
 5. Week 1 formats: keep Popunder, Direct Link, SmartLink, and Push Notifications off.
 6. Week 2 formats: if earnings are weak and stats look accepted, test OnClick/Popunder with max 1 per user/session if the dashboard allows frequency control.
 7. After first payout: if Monetag pays correctly but RPM is weak, test SmartLink only as a real internal "more recipe ideas" CTA. Never make it look like a fake button or site navigation.
+8. For Facebook funnel tests, use `/prelander/{post-slug}/` only when `KT_PRELANDER_ENABLE=1`.
 
 Recommended controlled-aggressive defaults:
 

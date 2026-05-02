@@ -122,6 +122,8 @@ function requireIncludes(label, content, patterns) {
 
 function checkEnvContract() {
   const monetagDefaults = new Map([
+    ['KT_AD_MODE', 'baseline'],
+    ['KT_PRELANDER_ENABLE', '0'],
     ['MONETAG_ENABLE', '0'],
     ['MONETAG_VERIFY_META_NAME', ''],
     ['MONETAG_VERIFY_META_CONTENT', ''],
@@ -157,6 +159,8 @@ function checkEnvContract() {
 function checkComposeContract() {
   for (const key of [
     'MONETAG_ENABLE',
+    'KT_AD_MODE',
+    'KT_PRELANDER_ENABLE',
     'MONETAG_VERIFY_META_NAME',
     'MONETAG_VERIFY_META_CONTENT',
     'MONETAG_SCRIPT_SRC',
@@ -189,6 +193,10 @@ function checkComposeContract() {
 function checkThemeGate() {
   requireIncludes('theme Monetag helpers', themeFunctions, [
     /function\s+kepoli_monetag_enabled\s*\(/,
+    /function\s+kepoli_ad_mode\s*\(/,
+    /function\s+kepoli_ad_mode_allows_action_onclick\s*\(/,
+    /KT_AD_MODE/,
+    /KT_PRELANDER_ENABLE/,
     /function\s+kepoli_monetag_verification_meta\s*\(/,
     /function\s+kepoli_monetag_should_render\s*\(/,
     /function\s+kepoli_monetag_head\s*\(/,
@@ -208,6 +216,7 @@ function checkThemeGate() {
     /MONETAG_PUSH_MINUTES/,
     /function\s+kepoli_monetag_frequency_minutes\s*\(/,
     /function\s+kepoli_monetag_render_snippet\s*\(/,
+    /function\s+kepoli_monetag_action_onclick_code\s*\(/,
     /localStorage\.getItem\(key\)/,
     /base64_decode\(\$encoded,\s*true\)/,
     /MONETAG_POST_ONLY/,
@@ -300,6 +309,8 @@ function checkPolicyPages() {
 function checkDocs() {
   requireIncludes('docs/monetag-readiness.md', docs, [
     /MONETAG_ENABLE=0/,
+    /KT_AD_MODE=baseline/,
+    /KT_PRELANDER_ENABLE=0/,
     /MONETAG_SCRIPT_SRC=/,
     /MONETAG_ZONE_ID=/,
     /MONETAG_CFASYNC=false/,
