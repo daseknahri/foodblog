@@ -1041,6 +1041,44 @@ function kepoli_monetag_cfasync(): string
     return kepoli_env_bool('MONETAG_CFASYNC', false) ? 'true' : 'false';
 }
 
+function kepoli_monetag_snippet_keys(): array
+{
+    return [
+        'inpage_push' => 'MONETAG_INPAGE_PUSH_BASE64',
+        'vignette' => 'MONETAG_VIGNETTE_BASE64',
+        'onclick' => 'MONETAG_ONCLICK_BASE64',
+        'push' => 'MONETAG_PUSH_BASE64',
+    ];
+}
+
+function kepoli_monetag_snippet_code(string $env_key): string
+{
+    $encoded = kepoli_env($env_key);
+    if ($encoded === '') {
+        return '';
+    }
+
+    $decoded = base64_decode($encoded, true);
+    if (!is_string($decoded)) {
+        return '';
+    }
+
+    return trim($decoded);
+}
+
+function kepoli_monetag_snippets(): array
+{
+    $snippets = [];
+    foreach (kepoli_monetag_snippet_keys() as $format => $env_key) {
+        $code = kepoli_monetag_snippet_code($env_key);
+        if ($code !== '') {
+            $snippets[$format] = $code;
+        }
+    }
+
+    return $snippets;
+}
+
 function kepoli_monetag_install_check_enabled(): bool
 {
     return kepoli_env_bool('MONETAG_INSTALL_CHECK', false);
@@ -2858,6 +2896,14 @@ function kepoli_monetag_head(): void
 {
     if (!kepoli_monetag_should_render()) {
         return;
+    }
+
+    foreach (kepoli_monetag_snippets() as $format => $code) {
+        printf(
+            "<!-- Monetag %s -->\n%s\n",
+            esc_html($format),
+            $code
+        );
     }
 
     $src = kepoli_monetag_script_src();

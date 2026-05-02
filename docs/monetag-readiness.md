@@ -21,6 +21,10 @@ MONETAG_VERIFY_META_CONTENT=
 MONETAG_SCRIPT_SRC=
 MONETAG_ZONE_ID=
 MONETAG_CFASYNC=false
+MONETAG_INPAGE_PUSH_BASE64=
+MONETAG_VIGNETTE_BASE64=
+MONETAG_ONCLICK_BASE64=
+MONETAG_PUSH_BASE64=
 MONETAG_POST_ONLY=1
 MONETAG_INSTALL_CHECK=0
 MONETAG_SW_JS_BASE64=
@@ -30,11 +34,12 @@ Use this sequence:
 
 1. Set only `MONETAG_VERIFY_META_NAME` and `MONETAG_VERIFY_META_CONTENT`.
 2. Redeploy and verify the site in Monetag.
-3. Add the Multitag script URL to `MONETAG_SCRIPT_SRC` and the `data-zone` number to `MONETAG_ZONE_ID`.
-4. If Monetag gives you a `sw.js` file, place it at `content/monetag/sw.js` in the repo, or encode it and add the value to `MONETAG_SW_JS_BASE64`.
-5. Set `MONETAG_ENABLE=1` only when the channel is ready.
-6. If Monetag's installation checker still fails, temporarily set `MONETAG_INSTALL_CHECK=1`, redeploy, run the checker, then set `MONETAG_INSTALL_CHECK=0` again after the checker passes.
-7. Redeploy and test one public post on mobile.
+3. Prefer individual zones over Multitag when you want control. Add the exact tags as base64 snippets in `MONETAG_INPAGE_PUSH_BASE64`, `MONETAG_VIGNETTE_BASE64`, `MONETAG_ONCLICK_BASE64`, or `MONETAG_PUSH_BASE64`.
+4. If you intentionally use one Multitag, add its script URL to `MONETAG_SCRIPT_SRC` and the `data-zone` number to `MONETAG_ZONE_ID`.
+5. If Monetag gives you a `sw.js` file, place it at `content/monetag/sw.js` in the repo, or encode it and add the value to `MONETAG_SW_JS_BASE64`.
+6. Set `MONETAG_ENABLE=1` only when the channel is ready.
+7. If Monetag's installation checker still fails, temporarily set `MONETAG_INSTALL_CHECK=1`, redeploy, run the checker, then set `MONETAG_INSTALL_CHECK=0` again after the checker passes.
+8. Redeploy and test one public post on mobile.
 
 The theme renders the Monetag verification meta tag in the public `<head>` when both verification values exist. The ad script renders only on public single posts. It does not render for logged-in admins, search, 404, feeds, static pages, or legal/policy pages. The homepage remains clean unless temporary installation-check mode is enabled with `MONETAG_INSTALL_CHECK=1`. The MU plugin serves Monetag's HTTPS service-worker file at `/sw.js` when `MONETAG_ENABLE=1`, first from `MONETAG_SW_JS_BASE64` if set, otherwise from the bundled `content/monetag/sw.js` file.
 
@@ -59,11 +64,30 @@ MONETAG_CFASYNC=false
 MONETAG_INSTALL_CHECK=0
 ```
 
+Example for an individual tag:
+
+```powershell
+[Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes(@'
+PASTE_MONETAG_INPAGE_PUSH_OR_VIGNETTE_TAG_HERE
+'@))
+```
+
+Then set only the format you want:
+
+```env
+MONETAG_INPAGE_PUSH_BASE64=PASTE_BASE64_HERE
+MONETAG_VIGNETTE_BASE64=PASTE_BASE64_HERE
+MONETAG_ONCLICK_BASE64=
+MONETAG_PUSH_BASE64=
+MONETAG_SCRIPT_SRC=
+MONETAG_ZONE_ID=
+```
+
 ## Monetag dashboard setup
 
 1. Add `kuchniatwist.pl`.
 2. Verify ownership with the meta tag.
-3. Create one initial Multitag channel.
+3. For controlled optimization, create separate individual zones instead of one Multitag.
 4. Week 1 formats: enable In-Page Push and Vignette Banner.
 5. Week 1 formats: keep Popunder, Direct Link, SmartLink, and Push Notifications off.
 6. Week 2 formats: if earnings are weak and stats look accepted, test OnClick/Popunder with max 1 per user/session if the dashboard allows frequency control.
@@ -125,7 +149,7 @@ Manual checks after deploy:
 
 1. With `MONETAG_ENABLE=0`, view source on the homepage and a post. No Monetag script should appear.
 2. With verification env values set, view source on the homepage. The verification meta tag should appear.
-3. With `MONETAG_ENABLE=1`, `MONETAG_SCRIPT_SRC`, and `MONETAG_ZONE_ID` set, view source on one public recipe/article post. The Monetag script should appear with the expected `data-zone`.
+3. With `MONETAG_ENABLE=1` and individual base64 tags set, view source on one public recipe/article post. The enabled Monetag snippets should appear.
 4. With `MONETAG_ENABLE=1` and `MONETAG_INSTALL_CHECK=1`, view source on the homepage. The Monetag script should appear for the checker.
 5. After Monetag passes the installation check, set `MONETAG_INSTALL_CHECK=0`, redeploy, and confirm the homepage script disappears.
 6. With `MONETAG_ENABLE=1`, open `https://kuchniatwist.pl/sw.js`. It should return JavaScript, not an HTML page.
