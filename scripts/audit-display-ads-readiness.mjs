@@ -81,6 +81,7 @@ function checkEnv() {
     ['DISPLAY_ADS_PROVIDER', 'adsterra'],
     ['DISPLAY_AD_HEADER_BASE64', ''],
     ['DISPLAY_AD_AFTER_INTRO_BASE64', ''],
+    ['DISPLAY_AD_READING_OPTION_BASE64', ''],
     ['DISPLAY_AD_MID_CONTENT_BASE64', ''],
     ['DISPLAY_AD_BELOW_CONTENT_BASE64', ''],
     ['DISPLAY_AD_SIDEBAR_BASE64', ''],
@@ -101,6 +102,7 @@ function checkCompose() {
     'DISPLAY_ADS_PROVIDER',
     'DISPLAY_AD_HEADER_BASE64',
     'DISPLAY_AD_AFTER_INTRO_BASE64',
+    'DISPLAY_AD_READING_OPTION_BASE64',
     'DISPLAY_AD_MID_CONTENT_BASE64',
     'DISPLAY_AD_BELOW_CONTENT_BASE64',
     'DISPLAY_AD_SIDEBAR_BASE64',
@@ -138,6 +140,7 @@ function checkTheme() {
 
   requireIncludes('display ad automatic insertion', functionsPhp, [
     /kepoli_ad_slot\('after_intro'\)/,
+    /kepoli_ad_slot\('reading_option'/,
     /kepoli_ad_slot\('mid_content'\)/,
     /kepoli_insert_after_nth_paragraph/,
     /add_filter\('the_content',\s*'kepoli_content_display_ads',\s*12\)/,
@@ -172,6 +175,7 @@ function checkDocs() {
   requireIncludes('docs/display-ads-readiness.md', docs, [
     /DISPLAY_ADS_ENABLE=0/,
     /DISPLAY_AD_AFTER_INTRO_BASE64=/,
+    /DISPLAY_AD_READING_OPTION_BASE64=/,
     /DISPLAY_AD_MID_CONTENT_BASE64=/,
     /DISPLAY_AD_BELOW_CONTENT_BASE64=/,
     /DISPLAY_AD_SIDEBAR_BASE64=/,

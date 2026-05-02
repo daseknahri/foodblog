@@ -34,6 +34,7 @@ Recommended visible display stack:
 - Keep `DISPLAY_AD_AFTER_INTRO_BASE64` active.
 - Keep `DISPLAY_AD_MID_CONTENT_BASE64` active.
 - Keep `DISPLAY_AD_BELOW_CONTENT_BASE64` empty at first.
+- Test `DISPLAY_AD_READING_OPTION_BASE64` next if you want a native ad that appears like sponsored reading suggestions, clearly labeled as an ad.
 - Keep `DISPLAY_AD_SIDEBAR_BASE64` empty at first.
 - Add `below_content` only if RPM is weak and mobile readability stays good.
 
@@ -106,7 +107,7 @@ Use this order. Do not jump to the bottom early.
 3. Pre-lander test: set `KT_PRELANDER_ENABLE=1` and send Facebook links to `/prelander/{post-slug}/`.
 4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64` only after adding a stable recipe intent hook, such as a tested same-page CTA that does not pretend to be navigation. Keep the default 45-second and 35% scroll guard.
 5. In-Page Push test: set `KT_AD_MODE=medium` and use `MONETAG_INPAGE_PUSH_BASE64` only if baseline RPM is too weak and user experience stays acceptable.
-6. More display: add below-content 320x50 or native only if readability remains good.
+6. More display: add `reading_option` first, then below-content 320x50 or native only if readability remains good.
 7. Vignette test: only try Vignette in `aggressive` after traffic is stable, with a 10-15 minute cooldown, and stop immediately if it traps users or redirects on close.
 8. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
 9. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.

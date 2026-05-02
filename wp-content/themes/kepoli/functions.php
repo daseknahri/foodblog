@@ -4058,12 +4058,17 @@ function kepoli_content_display_ads(string $content): string
 
     $after_intro = kepoli_ad_slot('after_intro');
     $mid_content = kepoli_ad_slot('mid_content');
-    if ($after_intro === '' && $mid_content === '') {
+    $reading_option = kepoli_ad_slot('reading_option', 'ad-slot--reading-option');
+    if ($after_intro === '' && $mid_content === '' && $reading_option === '') {
         return $content;
     }
 
     if ($after_intro !== '') {
         $content = kepoli_insert_after_nth_paragraph($content, $after_intro, 2);
+    }
+
+    if ($reading_option !== '') {
+        $content = kepoli_insert_after_nth_paragraph($content, $reading_option, 6);
     }
 
     if ($mid_content !== '') {

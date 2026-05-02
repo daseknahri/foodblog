@@ -17,6 +17,7 @@ DISPLAY_ADS_ENABLE=0
 DISPLAY_ADS_PROVIDER=adsterra
 DISPLAY_AD_HEADER_BASE64=
 DISPLAY_AD_AFTER_INTRO_BASE64=
+DISPLAY_AD_READING_OPTION_BASE64=
 DISPLAY_AD_MID_CONTENT_BASE64=
 DISPLAY_AD_BELOW_CONTENT_BASE64=
 DISPLAY_AD_SIDEBAR_BASE64=
@@ -26,6 +27,7 @@ The theme supports these placements:
 
 - `header`: below the site header on single posts only.
 - `after_intro`: automatically inserted after the second paragraph on single posts.
+- `reading_option`: automatically inserted after the sixth paragraph on single posts, intended for a native/display unit that looks like sponsored reading suggestions while remaining clearly labeled as an ad.
 - `mid_content`: automatically inserted near the middle of single posts.
 - `below_content`: after the main post body.
 - `sidebar`: near the bottom of the sidebar.
@@ -50,6 +52,7 @@ Then paste the encoded value into the matching placement, for example:
 DISPLAY_ADS_ENABLE=1
 DISPLAY_ADS_PROVIDER=adsterra
 DISPLAY_AD_AFTER_INTRO_BASE64=PASTE_BASE64_HERE
+DISPLAY_AD_READING_OPTION_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_MID_CONTENT_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_BELOW_CONTENT_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_SIDEBAR_BASE64=PASTE_BASE64_HERE
@@ -62,8 +65,9 @@ Start with cleaner display/native placements:
 1. `after_intro`: one native/banner unit.
 2. `mid_content`: one native/banner unit.
 3. `below_content`: one native/banner unit.
-4. `sidebar`: optional desktop-friendly native/banner unit.
-5. Skip `header` at first unless revenue is weak.
+4. `reading_option`: optional next test, preferably a native recommendation unit.
+5. `sidebar`: optional desktop-friendly native/banner unit.
+6. Skip `header` at first unless revenue is weak.
 
 Do not add fake download buttons, misleading labels, or SmartLink-style CTAs inside display slots. The wrapper already labels the placement as "Advertisement".
 
