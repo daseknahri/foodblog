@@ -85,19 +85,33 @@
     mode: adStrategy.mode || 'baseline',
   });
 
-  let scroll50Tracked = false;
-  const trackScrollDepth = () => {
-    if (scroll50Tracked || !source) {
-      return;
+  const pageStartedAt = Date.now();
+  let maxScrollPercent = 0;
+  const updateMaxScrollPercent = () => {
+    if (!source) {
+      return maxScrollPercent;
     }
 
     const total = source.offsetHeight - window.innerHeight;
     if (total <= 0) {
-      return;
+      maxScrollPercent = 100;
+      return maxScrollPercent;
     }
 
     const current = Math.min(Math.max(-source.getBoundingClientRect().top, 0), total);
-    if ((current / total) >= 0.5) {
+    maxScrollPercent = Math.max(maxScrollPercent, Math.round((current / total) * 100));
+    return maxScrollPercent;
+  };
+
+  let scroll50Tracked = false;
+  const trackScrollDepth = () => {
+    updateMaxScrollPercent();
+
+    if (scroll50Tracked) {
+      return;
+    }
+
+    if (maxScrollPercent >= 50) {
       scroll50Tracked = true;
       pushEvent('scroll_50', { mode: adStrategy.mode || 'baseline' });
     }
@@ -133,9 +147,19 @@
     }
 
     const now = Date.now();
+    const minActionSeconds = Math.max(0, parseInt(adStrategy.minActionSeconds || 45, 10));
+    const minActionScroll = Math.max(0, parseInt(adStrategy.minActionScroll || 35, 10));
     const cooldownMinutes = Math.max(30, parseInt(adStrategy.onclickCooldownMinutes || 60, 10));
     const cooldownMs = cooldownMinutes * 60 * 1000;
     const avoidVignetteMs = Math.max(0, parseInt(adStrategy.avoidVignetteMinutes || 0, 10)) * 60 * 1000;
+
+    if (minActionSeconds && now - pageStartedAt < minActionSeconds * 1000) {
+      return false;
+    }
+
+    if (minActionScroll && updateMaxScrollPercent() < minActionScroll) {
+      return false;
+    }
 
     try {
       const lastOnclick = parseInt(window.localStorage.getItem('kepoli_monetag_onclick_action') || '0', 10);

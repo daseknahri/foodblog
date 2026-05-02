@@ -49,8 +49,11 @@ function checkPlaybook() {
     /DISPLAY_AD_AFTER_INTRO_BASE64/,
     /DISPLAY_AD_MID_CONTENT_BASE64/,
     /MONETAG_INPAGE_PUSH_MINUTES=0/,
-    /MONETAG_VIGNETTE_MINUTES=5/,
+    /MONETAG_VIGNETTE_BASE64=/,
+    /MONETAG_VIGNETTE_MINUTES=0/,
     /MONETAG_ONCLICK_MINUTES=60/,
+    /KT_ACTION_AD_MIN_SECONDS=45/,
+    /KT_ACTION_AD_MIN_SCROLL=35/,
     /KT_AD_MODE=baseline/,
     /KT_PRELANDER_ENABLE=0/,
     /\/prelander\/\{post-slug\}\//,
@@ -66,7 +69,8 @@ function checkDocsLinkedToOperations() {
   requireIncludes('docs/monetag-readiness.md operations notes', monetagDocs, [
     /frequency/i,
     /adult/i,
-    /MONETAG_VIGNETTE_MINUTES=5/,
+    /MONETAG_VIGNETTE_MINUTES=0/,
+    /KT_ACTION_AD_MIN_SECONDS=45/,
   ]);
 
   requireIncludes('docs/display-ads-readiness.md operations notes', displayDocs, [

@@ -17,6 +17,8 @@ Add Monetag only after the dashboard gives the exact values:
 ```env
 KT_AD_MODE=baseline
 KT_PRELANDER_ENABLE=0
+KT_ACTION_AD_MIN_SECONDS=45
+KT_ACTION_AD_MIN_SCROLL=35
 MONETAG_ENABLE=0
 MONETAG_VERIFY_META_NAME=
 MONETAG_VERIFY_META_CONTENT=
@@ -82,37 +84,39 @@ Then set only the format you want:
 
 ```env
 MONETAG_INPAGE_PUSH_BASE64=PASTE_BASE64_HERE
-MONETAG_VIGNETTE_BASE64=PASTE_BASE64_HERE
+MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
 MONETAG_INPAGE_PUSH_MINUTES=0
-MONETAG_VIGNETTE_MINUTES=5
+MONETAG_VIGNETTE_MINUTES=0
 MONETAG_ONCLICK_MINUTES=60
 MONETAG_PUSH_MINUTES=0
 MONETAG_SCRIPT_SRC=
 MONETAG_ZONE_ID=
 ```
 
-Frequency values are optional client-side guards for individual base64 snippets. `0` means no extra guard. `5` means the format is injected at most once every five minutes per browser. Use provider dashboard frequency caps first when they exist; use these variables as an extra safety belt for formats like Vignette or OnClick.
+Frequency values are optional client-side guards for individual base64 snippets. `0` means no extra guard. `15` means the format is injected at most once every fifteen minutes per browser. Use provider dashboard frequency caps first when they exist; use these variables as an extra safety belt for formats like Vignette or OnClick. Baseline intentionally keeps Vignette empty, and the theme blocks Vignette in baseline even if the env value is accidentally left populated.
 
-`MONETAG_ONCLICK_BASE64` is action-triggered. It should not render on page load. It is injected only after a real recipe intent click when `KT_AD_MODE=medium` or `KT_AD_MODE=aggressive`.
+`MONETAG_ONCLICK_BASE64` is action-triggered. It should not render on page load. It is injected only after a real recipe intent click when `KT_AD_MODE=medium` or `KT_AD_MODE=aggressive`, after the visitor has spent at least `KT_ACTION_AD_MIN_SECONDS=45` seconds on the page and scrolled at least `KT_ACTION_AD_MIN_SCROLL=35` percent.
 
 ## Monetag dashboard setup
 
 1. Add `kuchniatwist.pl`.
 2. Verify ownership with the meta tag.
 3. For controlled optimization, create separate individual zones instead of one Multitag.
-4. Week 1 formats: enable In-Page Push and Vignette Banner.
+4. Week 1 formats: enable In-Page Push only, plus the separate display/native stack.
 5. Week 1 formats: keep Popunder, Direct Link, SmartLink, and Push Notifications off.
-6. Week 2 formats: if earnings are weak and stats look accepted, test OnClick/Popunder with max 1 per user/session if the dashboard allows frequency control.
+6. Week 2 formats: if earnings are weak and stats look accepted, test Vignette Banner with a 15-minute cooldown or test OnClick/Popunder with max 1 per user/session if the dashboard allows frequency control.
 7. After first payout: if Monetag pays correctly but RPM is weak, test SmartLink only as a real internal "more recipe ideas" CTA. Never make it look like a fake button or site navigation.
 8. For Facebook funnel tests, use `/prelander/{post-slug}/` only when `KT_PRELANDER_ENABLE=1`.
 
 Recommended controlled-aggressive defaults:
 
 ```env
+KT_ACTION_AD_MIN_SECONDS=45
+KT_ACTION_AD_MIN_SCROLL=35
 MONETAG_INPAGE_PUSH_MINUTES=0
-MONETAG_VIGNETTE_MINUTES=5
+MONETAG_VIGNETTE_MINUTES=0
 MONETAG_ONCLICK_MINUTES=60
 MONETAG_PUSH_MINUTES=0
 ```

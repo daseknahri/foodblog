@@ -10,6 +10,8 @@ Use this as the default stack while the site is young:
 ADSENSE_ENABLE=0
 KT_AD_MODE=baseline
 KT_PRELANDER_ENABLE=0
+KT_ACTION_AD_MIN_SECONDS=45
+KT_ACTION_AD_MIN_SCROLL=35
 DISPLAY_ADS_ENABLE=1
 DISPLAY_ADS_PROVIDER=adsterra
 MONETAG_ENABLE=1
@@ -17,10 +19,11 @@ MONETAG_POST_ONLY=1
 MONETAG_INSTALL_CHECK=0
 MONETAG_SCRIPT_SRC=
 MONETAG_ZONE_ID=
+MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
 MONETAG_INPAGE_PUSH_MINUTES=0
-MONETAG_VIGNETTE_MINUTES=5
+MONETAG_VIGNETTE_MINUTES=0
 MONETAG_ONCLICK_MINUTES=60
 MONETAG_PUSH_MINUTES=0
 ```
@@ -36,7 +39,7 @@ Recommended visible display stack:
 Recommended Monetag stack:
 
 - Keep In-Page Push active if ad quality is acceptable.
-- Keep Vignette active only if it does not create bad user reports or Facebook reach collapse.
+- Keep Vignette off in `baseline`. The theme blocks it in baseline even if a Vignette code is accidentally left in Coolify.
 - Keep OnClick/Popunder off until after the first payout.
 - Keep Push Notifications off unless there is a clear long-term reason to build subscribers.
 
@@ -45,7 +48,7 @@ Recommended Monetag stack:
 Use `KT_AD_MODE` as the simple operating mode:
 
 - `baseline`: default. Display/native ads plus light Monetag formats only.
-- `medium`: action-triggered OnClick is reserved for a stable recipe intent hook. The old recipe jump navigation was removed because broken anchors made the page look less professional.
+- `medium`: action-triggered OnClick is reserved for a stable recipe intent hook. It also requires at least `KT_ACTION_AD_MIN_SECONDS` seconds on page and `KT_ACTION_AD_MIN_SCROLL` percent scroll before firing.
 - `aggressive`: small traffic tests only. Never use it as the whole-site default.
 
 Use `KT_PRELANDER_ENABLE=1` only when testing Facebook comment funnels. The pre-lander route is `/prelander/{post-slug}/`, keeps UTM parameters, and should point to the real recipe page with one honest CTA.
@@ -98,13 +101,14 @@ Do not optimize only for dashboard CPM. A format can show high CPM and still red
 
 Use this order. Do not jump to the bottom early.
 
-1. Baseline: Adsterra after-intro + mid-content, Monetag In-Page Push, Monetag Vignette every 5 minutes.
-2. Cleaner mode: pause Vignette if adult/redirect-heavy ads appear, keep In-Page Push plus display.
+1. Baseline: Adsterra after-intro + mid-content, optional below-content display, and Monetag In-Page Push only.
+2. Cleaner mode: if users report bad creatives, pause In-Page Push too and keep display/native only.
 3. Pre-lander test: set `KT_PRELANDER_ENABLE=1` and send Facebook links to `/prelander/{post-slug}/`.
-4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64` only after adding a stable recipe intent hook, such as a tested same-page CTA that does not pretend to be navigation.
+4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64` only after adding a stable recipe intent hook, such as a tested same-page CTA that does not pretend to be navigation. Keep the default 45-second and 35% scroll guard.
 5. More display: add below-content 320x50 or native only if readability remains good.
-6. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
-7. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.
+6. Vignette test: only try Vignette after traffic is stable, with a 10-15 minute cooldown, and stop immediately if it traps users or redirects on close.
+7. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
+8. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.
 
 ## Coolify controls
 
@@ -119,6 +123,9 @@ To return to the safest mode:
 ```env
 KT_AD_MODE=baseline
 KT_PRELANDER_ENABLE=0
+KT_ACTION_AD_MIN_SECONDS=45
+KT_ACTION_AD_MIN_SCROLL=35
+MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
 ```
@@ -141,10 +148,11 @@ To pause only Vignette:
 MONETAG_VIGNETTE_BASE64=
 ```
 
-To keep Vignette but reduce frequency:
+To test Vignette later:
 
 ```env
-MONETAG_VIGNETTE_MINUTES=10
+KT_AD_MODE=medium
+MONETAG_VIGNETTE_MINUTES=15
 ```
 
 To pause all display/native ads:

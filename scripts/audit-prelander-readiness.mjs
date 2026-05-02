@@ -83,10 +83,19 @@ function checkEnv() {
   if (!env.has('KT_PRELANDER_ENABLE') || envValue('KT_PRELANDER_ENABLE') !== '0') {
     failures.push('.env.example must default KT_PRELANDER_ENABLE=0.');
   }
+  if (!env.has('KT_ACTION_AD_MIN_SECONDS') || envValue('KT_ACTION_AD_MIN_SECONDS') !== '45') {
+    failures.push('.env.example must default KT_ACTION_AD_MIN_SECONDS=45.');
+  }
+  if (!env.has('KT_ACTION_AD_MIN_SCROLL') || envValue('KT_ACTION_AD_MIN_SCROLL') !== '35') {
+    failures.push('.env.example must default KT_ACTION_AD_MIN_SCROLL=35.');
+  }
+  if (!env.has('MONETAG_VIGNETTE_MINUTES') || envValue('MONETAG_VIGNETTE_MINUTES') !== '0') {
+    failures.push('.env.example must keep baseline MONETAG_VIGNETTE_MINUTES=0.');
+  }
 }
 
 function checkCompose() {
-  for (const key of ['KT_AD_MODE', 'KT_PRELANDER_ENABLE']) {
+  for (const key of ['KT_AD_MODE', 'KT_PRELANDER_ENABLE', 'KT_ACTION_AD_MIN_SECONDS', 'KT_ACTION_AD_MIN_SCROLL']) {
     if (occurrences(compose, key) < 2) {
       failures.push(`docker-compose.yml must pass ${key} to both wordpress and wp-init.`);
     }
@@ -110,6 +119,9 @@ function checkTheme() {
     /prelander_cta_click/,
     /MONETAG_ONCLICK_BASE64/,
     /kepoli_monetag_action_onclick_code/,
+    /kepoli_action_ad_min_seconds/,
+    /kepoli_action_ad_min_scroll/,
+    /\$format\s*===\s*'vignette'[\s\S]{0,80}\$mode\s*===\s*'baseline'/,
   ]);
 
   requireIncludes('single post tracking hooks', singlePhp, [
@@ -126,6 +138,8 @@ function checkScripts() {
     /popunder_triggered/,
     /kepoli_monetag_onclick_action/,
     /kepoli_monetag_vignette/,
+    /minActionSeconds/,
+    /minActionScroll/,
     /data-ad-intent-action/,
     /data-ad-event/,
   ]);
@@ -152,6 +166,9 @@ function checkDocs() {
     /\/prelander\/\{post-slug\}\//,
     /medium/,
     /aggressive/,
+    /MONETAG_VIGNETTE_BASE64=/,
+    /KT_ACTION_AD_MIN_SECONDS=45/,
+    /KT_ACTION_AD_MIN_SCROLL=35/,
     /stable recipe intent hook/i,
   ]);
 }

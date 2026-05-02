@@ -1028,6 +1028,16 @@ function kepoli_ad_mode_allows_action_onclick(): bool
     return in_array(kepoli_ad_mode(), ['medium', 'aggressive'], true);
 }
 
+function kepoli_action_ad_min_seconds(): int
+{
+    return kepoli_env_int('KT_ACTION_AD_MIN_SECONDS', 45, 0, 3600);
+}
+
+function kepoli_action_ad_min_scroll(): int
+{
+    return kepoli_env_int('KT_ACTION_AD_MIN_SCROLL', 35, 0, 100);
+}
+
 function kepoli_monetag_meta_name(): string
 {
     $name = kepoli_env('MONETAG_VERIFY_META_NAME');
@@ -1104,13 +1114,18 @@ function kepoli_monetag_snippet_code(string $env_key): string
 
 function kepoli_monetag_snippets(): array
 {
+    $mode = kepoli_ad_mode();
     $snippets = [];
     foreach (kepoli_monetag_snippet_keys() as $format => $env_key) {
         if ($format === 'onclick') {
             continue;
         }
 
-        if ($format === 'push' && kepoli_ad_mode() !== 'aggressive') {
+        if ($format === 'vignette' && $mode === 'baseline') {
+            continue;
+        }
+
+        if ($format === 'push' && $mode !== 'aggressive') {
             continue;
         }
 
@@ -2834,6 +2849,8 @@ function kepoli_scripts(): void
                     'onclickHtml' => kepoli_monetag_action_onclick_code(),
                     'onclickCooldownMinutes' => max(30, kepoli_monetag_frequency_minutes('onclick')),
                     'avoidVignetteMinutes' => 2,
+                    'minActionSeconds' => kepoli_action_ad_min_seconds(),
+                    'minActionScroll' => kepoli_action_ad_min_scroll(),
                 ], JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE) . ';',
                 'before'
             );
