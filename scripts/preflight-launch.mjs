@@ -32,6 +32,10 @@ const checks = [
     label: 'Display ads readiness',
     command: ['node', 'scripts/audit-display-ads-readiness.mjs'],
   },
+  {
+    label: 'Ad operations readiness',
+    command: ['node', 'scripts/audit-ad-ops-readiness.mjs'],
+  },
 ];
 
 if (liveUrl !== '') {
@@ -120,6 +124,7 @@ Default checks:
 - Ezoic readiness
 - Monetag readiness
 - Display ads readiness
+- Ad operations readiness
 
 With --live:
 - live Ezoic readiness

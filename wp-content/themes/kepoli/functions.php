@@ -38,6 +38,16 @@ function kepoli_env_bool(string $key, bool $default = false): bool
     return in_array($value, ['1', 'true', 'yes', 'on'], true);
 }
 
+function kepoli_env_int(string $key, int $default = 0, int $min = 0, int $max = 10080): int
+{
+    $raw = kepoli_env($key, (string) $default);
+    if (!preg_match('/^-?\d+$/', $raw)) {
+        return $default;
+    }
+
+    return max($min, min($max, (int) $raw));
+}
+
 function kepoli_default_site_profile(): array
 {
     $public_locale = (string) get_option('WPLANG');
@@ -1051,6 +1061,16 @@ function kepoli_monetag_snippet_keys(): array
     ];
 }
 
+function kepoli_monetag_frequency_keys(): array
+{
+    return [
+        'inpage_push' => 'MONETAG_INPAGE_PUSH_MINUTES',
+        'vignette' => 'MONETAG_VIGNETTE_MINUTES',
+        'onclick' => 'MONETAG_ONCLICK_MINUTES',
+        'push' => 'MONETAG_PUSH_MINUTES',
+    ];
+}
+
 function kepoli_monetag_snippet_code(string $env_key): string
 {
     $encoded = kepoli_env($env_key);
@@ -1077,6 +1097,60 @@ function kepoli_monetag_snippets(): array
     }
 
     return $snippets;
+}
+
+function kepoli_monetag_frequency_minutes(string $format): int
+{
+    $frequency_keys = kepoli_monetag_frequency_keys();
+    $env_key = $frequency_keys[$format] ?? '';
+    return $env_key !== '' ? kepoli_env_int($env_key, 0, 0, 10080) : 0;
+}
+
+function kepoli_monetag_render_snippet(string $format, string $code): void
+{
+    $minutes = kepoli_monetag_frequency_minutes($format);
+    if ($minutes <= 0) {
+        echo $code . "\n";
+        return;
+    }
+
+    $storage_key = 'kepoli_monetag_' . sanitize_key($format);
+    $interval_ms = $minutes * MINUTE_IN_SECONDS * 1000;
+    ?>
+    <script>
+    (function () {
+      var key = <?php echo wp_json_encode($storage_key); ?>;
+      var intervalMs = <?php echo (int) $interval_ms; ?>;
+      try {
+        var now = Date.now();
+        var last = parseInt(window.localStorage.getItem(key) || '0', 10);
+        if (last && now - last < intervalMs) {
+          return;
+        }
+        window.localStorage.setItem(key, String(now));
+      } catch (error) {}
+
+      var html = <?php echo wp_json_encode($code, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
+      var holder = document.createElement('div');
+      holder.innerHTML = html;
+      Array.prototype.slice.call(holder.childNodes).forEach(function (node) {
+        if (node.nodeName && node.nodeName.toLowerCase() === 'script') {
+          var script = document.createElement('script');
+          Array.prototype.slice.call(node.attributes || []).forEach(function (attr) {
+            script.setAttribute(attr.name, attr.value);
+          });
+          if (node.text) {
+            script.text = node.text;
+          }
+          document.head.appendChild(script);
+          return;
+        }
+
+        (document.body || document.documentElement).appendChild(node.cloneNode(true));
+      });
+    }());
+    </script>
+    <?php
 }
 
 function kepoli_monetag_install_check_enabled(): bool
@@ -2900,10 +2974,11 @@ function kepoli_monetag_head(): void
 
     foreach (kepoli_monetag_snippets() as $format => $code) {
         printf(
-            "<!-- Monetag %s -->\n%s\n",
+            "<!-- Monetag %s%s -->\n",
             esc_html($format),
-            $code
+            kepoli_monetag_frequency_minutes($format) > 0 ? ' frequency gated' : ''
         );
+        kepoli_monetag_render_snippet($format, $code);
     }
 
     $src = kepoli_monetag_script_src();

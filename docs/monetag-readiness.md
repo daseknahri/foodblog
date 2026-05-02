@@ -25,6 +25,10 @@ MONETAG_INPAGE_PUSH_BASE64=
 MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
+MONETAG_INPAGE_PUSH_MINUTES=0
+MONETAG_VIGNETTE_MINUTES=0
+MONETAG_ONCLICK_MINUTES=0
+MONETAG_PUSH_MINUTES=0
 MONETAG_POST_ONLY=1
 MONETAG_INSTALL_CHECK=0
 MONETAG_SW_JS_BASE64=
@@ -79,9 +83,15 @@ MONETAG_INPAGE_PUSH_BASE64=PASTE_BASE64_HERE
 MONETAG_VIGNETTE_BASE64=PASTE_BASE64_HERE
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
+MONETAG_INPAGE_PUSH_MINUTES=0
+MONETAG_VIGNETTE_MINUTES=5
+MONETAG_ONCLICK_MINUTES=60
+MONETAG_PUSH_MINUTES=0
 MONETAG_SCRIPT_SRC=
 MONETAG_ZONE_ID=
 ```
+
+Frequency values are optional client-side guards for individual base64 snippets. `0` means no extra guard. `5` means the format is injected at most once every five minutes per browser. Use provider dashboard frequency caps first when they exist; use these variables as an extra safety belt for formats like Vignette or OnClick.
 
 ## Monetag dashboard setup
 
@@ -92,6 +102,17 @@ MONETAG_ZONE_ID=
 5. Week 1 formats: keep Popunder, Direct Link, SmartLink, and Push Notifications off.
 6. Week 2 formats: if earnings are weak and stats look accepted, test OnClick/Popunder with max 1 per user/session if the dashboard allows frequency control.
 7. After first payout: if Monetag pays correctly but RPM is weak, test SmartLink only as a real internal "more recipe ideas" CTA. Never make it look like a fake button or site navigation.
+
+Recommended controlled-aggressive defaults:
+
+```env
+MONETAG_INPAGE_PUSH_MINUTES=0
+MONETAG_VIGNETTE_MINUTES=5
+MONETAG_ONCLICK_MINUTES=60
+MONETAG_PUSH_MINUTES=0
+```
+
+If users report adult, dating, casino, misleading, or redirect-heavy ads, pause the most intrusive format first. Usually that means clearing `MONETAG_ONCLICK_BASE64`, then `MONETAG_VIGNETTE_BASE64`, while keeping cleaner display/native placements active.
 
 ## Traffic ramp
 
@@ -130,6 +151,8 @@ Supporting KPIs:
 - Use homepage rendering only as a temporary Monetag installation check, then turn `MONETAG_INSTALL_CHECK=0` again.
 - Do not use fake buttons, fake download actions, misleading CTAs, or forced navigation.
 - Do not send Facebook traffic directly to SmartLink at first.
+- Do not judge ad quality only from your own country. Check at least one target audience country/device mix because remnant ads can look different by GEO.
+- Ask each network to block adult, dating, casino, malware, and misleading software/download categories when available.
 - If KuchniaTwist later applies to AdSense, remove aggressive Monetag formats and run clean for 30-60 days before submitting.
 - Keep all changes repo-controlled so a redeploy can remove Monetag instantly by setting `MONETAG_ENABLE=0`.
 
