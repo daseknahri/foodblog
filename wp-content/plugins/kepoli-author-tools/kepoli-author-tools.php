@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Food Blog Author Tools
  * Description: Simplifies the post editor with split tools, excerpt and SEO helpers, internal-link suggestions, and featured-image metadata.
- * Version: 1.9.4
+ * Version: 1.9.5
  * Author: Site tools
  * Text Domain: kepoli-author-tools
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class Food_Blog_Author_Tools
 {
-    private const VERSION = '1.9.4';
+    private const VERSION = '1.9.5';
     private const AUTO_INTERNAL_LINKS_START = '<!-- kepoli-auto-internal-links:start -->';
     private const AUTO_INTERNAL_LINKS_END = '<!-- kepoli-auto-internal-links:end -->';
     private const AUTO_FAQ_START = '<!-- kepoli-auto-faq:start -->';
@@ -1229,6 +1229,20 @@ final class Food_Blog_Author_Tools
             'ingredients' => isset($data['ingredients']) && is_array($data['ingredients']) ? $data['ingredients'] : [],
             'steps' => isset($data['steps']) && is_array($data['steps']) ? $data['steps'] : [],
         ];
+    }
+
+    private static function recipe_servings_has_value(string $servings): bool
+    {
+        $servings = trim(sanitize_text_field($servings));
+        if ($servings === '') {
+            return false;
+        }
+
+        if (!preg_match('/\d+/', $servings, $matches)) {
+            return false;
+        }
+
+        return isset($matches[0]) && (int) $matches[0] > 0;
     }
 
     private static function save_meta_description(int $post_id, WP_Post $post): void
