@@ -987,6 +987,11 @@ function kepoli_ads_enabled(): bool
     return kepoli_env_bool('ADSENSE_ENABLE', false);
 }
 
+function kepoli_display_ads_enabled(): bool
+{
+    return kepoli_env_bool('DISPLAY_ADS_ENABLE', false);
+}
+
 function kepoli_ga_enabled(): bool
 {
     return kepoli_env_bool('GA_ENABLE', false);
@@ -2945,16 +2950,16 @@ function kepoli_ad_slot(string $slot, string $class = ''): string
     $slot_id = kepoli_env($slot_key);
     $classes = trim('ad-slot ad-slot--' . sanitize_html_class(str_replace('_', '-', $slot)) . ' ' . $class);
 
-    if (!kepoli_ads_enabled() || $client === '' || $slot_id === '') {
-        return '';
+    if (kepoli_ads_enabled() && $client !== '' && $slot_id !== '') {
+        return sprintf(
+            '<div class="%1$s"><ins class="adsbygoogle" style="display:block" data-ad-client="%2$s" data-ad-slot="%3$s" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>',
+            esc_attr($classes . ' ad-slot--live'),
+            esc_attr($client),
+            esc_attr($slot_id)
+        );
     }
 
-    return sprintf(
-        '<div class="%1$s"><ins class="adsbygoogle" style="display:block" data-ad-client="%2$s" data-ad-slot="%3$s" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>',
-        esc_attr($classes . ' ad-slot--live'),
-        esc_attr($client),
-        esc_attr($slot_id)
-    );
+    return kepoli_display_ad_slot($slot, $classes);
 }
 
 function kepoli_ad_shortcode(array $atts): string
@@ -2963,6 +2968,64 @@ function kepoli_ad_shortcode(array $atts): string
     return kepoli_ad_slot((string) $atts['slot']);
 }
 add_shortcode('kepoli_ad', 'kepoli_ad_shortcode');
+
+function kepoli_display_ads_should_render(): bool
+{
+    if (!kepoli_display_ads_enabled()) {
+        return false;
+    }
+
+    if (is_admin() || wp_doing_ajax() || is_feed() || is_search() || is_404()) {
+        return false;
+    }
+
+    if (is_user_logged_in() && current_user_can('manage_options')) {
+        return false;
+    }
+
+    return is_singular('post');
+}
+
+function kepoli_display_ad_code(string $slot): string
+{
+    $slot_key = strtoupper(preg_replace('/[^A-Za-z0-9_]/', '_', $slot));
+    $encoded = kepoli_env('DISPLAY_AD_' . $slot_key . '_BASE64');
+    if ($encoded === '') {
+        return '';
+    }
+
+    $decoded = base64_decode($encoded, true);
+    if (!is_string($decoded)) {
+        return '';
+    }
+
+    return trim($decoded);
+}
+
+function kepoli_display_ad_slot(string $slot, string $classes = ''): string
+{
+    if (!kepoli_display_ads_should_render()) {
+        return '';
+    }
+
+    $ad_code = kepoli_display_ad_code($slot);
+    if ($ad_code === '') {
+        return '';
+    }
+
+    $provider = sanitize_key(kepoli_env('DISPLAY_ADS_PROVIDER', 'display'));
+    $provider = $provider !== '' ? $provider : 'display';
+    $label = kepoli_is_english() ? 'Advertisement' : 'Publicitate';
+
+    return sprintf(
+        '<aside class="%1$s" data-display-ad-slot="%2$s" data-display-ad-provider="%3$s" aria-label="%4$s"><span class="ad-slot__label">%4$s</span><div class="ad-slot__creative">%5$s</div></aside>',
+        esc_attr(trim($classes . ' ad-slot--display ad-slot--live')),
+        esc_attr($slot),
+        esc_attr($provider),
+        esc_attr($label),
+        $ad_code
+    );
+}
 
 function kepoli_admin_adsense_notice(): void
 {
@@ -3650,6 +3713,57 @@ function kepoli_article_content_anchors(string $content): string
     );
 }
 add_filter('the_content', 'kepoli_article_content_anchors', 6);
+
+function kepoli_insert_after_nth_paragraph(string $content, string $insertion, int $paragraph_number): string
+{
+    if ($insertion === '' || $paragraph_number < 1) {
+        return $content;
+    }
+
+    $position = 0;
+    $inserted = false;
+    $updated = preg_replace_callback(
+        '/<\/p>/i',
+        static function (array $matches) use (&$position, &$inserted, $paragraph_number, $insertion): string {
+            $position++;
+            if (!$inserted && $position === $paragraph_number) {
+                $inserted = true;
+                return $matches[0] . $insertion;
+            }
+
+            return $matches[0];
+        },
+        $content
+    );
+
+    return $inserted && is_string($updated) ? $updated : $content;
+}
+
+function kepoli_content_display_ads(string $content): string
+{
+    if (!is_singular('post') || !in_the_loop() || !is_main_query()) {
+        return $content;
+    }
+
+    $after_intro = kepoli_ad_slot('after_intro');
+    $mid_content = kepoli_ad_slot('mid_content');
+    if ($after_intro === '' && $mid_content === '') {
+        return $content;
+    }
+
+    if ($after_intro !== '') {
+        $content = kepoli_insert_after_nth_paragraph($content, $after_intro, 2);
+    }
+
+    if ($mid_content !== '') {
+        $paragraph_count = substr_count(strtolower($content), '</p>');
+        $mid_position = max(5, (int) floor($paragraph_count / 2));
+        $content = kepoli_insert_after_nth_paragraph($content, $mid_content, $mid_position);
+    }
+
+    return $content;
+}
+add_filter('the_content', 'kepoli_content_display_ads', 12);
 
 function kepoli_breadcrumbs(): void
 {

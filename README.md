@@ -55,6 +55,21 @@ MONETAG_SW_JS_BASE64=
 
 When Monetag is enabled, the theme renders the script only on public single posts and never for logged-in admins, search, 404, feeds, static pages, or legal/policy pages. The homepage remains clean unless `MONETAG_INSTALL_CHECK=1` is temporarily enabled for Monetag's checker. The MU plugin serves Monetag's optional HTTPS service worker at `/sw.js` from `MONETAG_SW_JS_BASE64` or the bundled `content/monetag/sw.js` file. Use `docs/monetag-readiness.md` for the exact dashboard setup, traffic ramp, and acceptance checks.
 
+## Display Ad Notes
+
+KuchniaTwist also has an env-gated native/display layer for instant providers such as Adsterra. It stays disabled by default:
+
+```env
+DISPLAY_ADS_ENABLE=0
+DISPLAY_ADS_PROVIDER=adsterra
+DISPLAY_AD_AFTER_INTRO_BASE64=
+DISPLAY_AD_MID_CONTENT_BASE64=
+DISPLAY_AD_BELOW_CONTENT_BASE64=
+DISPLAY_AD_SIDEBAR_BASE64=
+```
+
+Provider snippets must be base64-encoded before being added to Coolify. The theme renders configured display slots only on public single posts, with automatic after-intro and mid-content placements. See `docs/display-ads-readiness.md`.
+
 ## Ezoic Notes
 
 Ezoic support remains available for a later test. Keep direct AdSense placements disabled during any third-party network review:

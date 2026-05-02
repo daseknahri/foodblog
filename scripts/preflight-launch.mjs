@@ -28,6 +28,10 @@ const checks = [
     label: 'Monetag readiness',
     command: ['node', 'scripts/audit-monetag-readiness.mjs'],
   },
+  {
+    label: 'Display ads readiness',
+    command: ['node', 'scripts/audit-display-ads-readiness.mjs'],
+  },
 ];
 
 if (liveUrl !== '') {
@@ -115,6 +119,7 @@ Default checks:
 - rebrand hygiene
 - Ezoic readiness
 - Monetag readiness
+- Display ads readiness
 
 With --live:
 - live Ezoic readiness

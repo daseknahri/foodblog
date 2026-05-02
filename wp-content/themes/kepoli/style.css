@@ -378,6 +378,38 @@ textarea {
   min-height: 140px;
 }
 
+.ad-slot--display {
+  display: block;
+  min-height: 120px;
+  padding: 10px;
+  border: 1px solid rgba(79, 85, 37, 0.14);
+  background: rgba(255, 253, 248, 0.7);
+  text-align: center;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.ad-slot__label {
+  display: block;
+  margin-bottom: 8px;
+  color: rgba(81, 75, 57, 0.72);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ad-slot__creative {
+  min-height: 90px;
+  display: grid;
+  place-items: center;
+}
+
+.ad-slot--after-intro,
+.ad-slot--mid-content {
+  margin: 26px auto;
+}
+
 .home-hero {
   position: relative;
   isolation: isolate;
