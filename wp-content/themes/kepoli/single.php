@@ -102,7 +102,6 @@ get_header();
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-                <?php kepoli_render_reader_trust_links(); ?>
                 <?php if (!$is_recipe && count($article_headings) > 1) : ?>
                     <nav class="entry-outline" aria-label="<?php echo esc_attr(kepoli_ui_text('In acest articol', 'In this article')); ?>">
                         <div class="entry-outline__header">
