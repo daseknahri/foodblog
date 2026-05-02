@@ -45,7 +45,7 @@ Recommended Monetag stack:
 Use `KT_AD_MODE` as the simple operating mode:
 
 - `baseline`: default. Display/native ads plus light Monetag formats only.
-- `medium`: action-triggered OnClick can fire only after a real recipe intent click.
+- `medium`: action-triggered OnClick is reserved for a stable recipe intent hook. The old recipe jump navigation was removed because broken anchors made the page look less professional.
 - `aggressive`: small traffic tests only. Never use it as the whole-site default.
 
 Use `KT_PRELANDER_ENABLE=1` only when testing Facebook comment funnels. The pre-lander route is `/prelander/{post-slug}/`, keeps UTM parameters, and should point to the real recipe page with one honest CTA.
@@ -101,7 +101,7 @@ Use this order. Do not jump to the bottom early.
 1. Baseline: Adsterra after-intro + mid-content, Monetag In-Page Push, Monetag Vignette every 5 minutes.
 2. Cleaner mode: pause Vignette if adult/redirect-heavy ads appear, keep In-Page Push plus display.
 3. Pre-lander test: set `KT_PRELANDER_ENABLE=1` and send Facebook links to `/prelander/{post-slug}/`.
-4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64`; OnClick fires only after a recipe intent click.
+4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64` only after adding a stable recipe intent hook, such as a tested same-page CTA that does not pretend to be navigation.
 5. More display: add below-content 320x50 or native only if readability remains good.
 6. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
 7. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.

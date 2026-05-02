@@ -914,6 +914,9 @@
   function fillRecipeSchema(extractOnlyIfEmpty) {
     const data = extractRecipeMetaFromText();
     const setter = extractOnlyIfEmpty ? setFieldIfEmpty : setField;
+    if (!data.totalMinutes && (data.prepMinutes || data.cookMinutes)) {
+      data.totalMinutes = String((Number.parseInt(data.prepMinutes || '0', 10) || 0) + (Number.parseInt(data.cookMinutes || '0', 10) || 0));
+    }
 
     setter('input[name="kepoli_recipe_servings"]', data.servings);
     setter('input[name="kepoli_recipe_prep_minutes"]', data.prepMinutes);
@@ -1331,8 +1334,13 @@
     const recipeIngredients = parseListField('textarea[name="kepoli_recipe_ingredients"]');
     const recipeSteps = parseListField('textarea[name="kepoli_recipe_steps"]');
     const recipeServings = currentFieldValue('input[name="kepoli_recipe_servings"]');
+    const recipePrepMinutes = Number.parseInt(currentFieldValue('input[name="kepoli_recipe_prep_minutes"]'), 10) || 0;
+    const recipeCookMinutes = Number.parseInt(currentFieldValue('input[name="kepoli_recipe_cook_minutes"]'), 10) || 0;
     const contentLanguage = detectLanguage(`${title} ${excerpt} ${meta} ${content}`);
     const slugLanguage = detectLanguage(slug.replace(/-/g, ' '));
+    const servingsMatch = recipeServings.match(/\d+/);
+    const recipeServingsValid = recipeServings.trim().length > 0
+      && (!servingsMatch || Number.parseInt(servingsMatch[0], 10) > 0);
 
     return {
       title: title.length >= 6,
@@ -1344,7 +1352,13 @@
       featuredImage: hasFeaturedImage(),
       imageAlt: !hasFeaturedImage() ? false : imageAlt.length >= 8,
       related: hasBodyLinks || (relatedRecipes.length + relatedArticles.length) > 0,
-      recipe: kind !== 'recipe' || (recipeIngredients.length > 0 && recipeSteps.length > 0 && recipeServings.length > 0)
+      recipe: kind !== 'recipe' || (
+        recipeIngredients.length > 0
+        && recipeSteps.length > 0
+        && recipeServingsValid
+        && recipePrepMinutes > 0
+        && recipeCookMinutes > 0
+      )
     };
   }
 
@@ -1454,7 +1468,7 @@
 
   function bindChecklist() {
     const fields = document.querySelectorAll(
-      '#title, #content, input[name="kepoli_post_kind"], textarea[name="kepoli_post_excerpt"], textarea[name="kepoli_meta_description"], textarea[name="kepoli_related_recipe_slugs"], textarea[name="kepoli_related_article_slugs"], input[name="kepoli_image_alt"], input[name="kepoli_recipe_servings"], textarea[name="kepoli_recipe_ingredients"], textarea[name="kepoli_recipe_steps"], #_thumbnail_id'
+      '#title, #content, input[name="kepoli_post_kind"], textarea[name="kepoli_post_excerpt"], textarea[name="kepoli_meta_description"], textarea[name="kepoli_related_recipe_slugs"], textarea[name="kepoli_related_article_slugs"], input[name="kepoli_image_alt"], input[name="kepoli_recipe_servings"], input[name="kepoli_recipe_prep_minutes"], input[name="kepoli_recipe_cook_minutes"], input[name="kepoli_recipe_total_minutes"], textarea[name="kepoli_recipe_ingredients"], textarea[name="kepoli_recipe_steps"], #_thumbnail_id'
     );
 
     if (!fields.length) {
@@ -1507,7 +1521,7 @@
 
   function bindCompanionRefresh() {
     const fields = document.querySelectorAll(
-      '#title, #content, input[name="kepoli_post_kind"], textarea[name="kepoli_post_excerpt"], textarea[name="kepoli_meta_description"], textarea[name="kepoli_related_recipe_slugs"], textarea[name="kepoli_related_article_slugs"], input[name="kepoli_image_alt"], input[name="kepoli_recipe_servings"], textarea[name="kepoli_recipe_ingredients"], textarea[name="kepoli_recipe_steps"], #_thumbnail_id'
+      '#title, #content, input[name="kepoli_post_kind"], textarea[name="kepoli_post_excerpt"], textarea[name="kepoli_meta_description"], textarea[name="kepoli_related_recipe_slugs"], textarea[name="kepoli_related_article_slugs"], input[name="kepoli_image_alt"], input[name="kepoli_recipe_servings"], input[name="kepoli_recipe_prep_minutes"], input[name="kepoli_recipe_cook_minutes"], input[name="kepoli_recipe_total_minutes"], textarea[name="kepoli_recipe_ingredients"], textarea[name="kepoli_recipe_steps"], #_thumbnail_id'
     );
 
     fields.forEach((field) => {

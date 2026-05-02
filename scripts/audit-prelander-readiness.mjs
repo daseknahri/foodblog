@@ -112,9 +112,7 @@ function checkTheme() {
     /kepoli_monetag_action_onclick_code/,
   ]);
 
-  requireIncludes('single recipe action hooks', singlePhp, [
-    /data-ad-intent-action="show_ingredients"/,
-    /data-ad-intent-action="show_steps"/,
+  requireIncludes('single post tracking hooks', singlePhp, [
     /data-ad-event="related_recipe_click"/,
   ]);
 }
@@ -154,6 +152,6 @@ function checkDocs() {
     /\/prelander\/\{post-slug\}\//,
     /medium/,
     /aggressive/,
-    /real recipe intent click/i,
+    /stable recipe intent hook/i,
   ]);
 }
