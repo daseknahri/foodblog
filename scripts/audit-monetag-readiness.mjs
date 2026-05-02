@@ -225,6 +225,8 @@ function checkThemeGate() {
     /function\s+kepoli_monetag_frequency_minutes\s*\(/,
     /function\s+kepoli_monetag_render_snippet\s*\(/,
     /function\s+kepoli_monetag_action_onclick_code\s*\(/,
+    /\$format\s*===\s*'inpage_push'[\s\S]{0,80}\$mode\s*===\s*'baseline'/,
+    /\$format\s*===\s*'vignette'[\s\S]{0,80}\$mode\s*!==\s*'aggressive'/,
     /localStorage\.getItem\(key\)/,
     /base64_decode\(\$encoded,\s*true\)/,
     /MONETAG_POST_ONLY/,

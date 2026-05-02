@@ -19,6 +19,7 @@ MONETAG_POST_ONLY=1
 MONETAG_INSTALL_CHECK=0
 MONETAG_SCRIPT_SRC=
 MONETAG_ZONE_ID=
+MONETAG_INPAGE_PUSH_BASE64=
 MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
@@ -38,8 +39,7 @@ Recommended visible display stack:
 
 Recommended Monetag stack:
 
-- Keep In-Page Push active if ad quality is acceptable.
-- Keep Vignette off in `baseline`. The theme blocks it in baseline even if a Vignette code is accidentally left in Coolify.
+- Keep Monetag page-load formats off in `baseline`. The theme blocks In-Page Push and Vignette in baseline even if a code is accidentally left in Coolify.
 - Keep OnClick/Popunder off until after the first payout.
 - Keep Push Notifications off unless there is a clear long-term reason to build subscribers.
 
@@ -47,8 +47,8 @@ Recommended Monetag stack:
 
 Use `KT_AD_MODE` as the simple operating mode:
 
-- `baseline`: default. Display/native ads plus light Monetag formats only.
-- `medium`: action-triggered OnClick is reserved for a stable recipe intent hook. It also requires at least `KT_ACTION_AD_MIN_SECONDS` seconds on page and `KT_ACTION_AD_MIN_SCROLL` percent scroll before firing.
+- `baseline`: default. Display/native ads only. No Monetag page-load formats.
+- `medium`: optional In-Page Push test plus action-triggered OnClick. OnClick requires at least `KT_ACTION_AD_MIN_SECONDS` seconds on page and `KT_ACTION_AD_MIN_SCROLL` percent scroll before firing.
 - `aggressive`: small traffic tests only. Never use it as the whole-site default.
 
 Use `KT_PRELANDER_ENABLE=1` only when testing Facebook comment funnels. The pre-lander route is `/prelander/{post-slug}/`, keeps UTM parameters, and should point to the real recipe page with one honest CTA.
@@ -101,14 +101,15 @@ Do not optimize only for dashboard CPM. A format can show high CPM and still red
 
 Use this order. Do not jump to the bottom early.
 
-1. Baseline: Adsterra after-intro + mid-content, optional below-content display, and Monetag In-Page Push only.
-2. Cleaner mode: if users report bad creatives, pause In-Page Push too and keep display/native only.
+1. Baseline: Adsterra after-intro + mid-content, optional below-content display, no Monetag page-load formats.
+2. Cleaner mode: if users report bad creatives, pause below-content first, then keep only after-intro + mid-content display.
 3. Pre-lander test: set `KT_PRELANDER_ENABLE=1` and send Facebook links to `/prelander/{post-slug}/`.
 4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64` only after adding a stable recipe intent hook, such as a tested same-page CTA that does not pretend to be navigation. Keep the default 45-second and 35% scroll guard.
-5. More display: add below-content 320x50 or native only if readability remains good.
-6. Vignette test: only try Vignette after traffic is stable, with a 10-15 minute cooldown, and stop immediately if it traps users or redirects on close.
-7. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
-8. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.
+5. In-Page Push test: set `KT_AD_MODE=medium` and use `MONETAG_INPAGE_PUSH_BASE64` only if baseline RPM is too weak and user experience stays acceptable.
+6. More display: add below-content 320x50 or native only if readability remains good.
+7. Vignette test: only try Vignette in `aggressive` after traffic is stable, with a 10-15 minute cooldown, and stop immediately if it traps users or redirects on close.
+8. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
+9. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.
 
 ## Coolify controls
 
@@ -125,6 +126,7 @@ KT_AD_MODE=baseline
 KT_PRELANDER_ENABLE=0
 KT_ACTION_AD_MIN_SECONDS=45
 KT_ACTION_AD_MIN_SCROLL=35
+MONETAG_INPAGE_PUSH_BASE64=
 MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=

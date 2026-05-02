@@ -121,7 +121,8 @@ function checkTheme() {
     /kepoli_monetag_action_onclick_code/,
     /kepoli_action_ad_min_seconds/,
     /kepoli_action_ad_min_scroll/,
-    /\$format\s*===\s*'vignette'[\s\S]{0,80}\$mode\s*===\s*'baseline'/,
+    /\$format\s*===\s*'inpage_push'[\s\S]{0,80}\$mode\s*===\s*'baseline'/,
+    /\$format\s*===\s*'vignette'[\s\S]{0,80}\$mode\s*!==\s*'aggressive'/,
   ]);
 
   requireIncludes('single post tracking hooks', singlePhp, [
@@ -167,6 +168,7 @@ function checkDocs() {
     /medium/,
     /aggressive/,
     /MONETAG_VIGNETTE_BASE64=/,
+    /MONETAG_INPAGE_PUSH_BASE64=/,
     /KT_ACTION_AD_MIN_SECONDS=45/,
     /KT_ACTION_AD_MIN_SCROLL=35/,
     /stable recipe intent hook/i,

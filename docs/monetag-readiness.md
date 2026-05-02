@@ -38,6 +38,8 @@ MONETAG_INSTALL_CHECK=0
 MONETAG_SW_JS_BASE64=
 ```
 
+In `baseline`, the theme does not render Monetag page-load ad formats. Keep `MONETAG_INPAGE_PUSH_BASE64` and `MONETAG_VIGNETTE_BASE64` empty for the safest browsing experience. If those variables are accidentally left populated, baseline still blocks them.
+
 Use this sequence:
 
 1. Set only `MONETAG_VERIFY_META_NAME` and `MONETAG_VERIFY_META_CONTENT`.
@@ -104,9 +106,9 @@ Frequency values are optional client-side guards for individual base64 snippets.
 1. Add `kuchniatwist.pl`.
 2. Verify ownership with the meta tag.
 3. For controlled optimization, create separate individual zones instead of one Multitag.
-4. Week 1 formats: enable In-Page Push only, plus the separate display/native stack.
+4. Week 1 formats: keep Monetag page-load formats off and run the separate display/native stack.
 5. Week 1 formats: keep Popunder, Direct Link, SmartLink, and Push Notifications off.
-6. Week 2 formats: if earnings are weak and stats look accepted, test Vignette Banner with a 15-minute cooldown or test OnClick/Popunder with max 1 per user/session if the dashboard allows frequency control.
+6. Week 2 formats: if earnings are weak and stats look accepted, test In-Page Push in `medium`, test Vignette Banner only in `aggressive` with a 15-minute cooldown, or test OnClick/Popunder with max 1 per user/session if the dashboard allows frequency control.
 7. After first payout: if Monetag pays correctly but RPM is weak, test SmartLink only as a real internal "more recipe ideas" CTA. Never make it look like a fake button or site navigation.
 8. For Facebook funnel tests, use `/prelander/{post-slug}/` only when `KT_PRELANDER_ENABLE=1`.
 

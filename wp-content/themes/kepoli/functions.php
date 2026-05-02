@@ -1121,7 +1121,11 @@ function kepoli_monetag_snippets(): array
             continue;
         }
 
-        if ($format === 'vignette' && $mode === 'baseline') {
+        if ($format === 'inpage_push' && $mode === 'baseline') {
+            continue;
+        }
+
+        if ($format === 'vignette' && $mode !== 'aggressive') {
             continue;
         }
 
