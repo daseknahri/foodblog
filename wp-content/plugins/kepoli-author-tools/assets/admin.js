@@ -828,15 +828,15 @@
   function canonicalRecipeHeading(line) {
     const heading = normalizedHeading(stripRecipeListMarker(line).replace(/:$/, ''));
 
-    if (/^(ingredients?|ingredient list|ingrediente|lista ingrediente)$/.test(heading)) {
+    if (/^(ingredients?|ingredient list|ingredient checklist|what you need|ingrediente|lista ingrediente)$/.test(heading)) {
       return 'ingredients';
     }
 
-    if (/^(method|instructions?|directions?|preparation|steps?|mod de preparare|preparare|pasi|instructiuni)$/.test(heading)) {
+    if (/^(method|instructions?|directions?|preparation|preparation method|steps?|cooking steps?|mod de preparare|preparare|pasi|pasii|instructiuni)$/.test(heading)) {
       return 'steps';
     }
 
-    if (/^(serving ideas?|serving notes?|serving|how to serve|cum se serveste|cum servesti|success notes?|tips?|storage|storage and reheating|variations?|common mistakes?|faq|frequently asked questions?|conclusion|notes?|nutrition|nutritional values?|what to know first|pe scurt|cum pastrezi|variante|intrebari frecvente|concluzie)$/.test(heading)) {
+    if (/^(recipe details?|details?|what to know first|serving ideas?|serving notes?|serving|how to serve|cum se serveste|cum servesti|success notes?|tips?|storage|storage and reheating|variations?|common mistakes?|faq|frequently asked questions?|conclusion|notes?|nutrition|nutritional values?|pe scurt|detalii despre reteta|cum pastrezi|variante|intrebari frecvente|concluzie)$/.test(heading)) {
       return 'stop';
     }
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Food Blog Author Tools
  * Description: Simplifies the post editor with split tools, excerpt and SEO helpers, internal-link suggestions, and featured-image metadata.
- * Version: 1.9.3
+ * Version: 1.9.4
  * Author: Site tools
  * Text Domain: kepoli-author-tools
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class Food_Blog_Author_Tools
 {
-    private const VERSION = '1.9.3';
+    private const VERSION = '1.9.4';
     private const AUTO_INTERNAL_LINKS_START = '<!-- kepoli-auto-internal-links:start -->';
     private const AUTO_INTERNAL_LINKS_END = '<!-- kepoli-auto-internal-links:end -->';
     private const AUTO_FAQ_START = '<!-- kepoli-auto-faq:start -->';
@@ -640,7 +640,7 @@ final class Food_Blog_Author_Tools
         update_post_meta($post_id, '_kepoli_related_slugs', array_values(array_unique(array_merge($related_recipes, $related_articles))));
 
         if ($kind === 'recipe') {
-            self::save_recipe_json($post_id);
+            self::save_recipe_json($post_id, $post);
             self::maybe_add_recipe_faq($post_id, $post);
         } else {
             delete_post_meta($post_id, '_kepoli_recipe_json');
@@ -2298,31 +2298,286 @@ final class Food_Blog_Author_Tools
         return $clean;
     }
 
-    private static function save_recipe_json(int $post_id): void
+    private static function normalized_text_lines(array $lines): array
     {
-        $ingredients = self::posted_lines('kepoli_recipe_ingredients');
-        $steps = self::posted_lines('kepoli_recipe_steps');
-        $servings = isset($_POST['kepoli_recipe_servings']) ? sanitize_text_field(wp_unslash((string) $_POST['kepoli_recipe_servings'])) : '';
-        $prep_minutes = isset($_POST['kepoli_recipe_prep_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_prep_minutes'])) : 0;
-        $cook_minutes = isset($_POST['kepoli_recipe_cook_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_cook_minutes'])) : 0;
-        $total_minutes = isset($_POST['kepoli_recipe_total_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_total_minutes'])) : 0;
-        if ($total_minutes <= 0 && ($prep_minutes > 0 || $cook_minutes > 0)) {
-            $total_minutes = $prep_minutes + $cook_minutes;
+        $clean = [];
+
+        foreach ($lines as $line) {
+            $value = trim(sanitize_text_field((string) $line));
+            if ($value !== '') {
+                $clean[] = $value;
+            }
         }
 
-        if (!$ingredients && !$steps && $servings === '') {
+        return $clean;
+    }
+
+    private static function stored_recipe_data(int $post_id): array
+    {
+        $data = self::recipe_data($post_id);
+
+        return [
+            'servings' => self::recipe_servings_has_value((string) ($data['servings'] ?? '')) ? sanitize_text_field((string) ($data['servings'] ?? '')) : '',
+            'prep_minutes' => max(0, (int) ($data['prep_minutes'] ?? 0)),
+            'cook_minutes' => max(0, (int) ($data['cook_minutes'] ?? 0)),
+            'total_minutes' => max(0, (int) ($data['total_minutes'] ?? 0)),
+            'ingredients' => self::normalized_text_lines(isset($data['ingredients']) && is_array($data['ingredients']) ? $data['ingredients'] : []),
+            'steps' => self::normalized_text_lines(isset($data['steps']) && is_array($data['steps']) ? $data['steps'] : []),
+        ];
+    }
+
+    private static function recipe_data_is_empty(array $data): bool
+    {
+        return ($data['servings'] ?? '') === ''
+            && (int) ($data['prep_minutes'] ?? 0) === 0
+            && (int) ($data['cook_minutes'] ?? 0) === 0
+            && (int) ($data['total_minutes'] ?? 0) === 0
+            && ($data['ingredients'] ?? []) === []
+            && ($data['steps'] ?? []) === [];
+    }
+
+    private static function recipe_text_lines(string $content): array
+    {
+        $content = strip_shortcodes($content);
+        $content = (string) preg_replace('/<br\s*\/?>/i', "\n", $content);
+        $content = (string) preg_replace('/<li\b[^>]*>/i', "\n- ", $content);
+        $content = (string) preg_replace('/<\/(?:p|div|li|h[1-6]|ul|ol|section|article|blockquote|tr)>/i', "\n", $content);
+        $content = wp_strip_all_tags($content);
+        $content = html_entity_decode($content, ENT_QUOTES, get_bloginfo('charset'));
+        $content = str_replace("\r", "\n", $content);
+        $content = preg_replace('/[ \t]+/', ' ', $content);
+        $lines = preg_split('/\n+/', (string) $content) ?: [];
+
+        return array_values(array_filter(array_map(static fn ($line): string => trim((string) $line), $lines)));
+    }
+
+    private static function recipe_line_text(string $line): string
+    {
+        $line = wp_strip_all_tags($line);
+        $line = html_entity_decode($line, ENT_QUOTES, get_bloginfo('charset'));
+        $line = (string) preg_replace('/^[\s>*\x{2022}\x{00b7}-]+/u', '', $line);
+        $line = (string) preg_replace('/^\d{1,2}\s*[.)-]\s*/', '', $line);
+        $line = (string) preg_replace('/^\([a-z0-9]+\)\s*/i', '', $line);
+
+        return trim(sanitize_text_field($line));
+    }
+
+    private static function recipe_heading_key(string $line): string
+    {
+        $line = self::recipe_line_text($line);
+        $line = remove_accents(strtolower($line));
+        $line = preg_replace('/[^a-z0-9\s]/', ' ', (string) $line);
+
+        return trim((string) preg_replace('/\s+/', ' ', (string) $line));
+    }
+
+    private static function canonical_recipe_heading(string $line): string
+    {
+        $heading = self::recipe_heading_key($line);
+
+        if (preg_match('/^(ingredients?|ingredient list|ingredient checklist|what you need|ingrediente|lista ingrediente)$/', $heading)) {
+            return 'ingredients';
+        }
+
+        if (preg_match('/^(method|instructions?|directions?|preparation|preparation method|steps?|cooking steps?|mod de preparare|preparare|pasi|instructiuni)$/', $heading)) {
+            return 'steps';
+        }
+
+        if (preg_match('/^(recipe details?|details?|what to know first|serving ideas?|serving notes?|serving|how to serve|success notes?|tips?|storage|storage and reheating|variations?|common mistakes?|faq|frequently asked questions?|conclusion|notes?|nutrition|nutritional values?|pe scurt|detalii despre reteta|cum se serveste|cum servesti|sfaturi|cum pastrezi|variante|intrebari frecvente|concluzie)$/', $heading)) {
+            return 'stop';
+        }
+
+        return '';
+    }
+
+    private static function recipe_line_looks_like_meta(string $line): bool
+    {
+        return (bool) preg_match('/^(prep|preparation|rest|cook|cooking|bake|baking|total|servings?|serves|makes|yield|difficulty|timp|portii|nivel)\b/i', self::recipe_line_text($line));
+    }
+
+    private static function recipe_section_items_from_content(string $content, string $section): array
+    {
+        $items = [];
+        $active = false;
+
+        foreach (self::recipe_text_lines($content) as $line) {
+            $heading = self::canonical_recipe_heading($line);
+
+            if ($heading === $section) {
+                $active = true;
+                continue;
+            }
+
+            if ($active && $heading !== '') {
+                $active = false;
+                continue;
+            }
+
+            if (!$active || self::recipe_line_looks_like_meta($line)) {
+                continue;
+            }
+
+            $text = self::recipe_line_text($line);
+            if ($text !== '') {
+                $items[] = $text;
+            }
+        }
+
+        return array_slice(array_values(array_unique($items)), 0, $section === 'ingredients' ? 40 : 30);
+    }
+
+    private static function recipe_duration_value_to_minutes(string $value): int
+    {
+        $value = self::recipe_heading_key($value);
+        $hours = 0;
+        $minutes = 0;
+
+        if (preg_match('/(\d{1,2})\s*(?:h|hr|hrs|ora|ore|hour|hours)\b/i', $value, $matches)) {
+            $hours = max(0, (int) ($matches[1] ?? 0));
+        }
+
+        if (preg_match('/(\d{1,3})\s*(?:m|min|mins|minute|minutes)\b/i', $value, $matches)) {
+            $minutes = max(0, (int) ($matches[1] ?? 0));
+        }
+
+        if ($hours === 0 && $minutes === 0 && preg_match('/(\d{1,3})/', $value, $matches)) {
+            return max(0, (int) ($matches[1] ?? 0));
+        }
+
+        return ($hours * 60) + $minutes;
+    }
+
+    private static function recipe_minutes_from_lines(array $lines, array $labels): int
+    {
+        $labels = array_values(array_unique(array_filter(array_map([self::class, 'recipe_heading_key'], $labels))));
+
+        foreach ($lines as $line) {
+            $normalized_line = self::recipe_heading_key((string) $line);
+            foreach ($labels as $label) {
+                if ($normalized_line === $label || !str_starts_with($normalized_line, $label . ' ')) {
+                    continue;
+                }
+
+                $minutes = self::recipe_duration_value_to_minutes(substr($normalized_line, strlen($label)));
+                if ($minutes > 0) {
+                    return $minutes;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private static function recipe_minutes_from_text(string $text, array $labels): int
+    {
+        $plain = implode(' ', self::recipe_text_lines($text));
+        foreach ($labels as $label) {
+            $quoted = preg_quote($label, '/');
+            if (preg_match('/(?:^|\s)' . $quoted . '\s*:?\s*((?:\d{1,2}\s*(?:h|hr|hrs|hour|hours|ora|ore)\s*)?(?:\d{1,3}\s*(?:m|min|mins|minute|minutes))|(?:\d{1,3}))/i', $plain, $matches)) {
+                $minutes = self::recipe_duration_value_to_minutes((string) ($matches[1] ?? ''));
+                if ($minutes > 0) {
+                    return $minutes;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private static function recipe_servings_from_text(string $content): string
+    {
+        $plain = implode(' ', self::recipe_text_lines($content));
+        if (!preg_match('/(?:servings?|serves|makes|yield|portii|pentru|aproximativ|cam)\s*:?\s*(\d{1,2}(?:\s*(?:servings?|portions?|people|persons|pieces?|slices?|portii|persoane))?)/i', $plain, $matches)) {
+            return '';
+        }
+
+        $servings = sanitize_text_field((string) ($matches[1] ?? ''));
+        return self::recipe_servings_has_value($servings) ? $servings : '';
+    }
+
+    private static function extract_recipe_data_from_content(string $content): array
+    {
+        $lines = self::recipe_text_lines($content);
+        $prep_minutes = self::recipe_minutes_from_lines($lines, ['prep time', 'preparation time', 'prep', 'timp de pregatire', 'timp pregatire']);
+        if ($prep_minutes === 0) {
+            $prep_minutes = self::recipe_minutes_from_text($content, ['prep time', 'preparation time', 'prep', 'timp de pregatire', 'timp pregatire']);
+        }
+
+        $cook_minutes = self::recipe_minutes_from_lines($lines, ['cook time', 'cooking time', 'bake time', 'baking time', 'boil time', 'simmer time', 'timp de gatire', 'timp gatire', 'timp de coacere', 'timp de fierbere']);
+        if ($cook_minutes === 0) {
+            $cook_minutes = self::recipe_minutes_from_text($content, ['cook time', 'cooking time', 'bake time', 'baking time', 'boil time', 'simmer time', 'timp de gatire', 'timp gatire', 'timp de coacere', 'timp de fierbere']);
+        }
+
+        $total_minutes = self::recipe_minutes_from_lines($lines, ['total time', 'total', 'timp total']);
+        if ($total_minutes === 0) {
+            $total_minutes = self::recipe_minutes_from_text($content, ['total time', 'total', 'timp total']);
+        }
+
+        if ($prep_minutes > 0 && $cook_minutes === 0 && $total_minutes > $prep_minutes) {
+            $cook_minutes = max(0, $total_minutes - $prep_minutes);
+        } elseif ($cook_minutes > 0 && $prep_minutes === 0 && $total_minutes > $cook_minutes) {
+            $prep_minutes = max(0, $total_minutes - $cook_minutes);
+        }
+
+        return [
+            'servings' => self::recipe_servings_from_text($content),
+            'prep_minutes' => $prep_minutes,
+            'cook_minutes' => $cook_minutes,
+            'total_minutes' => $total_minutes,
+            'ingredients' => self::recipe_section_items_from_content($content, 'ingredients'),
+            'steps' => self::recipe_section_items_from_content($content, 'steps'),
+        ];
+    }
+
+    private static function save_recipe_json(int $post_id, WP_Post $post): void
+    {
+        $posted = [
+            'ingredients' => self::posted_lines('kepoli_recipe_ingredients'),
+            'steps' => self::posted_lines('kepoli_recipe_steps'),
+            'servings' => self::recipe_servings_has_value(isset($_POST['kepoli_recipe_servings']) ? (string) wp_unslash((string) $_POST['kepoli_recipe_servings']) : '')
+                ? sanitize_text_field(wp_unslash((string) $_POST['kepoli_recipe_servings']))
+                : '',
+            'prep_minutes' => isset($_POST['kepoli_recipe_prep_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_prep_minutes'])) : 0,
+            'cook_minutes' => isset($_POST['kepoli_recipe_cook_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_cook_minutes'])) : 0,
+            'total_minutes' => isset($_POST['kepoli_recipe_total_minutes']) ? absint(wp_unslash((string) $_POST['kepoli_recipe_total_minutes'])) : 0,
+        ];
+        $existing = self::stored_recipe_data($post_id);
+        $extracted = self::extract_recipe_data_from_content((string) $post->post_content);
+        $resolved = [
+            'ingredients' => $posted['ingredients'] !== [] ? $posted['ingredients'] : (!empty($extracted['ingredients']) ? $extracted['ingredients'] : $existing['ingredients']),
+            'steps' => $posted['steps'] !== [] ? $posted['steps'] : (!empty($extracted['steps']) ? $extracted['steps'] : $existing['steps']),
+            'servings' => $posted['servings'] !== '' ? $posted['servings'] : (!empty($extracted['servings']) ? $extracted['servings'] : $existing['servings']),
+            'prep_minutes' => $posted['prep_minutes'] > 0 ? $posted['prep_minutes'] : (!empty($extracted['prep_minutes']) ? (int) $extracted['prep_minutes'] : $existing['prep_minutes']),
+            'cook_minutes' => $posted['cook_minutes'] > 0 ? $posted['cook_minutes'] : (isset($extracted['cook_minutes']) && (int) $extracted['cook_minutes'] > 0 ? (int) $extracted['cook_minutes'] : $existing['cook_minutes']),
+            'total_minutes' => $posted['total_minutes'] > 0 ? $posted['total_minutes'] : (!empty($extracted['total_minutes']) ? (int) $extracted['total_minutes'] : $existing['total_minutes']),
+        ];
+
+        $resolved = [
+            'ingredients' => self::normalized_text_lines($resolved['ingredients'] ?? []),
+            'steps' => self::normalized_text_lines($resolved['steps'] ?? []),
+            'servings' => self::recipe_servings_has_value((string) ($resolved['servings'] ?? '')) ? sanitize_text_field((string) ($resolved['servings'] ?? '')) : '',
+            'prep_minutes' => max(0, (int) ($resolved['prep_minutes'] ?? 0)),
+            'cook_minutes' => max(0, (int) ($resolved['cook_minutes'] ?? 0)),
+            'total_minutes' => max(0, (int) ($resolved['total_minutes'] ?? 0)),
+        ];
+
+        if ($resolved['total_minutes'] <= 0 && ($resolved['prep_minutes'] > 0 || $resolved['cook_minutes'] > 0)) {
+            $resolved['total_minutes'] = $resolved['prep_minutes'] + $resolved['cook_minutes'];
+        }
+
+        if (self::recipe_data_is_empty($resolved)) {
             delete_post_meta($post_id, '_kepoli_recipe_json');
             return;
         }
 
         update_post_meta($post_id, '_kepoli_recipe_json', wp_json_encode([
             'category' => self::primary_category_name($post_id),
-            'servings' => $servings,
-            'prep_iso' => self::minutes_to_iso($prep_minutes),
-            'cook_iso' => self::minutes_to_iso($cook_minutes),
-            'total_iso' => self::minutes_to_iso($total_minutes),
-            'ingredients' => $ingredients,
-            'steps' => $steps,
+            'servings' => $resolved['servings'],
+            'prep_iso' => self::minutes_to_iso($resolved['prep_minutes']),
+            'cook_iso' => self::minutes_to_iso($resolved['cook_minutes']),
+            'total_iso' => self::minutes_to_iso($resolved['total_minutes']),
+            'ingredients' => $resolved['ingredients'],
+            'steps' => $resolved['steps'],
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
     }
 
