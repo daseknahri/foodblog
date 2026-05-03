@@ -127,11 +127,6 @@ function checkEnvContract() {
     ['MONETAG_ENABLE', '0'],
     ['KT_ACTION_AD_MIN_SECONDS', '45'],
     ['KT_ACTION_AD_MIN_SCROLL', '35'],
-    ['MONETAG_VERIFY_META_NAME', ''],
-    ['MONETAG_VERIFY_META_CONTENT', ''],
-    ['MONETAG_SCRIPT_SRC', ''],
-    ['MONETAG_ZONE_ID', ''],
-    ['MONETAG_CFASYNC', 'false'],
     ['MONETAG_INPAGE_PUSH_BASE64', ''],
     ['MONETAG_VIGNETTE_BASE64', ''],
     ['MONETAG_ONCLICK_BASE64', ''],
@@ -165,11 +160,6 @@ function checkComposeContract() {
     'KT_PRELANDER_ENABLE',
     'KT_ACTION_AD_MIN_SECONDS',
     'KT_ACTION_AD_MIN_SCROLL',
-    'MONETAG_VERIFY_META_NAME',
-    'MONETAG_VERIFY_META_CONTENT',
-    'MONETAG_SCRIPT_SRC',
-    'MONETAG_ZONE_ID',
-    'MONETAG_CFASYNC',
     'MONETAG_INPAGE_PUSH_BASE64',
     'MONETAG_VIGNETTE_BASE64',
     'MONETAG_ONCLICK_BASE64',
@@ -205,15 +195,9 @@ function checkThemeGate() {
     /KT_PRELANDER_ENABLE/,
     /KT_ACTION_AD_MIN_SECONDS/,
     /KT_ACTION_AD_MIN_SCROLL/,
-    /function\s+kepoli_monetag_verification_meta\s*\(/,
     /function\s+kepoli_monetag_should_render\s*\(/,
     /function\s+kepoli_monetag_head\s*\(/,
     /MONETAG_ENABLE/,
-    /MONETAG_VERIFY_META_NAME/,
-    /MONETAG_VERIFY_META_CONTENT/,
-    /MONETAG_SCRIPT_SRC/,
-    /MONETAG_ZONE_ID/,
-    /MONETAG_CFASYNC/,
     /MONETAG_INPAGE_PUSH_BASE64/,
     /MONETAG_VIGNETTE_BASE64/,
     /MONETAG_ONCLICK_BASE64/,
@@ -231,10 +215,6 @@ function checkThemeGate() {
     /base64_decode\(\$encoded,\s*true\)/,
     /MONETAG_POST_ONLY/,
     /MONETAG_INSTALL_CHECK/,
-    /esc_url_raw\(\$src,\s*\['https'\]\)/,
-    /wp_parse_url\(\$url,\s*PHP_URL_SCHEME\)/,
-    /data-zone/,
-    /data-cfasync/,
   ]);
 
   requireIncludes('theme public-only Monetag gate', themeFunctions, [
@@ -249,12 +229,16 @@ function checkThemeGate() {
     /is_singular\('post'\)/,
   ]);
 
-  if (/MONETAG_SCRIPT_SRC\s*=\s*['"]https?:\/\//.test(themeFunctions)) {
-    failures.push('Theme must not hardcode a Monetag script URL. Use MONETAG_SCRIPT_SRC.');
-  }
-
-  if (!/add_action\('wp_head',\s*'kepoli_monetag_verification_meta',\s*7\)/.test(themeFunctions)) {
-    warnings.push('Expected Monetag verification meta to run before ad and analytics scripts.');
+  for (const legacyKey of [
+    'MONETAG_VERIFY_META_NAME',
+    'MONETAG_VERIFY_META_CONTENT',
+    'MONETAG_SCRIPT_SRC',
+    'MONETAG_ZONE_ID',
+    'MONETAG_CFASYNC',
+  ]) {
+    if (themeFunctions.includes(legacyKey) || compose.includes(legacyKey) || env.has(legacyKey)) {
+      failures.push(`${legacyKey} is legacy and should not be part of the current Monetag contract.`);
+    }
   }
 }
 
@@ -323,9 +307,6 @@ function checkDocs() {
     /KT_PRELANDER_ENABLE=0/,
     /KT_ACTION_AD_MIN_SECONDS=45/,
     /KT_ACTION_AD_MIN_SCROLL=35/,
-    /MONETAG_SCRIPT_SRC=/,
-    /MONETAG_ZONE_ID=/,
-    /MONETAG_CFASYNC=false/,
     /MONETAG_INPAGE_PUSH_BASE64=/,
     /MONETAG_VIGNETTE_BASE64=/,
     /MONETAG_ONCLICK_BASE64=/,

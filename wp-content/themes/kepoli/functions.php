@@ -1038,45 +1038,6 @@ function kepoli_action_ad_min_scroll(): int
     return kepoli_env_int('KT_ACTION_AD_MIN_SCROLL', 35, 0, 100);
 }
 
-function kepoli_monetag_meta_name(): string
-{
-    $name = kepoli_env('MONETAG_VERIFY_META_NAME');
-    $name = preg_replace('/[^A-Za-z0-9:_-]/', '', $name);
-    return is_string($name) ? trim($name) : '';
-}
-
-function kepoli_monetag_script_src(): string
-{
-    $src = kepoli_env('MONETAG_SCRIPT_SRC');
-    if ($src === '') {
-        return '';
-    }
-
-    $url = esc_url_raw($src, ['https']);
-    if ($url === '') {
-        return '';
-    }
-
-    $scheme = strtolower((string) wp_parse_url($url, PHP_URL_SCHEME));
-    $host = (string) wp_parse_url($url, PHP_URL_HOST);
-    if ($scheme !== 'https' || $host === '') {
-        return '';
-    }
-
-    return $url;
-}
-
-function kepoli_monetag_zone_id(): string
-{
-    $zone_id = preg_replace('/[^0-9]/', '', kepoli_env('MONETAG_ZONE_ID'));
-    return is_string($zone_id) ? trim($zone_id) : '';
-}
-
-function kepoli_monetag_cfasync(): string
-{
-    return kepoli_env_bool('MONETAG_CFASYNC', false) ? 'true' : 'false';
-}
-
 function kepoli_monetag_snippet_keys(): array
 {
     return [
@@ -3097,22 +3058,6 @@ function kepoli_adsense_head(): void
 }
 add_action('wp_head', 'kepoli_adsense_head', 8);
 
-function kepoli_monetag_verification_meta(): void
-{
-    if (is_admin()) {
-        return;
-    }
-
-    $name = kepoli_monetag_meta_name();
-    $content = kepoli_env('MONETAG_VERIFY_META_CONTENT');
-    if ($name === '' || $content === '') {
-        return;
-    }
-
-    printf("<meta name=\"%s\" content=\"%s\">\n", esc_attr($name), esc_attr($content));
-}
-add_action('wp_head', 'kepoli_monetag_verification_meta', 7);
-
 function kepoli_ga_head(): void
 {
     $measurement_id = kepoli_env('GA_MEASUREMENT_ID');
@@ -3171,22 +3116,6 @@ function kepoli_monetag_head(): void
         kepoli_monetag_render_snippet($format, $code);
     }
 
-    $src = kepoli_monetag_script_src();
-    if ($src === '') {
-        return;
-    }
-
-    $zone_id = kepoli_monetag_zone_id();
-    if ($zone_id === '') {
-        return;
-    }
-
-    printf(
-        "<script src=\"%s\" data-zone=\"%s\" async data-cfasync=\"%s\"></script>\n",
-        esc_url($src),
-        esc_attr($zone_id),
-        esc_attr(kepoli_monetag_cfasync())
-    );
 }
 add_action('wp_head', 'kepoli_monetag_head', 11);
 

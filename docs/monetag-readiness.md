@@ -20,11 +20,6 @@ KT_PRELANDER_ENABLE=0
 KT_ACTION_AD_MIN_SECONDS=45
 KT_ACTION_AD_MIN_SCROLL=35
 MONETAG_ENABLE=0
-MONETAG_VERIFY_META_NAME=
-MONETAG_VERIFY_META_CONTENT=
-MONETAG_SCRIPT_SRC=
-MONETAG_ZONE_ID=
-MONETAG_CFASYNC=false
 MONETAG_INPAGE_PUSH_BASE64=
 MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
@@ -42,36 +37,19 @@ In `baseline`, the theme does not render Monetag page-load ad formats. Keep `MON
 
 Use this sequence:
 
-1. Set only `MONETAG_VERIFY_META_NAME` and `MONETAG_VERIFY_META_CONTENT`.
-2. Redeploy and verify the site in Monetag.
-3. Prefer individual zones over Multitag when you want control. Add the exact tags as base64 snippets in `MONETAG_INPAGE_PUSH_BASE64`, `MONETAG_VIGNETTE_BASE64`, `MONETAG_ONCLICK_BASE64`, or `MONETAG_PUSH_BASE64`.
-4. If you intentionally use one Multitag, add its script URL to `MONETAG_SCRIPT_SRC` and the `data-zone` number to `MONETAG_ZONE_ID`.
-5. If Monetag gives you a `sw.js` file, place it at `content/monetag/sw.js` in the repo, or encode it and add the value to `MONETAG_SW_JS_BASE64`.
-6. Set `MONETAG_ENABLE=1` only when the channel is ready.
-7. If Monetag's installation checker still fails, temporarily set `MONETAG_INSTALL_CHECK=1`, redeploy, run the checker, then set `MONETAG_INSTALL_CHECK=0` again after the checker passes.
-8. Redeploy and test one public post on mobile.
+1. Verify the website in Monetag using their dashboard flow, then remove temporary verification-only variables from Coolify.
+2. Prefer individual zones over Multitag when you want control. Add the exact tags as base64 snippets in `MONETAG_INPAGE_PUSH_BASE64`, `MONETAG_VIGNETTE_BASE64`, `MONETAG_ONCLICK_BASE64`, or `MONETAG_PUSH_BASE64`.
+3. If Monetag gives you a `sw.js` file, place it at `content/monetag/sw.js` in the repo, or encode it and add the value to `MONETAG_SW_JS_BASE64`.
+4. Set `MONETAG_ENABLE=1` only when the channel is ready.
+5. If Monetag's installation checker still fails, temporarily set `MONETAG_INSTALL_CHECK=1`, redeploy, run the checker, then set `MONETAG_INSTALL_CHECK=0` again after the checker passes.
+6. Redeploy and test one public post on mobile.
 
-The theme renders the Monetag verification meta tag in the public `<head>` when both verification values exist. The ad script renders only on public single posts. It does not render for logged-in admins, search, 404, feeds, static pages, or legal/policy pages. The homepage remains clean unless temporary installation-check mode is enabled with `MONETAG_INSTALL_CHECK=1`. The MU plugin serves Monetag's HTTPS service-worker file at `/sw.js` when `MONETAG_ENABLE=1`, first from `MONETAG_SW_JS_BASE64` if set, otherwise from the bundled `content/monetag/sw.js` file.
+The Monetag ad scripts render only on public single posts. They do not render for logged-in admins, search, 404, feeds, static pages, or legal/policy pages. The homepage remains clean unless temporary installation-check mode is enabled with `MONETAG_INSTALL_CHECK=1`. The MU plugin serves Monetag's HTTPS service-worker file at `/sw.js` when `MONETAG_ENABLE=1`, first from `MONETAG_SW_JS_BASE64` if set, otherwise from the bundled `content/monetag/sw.js` file.
 
 PowerShell command to encode a downloaded `sw.js` file:
 
 ```powershell
 [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\to\sw.js"))
-```
-
-Example from a Monetag Multitag snippet:
-
-```html
-<script src="https://quge5.com/88/tag.min.js" data-zone="235077" async data-cfasync="false"></script>
-```
-
-Coolify values:
-
-```env
-MONETAG_SCRIPT_SRC=https://quge5.com/88/tag.min.js
-MONETAG_ZONE_ID=235077
-MONETAG_CFASYNC=false
-MONETAG_INSTALL_CHECK=0
 ```
 
 Example for an individual tag:
@@ -93,8 +71,6 @@ MONETAG_INPAGE_PUSH_MINUTES=0
 MONETAG_VIGNETTE_MINUTES=0
 MONETAG_ONCLICK_MINUTES=60
 MONETAG_PUSH_MINUTES=0
-MONETAG_SCRIPT_SRC=
-MONETAG_ZONE_ID=
 ```
 
 Frequency values are optional client-side guards for individual base64 snippets. `0` means no extra guard. `15` means the format is injected at most once every fifteen minutes per browser. Use provider dashboard frequency caps first when they exist; use these variables as an extra safety belt for formats like Vignette or OnClick. Baseline intentionally keeps Vignette empty, and the theme blocks Vignette in baseline even if the env value is accidentally left populated.
