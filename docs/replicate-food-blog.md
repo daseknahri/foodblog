@@ -34,7 +34,7 @@ Then generate fresh starter pages and categories:
 node scripts/generate-replica-shell.mjs --brand "New Blog" --domain https://new-domain.com --site-email contact@new-domain.com --writer-name "Writer Name" --writer-email writer@example.com --project-slug new-blog --language en --monetization ezoic --write
 ```
 
-These commands create or rewrite `content/site-profile.json` too. The profile is the canonical source for brand name, public locale, admin locale, writer identity, identity asset basenames, and canonical page slugs. Admin stays English through `locales.admin=en_US` and `locales.force_admin=true`; public generated text follows `locales.public`.
+These commands create or rewrite `content/site-profile.json` too. The profile is the canonical source for brand name, public locale, admin locale, writer identity, optional Gravatar profile URL, identity asset basenames, and canonical page slugs. Admin stays English through `locales.admin=en_US` and `locales.force_admin=true`; public generated text follows `locales.public`.
 
 These pages are a starter shell. Review them before launch, especially privacy, cookies, advertising, editorial, terms, and disclaimer pages. The shell generator supports both Romanian and English starter sets.
 
@@ -77,7 +77,7 @@ If the new site will use AdSense after approval, fill `ADSENSE_CLIENT_ID` and `A
 
 ## Files To Rebrand
 
-- `content/site-profile.json`: replace brand name, tagline, description, public locale, writer identity, email, identity asset basenames, and canonical slugs. This is the first file to check.
+- `content/site-profile.json`: replace brand name, tagline, description, public locale, writer identity, email, optional Gravatar profile URL, identity asset basenames, and canonical slugs. This is the first file to check.
 - `.env.example`: replace domain, emails, database names, AdSense IDs, and canonical hosts. Keep `WP_LOCALE` equal to `content/site-profile.json` `locales.public`.
 - `WP_ADMIN_LOCALE`: keep this as `en_US` so WordPress admin and beginner-publisher tools stay in English, even if a future public site uses another language.
 - `docker-compose.yml`: replace default domain/email values and rename the image tags from `kepoli-wordpress` and `kepoli-wp-cli` to the new project name. This avoids image-name collisions if both blogs run on the same server.
@@ -101,7 +101,7 @@ Do not reuse the kuchniatwist launch posts or images on the new site. For AdSens
 Replace these:
 
 - `content/categories.json`: new categories and descriptions.
-- `content/site-profile.json`: brand, locale, writer, email, and canonical public slugs.
+- `content/site-profile.json`: brand, locale, writer, email, optional Gravatar profile URL, and canonical public slugs.
 - `content/pages.json`: new Home, Recipes, Guides, About, Author, Contact, Privacy, Cookies, Advertising, Editorial Policy, Terms, and Disclaimer text.
 - `content/posts.json`: new original posts, slugs, excerpts, tags, recipe data, related links, SEO titles, and meta descriptions.
 - `content/image-plan.json`: new image prompts/metadata for the new posts.

@@ -46,6 +46,7 @@ const disclaimerSlug = slugify(args['disclaimer-slug'] || defaultDisclaimerSlug(
 const brandTagline = args['brand-tagline'] || defaultBrandTagline(language, brand);
 const brandDescription = args['brand-description'] || defaultBrandDescription(language, brand);
 const writerBio = args['writer-bio'] || defaultWriterBio(language, brand, writerName);
+const writerGravatarUrl = args['writer-gravatar-url'] || '';
 const canonicalHosts = args['canonical-hosts'] || `www.${hostname}`;
 const adsenseClientId = args['adsense-client-id'] || '';
 const adsensePubId = args['adsense-pub-id'] || '';
@@ -100,6 +101,7 @@ Optional:
   --brand-tagline     Public tagline written to content/site-profile.json
   --brand-description Public brand description written to content/site-profile.json
   --writer-bio        Public writer bio written to content/site-profile.json
+  --writer-gravatar-url Public Gravatar profile URL, optional
   --project-slug      Internal project slug for Docker image, DB, and volume names
   --home-slug         Home page slug, default: home or acasa
   --canonical-hosts   Extra hosts that should redirect to the canonical domain
@@ -296,6 +298,7 @@ function buildSiteProfile() {
     writer: {
       name: writerName,
       email: writerEmail,
+      gravatar_url: writerGravatarUrl,
       bio: writerBio,
     },
     assets: {

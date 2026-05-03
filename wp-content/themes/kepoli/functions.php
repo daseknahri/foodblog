@@ -78,6 +78,7 @@ function kepoli_default_site_profile(): array
         'writer' => [
             'name' => 'Isalune Merovik',
             'email' => kepoli_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'),
+            'gravatar_url' => 'https://gravatar.com/isalunemerovik',
             'bio' => '',
         ],
         'assets' => [
@@ -591,6 +592,11 @@ function kepoli_writer_email(): string
 
 function kepoli_writer_gravatar_url(): string
 {
+    $profile_url = esc_url_raw((string) kepoli_profile_value(['writer', 'gravatar_url'], ''), ['https']);
+    if ($profile_url !== '') {
+        return $profile_url;
+    }
+
     $email = strtolower(trim(kepoli_writer_email()));
     return $email !== '' ? 'https://gravatar.com/' . md5($email) : 'https://gravatar.com/';
 }

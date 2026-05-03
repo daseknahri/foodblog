@@ -48,6 +48,7 @@ const audience = args.audience || defaultAudience(language);
 const brandTagline = args['brand-tagline'] || defaultBrandTagline(language, brand);
 const brandDescription = args['brand-description'] || defaultBrandDescription(language, brand);
 const writerBio = args['writer-bio'] || defaultWriterBio(language, brand, writerName);
+const writerGravatarUrl = args['writer-gravatar-url'] || '';
 const operations = [];
 const backupRoot = path.join(root, '.replica-backups', timestamp());
 
@@ -99,6 +100,7 @@ Optional:
   --brand-tagline  Public tagline for content/site-profile.json
   --brand-description Public brand description for content/site-profile.json
   --writer-bio     Public writer bio for content/site-profile.json
+  --writer-gravatar-url Public Gravatar profile URL, optional
   --home-slug      Home page slug, default: home or acasa
   --recipes-slug   Recipes landing page slug, default: recipes or retete
   --guides-slug    Guides/articles landing page slug, default: guides or articole
@@ -307,6 +309,7 @@ function buildSiteProfile() {
     writer: {
       name: writerName,
       email: writerEmail,
+      gravatar_url: writerGravatarUrl,
       bio: writerBio,
     },
     assets: {
