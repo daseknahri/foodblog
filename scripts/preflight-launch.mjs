@@ -21,6 +21,10 @@ const checks = [
     command: ['node', 'scripts/audit-rebrand.mjs'],
   },
   {
+    label: 'Seed readiness',
+    command: ['node', 'scripts/audit-seed-readiness.mjs'],
+  },
+  {
     label: 'Ezoic readiness',
     command: ['node', 'scripts/audit-ezoic-readiness.mjs'],
   },
@@ -125,6 +129,7 @@ Default checks:
 - content structure
 - image coverage
 - rebrand hygiene
+- seed readiness
 - Ezoic readiness
 - Monetag readiness
 - Display ads readiness

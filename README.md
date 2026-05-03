@@ -7,7 +7,7 @@ kuchniatwist is a GitHub-driven WordPress food blog for English recipes and prac
 - WordPress with MariaDB, deployed by Docker Compose with kuchniatwist-specific images built from this repo.
 - A reusable internal `kepoli` theme focused on reading, recipes, internal links, newsletter capture, and ad-safe layouts.
 - Production Apache settings for static asset caching, compression, and small security headers.
-- A one-shot `wp-init` seed profile for manual reseeding, plus a self-seeding MU plugin for platforms that skip the profile service.
+- A one-shot `wp-init` seed profile for first launch, plus a guarded self-seeding MU plugin for platforms that skip the profile service.
 - A compact authoring plugin that keeps the WordPress admin in English and helps fill SEO, image, recipe, internal-link, and split-post fields.
 - Google Site Kit installation for later Search Console, Analytics, or AdSense connection from WordPress admin.
 - Env-gated monetization defaults: AdSense, Ezoic, and Monetag stay off unless explicit environment variables enable them.
@@ -27,7 +27,8 @@ kuchniatwist is a GitHub-driven WordPress food blog for English recipes and prac
 3. Use only `docker-compose.yml`.
 4. Add the environment variables from `.env.example`.
 5. Assign `https://kuchniatwist.pl` to the `wordpress` service on port `80`. The compose file also exposes `SERVICE_FQDN_WORDPRESS_80=https://kuchniatwist.pl` for Coolify's proxy routing.
-6. Keep the `seed` profile disabled for normal deploys. WordPress self-seeds automatically from the app image.
+6. Keep the `seed` profile disabled for normal deploys. WordPress self-seeds only on first launch, before real content exists.
+7. After launch, keep `KEPOLI_FORCE_RESEED=0`. Set `KEPOLI_FORCE_RESEED=1` only for an intentional one-time repair, then turn it off again.
 7. Enable GitHub auto-deploy on push.
 
 The `CANONICAL_REDIRECT_HOSTS` value should include hostnames that may reach the app, such as `www.kuchniatwist.pl`. The MU plugin redirects those hosts to `SITE_URL` so readers and search engines see one canonical site.
