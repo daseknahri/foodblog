@@ -361,6 +361,12 @@ function kepoli_seed_iso_duration(string $value): string
     return $duration;
 }
 
+function kepoli_seed_post_date(int $index): string
+{
+    // Keep launch content older than manually published posts across reseeds.
+    return gmdate('Y-m-d H:i:s', strtotime('2026-03-01 +' . max(0, $index) . ' days'));
+}
+
 function kepoli_seed_upsert_page(array $page, int $author_id): int
 {
     $existing = get_page_by_path($page['slug'], OBJECT, 'page');
@@ -1536,7 +1542,7 @@ if ($sample_page) {
 $post_ids = [];
 foreach ($posts as $index => $post) {
     $existing = get_page_by_path($post['slug'], OBJECT, 'post');
-    $date = gmdate('Y-m-d H:i:s', strtotime('2026-03-01 +' . $index . ' days'));
+    $date = kepoli_seed_post_date($index);
     $postarr = [
         'post_type' => 'post',
         'post_status' => 'publish',
@@ -1549,10 +1555,11 @@ foreach ($posts as $index => $post) {
         'post_content' => '<p>' . esc_html(kepoli_seed_post_intro($post)) . '</p>',
         'post_date' => $date,
         'post_date_gmt' => get_gmt_from_date($date),
+        'post_modified' => $date,
+        'post_modified_gmt' => get_gmt_from_date($date),
     ];
     if ($existing) {
         $postarr['ID'] = $existing->ID;
-        unset($postarr['post_date'], $postarr['post_date_gmt']);
     }
 
     $post_id = wp_insert_post(wp_slash($postarr), true);
@@ -1603,6 +1610,10 @@ foreach ($posts as $post) {
     wp_update_post(wp_slash([
         'ID' => $post_id,
         'post_content' => $content,
+        'post_date' => get_post_field('post_date', $post_id),
+        'post_date_gmt' => get_post_field('post_date_gmt', $post_id),
+        'post_modified' => get_post_field('post_date', $post_id),
+        'post_modified_gmt' => get_post_field('post_date_gmt', $post_id),
     ]), true);
 }
 
