@@ -1867,6 +1867,11 @@ function kepoli_attachment_image_url(int $attachment_id, string $size = 'large')
         return '';
     }
 
+    $file = get_attached_file($attachment_id, true);
+    if (!is_string($file) || $file === '' || !is_readable($file)) {
+        return '';
+    }
+
     $url = wp_get_attachment_image_url($attachment_id, $size);
     if (!is_string($url) || $url === '') {
         $url = wp_get_attachment_url($attachment_id);

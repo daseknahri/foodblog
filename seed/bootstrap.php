@@ -1288,6 +1288,16 @@ function kepoli_seed_find_attachment(string $filename): int
     return $attachment ? (int) $attachment->ID : 0;
 }
 
+function kepoli_seed_attachment_file_exists(int $attachment_id): bool
+{
+    if ($attachment_id <= 0) {
+        return false;
+    }
+
+    $file = get_attached_file($attachment_id, true);
+    return is_string($file) && $file !== '' && is_readable($file);
+}
+
 function kepoli_seed_apply_attachment_meta(int $attachment_id, array $image): void
 {
     $alt = sanitize_text_field((string) ($image['alt'] ?? ''));
@@ -1341,6 +1351,10 @@ function kepoli_seed_import_featured_image(int $post_id, array $image): void
 
     $source_hash = hash_file('sha256', $source) ?: '';
     $attachment_id = kepoli_seed_find_attachment($filename);
+    if ($attachment_id && !kepoli_seed_attachment_file_exists($attachment_id)) {
+        wp_delete_attachment($attachment_id, true);
+        $attachment_id = 0;
+    }
     if ($attachment_id && $source_hash !== '' && (string) get_post_meta($attachment_id, '_kepoli_seed_image_hash', true) !== $source_hash) {
         wp_delete_attachment($attachment_id, true);
         $attachment_id = 0;
