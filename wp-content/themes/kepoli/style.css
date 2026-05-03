@@ -2307,7 +2307,7 @@ a.page-header-meta__value:focus-visible {
 }
 
 .post-page-links {
-  margin: 26px 0 10px;
+  margin: 18px 0 10px;
   padding: 16px 0;
   display: flex;
   align-items: center;
@@ -2331,8 +2331,7 @@ a.page-header-meta__value:focus-visible {
   gap: 8px;
 }
 
-.post-page-links a,
-.post-page-links .post-page-numbers {
+.post-page-links__item {
   min-width: 38px;
   min-height: 38px;
   display: inline-grid;
@@ -2345,10 +2344,54 @@ a.page-header-meta__value:focus-visible {
   text-decoration: none;
 }
 
-.post-page-links .current {
+.post-page-links__item--current {
   border-color: var(--olive-dark);
   background: var(--olive-dark);
   color: #fffdf8;
+}
+
+.post-part-continue {
+  margin: 30px 0 18px;
+  padding: clamp(20px, 4vw, 30px);
+  border: 1px solid rgba(200, 116, 63, 0.24);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(135deg, rgba(255, 253, 248, 0.96), rgba(245, 232, 211, 0.8)),
+    var(--paper);
+  box-shadow: var(--shadow-soft);
+}
+
+.post-part-continue__progress {
+  height: 6px;
+  margin-bottom: 18px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(230, 217, 200, 0.72);
+}
+
+.post-part-continue__progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--copper);
+}
+
+.post-part-continue h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.55rem, 2.6vw, 2.2rem);
+}
+
+.post-part-continue p:not(.eyebrow) {
+  max-width: 42rem;
+  color: var(--muted);
+}
+
+.post-part-continue__button {
+  margin-top: 8px;
+}
+
+.ad-slot--part-continue {
+  margin: 28px auto 18px;
 }
 
 .kepoli-recipe-box,

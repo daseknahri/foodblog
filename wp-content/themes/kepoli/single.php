@@ -14,6 +14,7 @@ get_header();
     $article_snapshot = [];
     $recipe_snapshot = $is_recipe ? kepoli_recipe_snapshot_items() : [];
     $post_next_steps = $is_recipe ? kepoli_post_next_steps() : ['items' => []];
+    $show_after_article = !kepoli_is_multipart_post() || kepoli_current_post_part() >= kepoli_post_part_count();
     $share_icons = ['facebook' => 'facebook', 'whatsapp' => 'whatsapp', 'email' => 'email', 'copy' => 'link', 'print' => 'print'];
     $featured_image = kepoli_post_featured_image_markup(get_the_ID(), 'large', [
         'class' => 'entry-featured-media__image',
@@ -123,15 +124,9 @@ get_header();
             <div class="entry-content">
                 <?php the_content(); ?>
             </div>
-            <?php
-            wp_link_pages([
-                'before' => '<nav class="post-page-links" aria-label="' . esc_attr(kepoli_ui_text('Navigatie pagini articol', 'Article page navigation')) . '"><span class="post-page-links__label">' . esc_html(kepoli_ui_text('Partile articolului', 'Article parts')) . '</span><div class="post-page-links__items">',
-                'after' => '</div></nav>',
-                'link_before' => '<span>',
-                'link_after' => '</span>',
-            ]);
-            ?>
-            <?php if (!empty($post_next_steps['items'])) : ?>
+            <?php echo kepoli_multipart_continue_panel(); ?>
+            <?php echo kepoli_multipart_page_links(); ?>
+            <?php if ($show_after_article && !empty($post_next_steps['items'])) : ?>
                 <section class="entry-next-steps">
                     <div class="entry-next-steps__header">
                         <p class="eyebrow"><?php echo esc_html($post_next_steps['eyebrow']); ?></p>
@@ -149,10 +144,12 @@ get_header();
                     </div>
                 </section>
             <?php endif; ?>
-            <?php echo kepoli_ad_slot('below_content'); ?>
+            <?php if ($show_after_article) : ?>
+                <?php echo kepoli_ad_slot('below_content'); ?>
+            <?php endif; ?>
             <?php
             $related_posts = kepoli_related_posts_by_kind(get_the_ID(), $is_recipe ? 'article' : 'recipe');
-            if ($related_posts) :
+            if ($show_after_article && $related_posts) :
                 ?>
                 <section class="related-posts related-posts--cards">
                     <div class="related-posts__heading">

@@ -3355,6 +3355,110 @@ function kepoli_display_card_grid_ad(): string
     return kepoli_display_ad_slot('card_grid', 'ad-slot--card-grid', true);
 }
 
+function kepoli_post_part_count(): int
+{
+    global $numpages;
+    return max(1, (int) $numpages);
+}
+
+function kepoli_current_post_part(): int
+{
+    global $page;
+    return max(1, (int) $page);
+}
+
+function kepoli_is_multipart_post(): bool
+{
+    global $multipage;
+    return !empty($multipage) && kepoli_post_part_count() > 1;
+}
+
+function kepoli_post_part_anchor(int $part, string $label, string $class = ''): string
+{
+    if (!function_exists('_wp_link_page')) {
+        return '';
+    }
+
+    $open = _wp_link_page($part);
+    if (!is_string($open) || $open === '') {
+        return '';
+    }
+
+    $class = trim($class);
+    if ($class !== '') {
+        $open = (string) preg_replace('/^<a\b/', '<a class="' . esc_attr($class) . '"', $open, 1);
+    }
+
+    return $open . esc_html($label) . '</a>';
+}
+
+function kepoli_multipart_page_links(): string
+{
+    if (!kepoli_is_multipart_post()) {
+        return '';
+    }
+
+    $current = kepoli_current_post_part();
+    $total = kepoli_post_part_count();
+    $items = [];
+
+    for ($part = 1; $part <= $total; $part++) {
+        $label = sprintf(kepoli_ui_text('Partea %d', 'Part %d'), $part);
+        if ($part === $current) {
+            $items[] = '<span class="post-page-links__item post-page-links__item--current" aria-current="page">' . esc_html($label) . '</span>';
+            continue;
+        }
+
+        $items[] = kepoli_post_part_anchor($part, $label, 'post-page-links__item');
+    }
+
+    return sprintf(
+        '<nav class="post-page-links" aria-label="%1$s"><span class="post-page-links__label">%2$s</span><div class="post-page-links__items">%3$s</div></nav>',
+        esc_attr(kepoli_ui_text('Navigatie pagini articol', 'Article page navigation')),
+        esc_html(sprintf(kepoli_ui_text('Partea %1$d din %2$d', 'Part %1$d of %2$d'), $current, $total)),
+        implode('', array_filter($items))
+    );
+}
+
+function kepoli_multipart_continue_panel(): string
+{
+    if (!kepoli_is_multipart_post()) {
+        return '';
+    }
+
+    $current = kepoli_current_post_part();
+    $total = kepoli_post_part_count();
+    if ($current >= $total) {
+        return '';
+    }
+
+    $next = $current + 1;
+    $ad = kepoli_ad_slot('part_continue', 'ad-slot--part-continue');
+    $link = kepoli_post_part_anchor(
+        $next,
+        sprintf(kepoli_ui_text('Continua cu partea %d', 'Continue to part %d'), $next),
+        'post-part-continue__button button'
+    );
+
+    if ($link === '') {
+        return '';
+    }
+
+    $link = str_replace('<a ', '<a data-ad-intent-action="continue_part" ', $link);
+    $progress = max(1, min(100, (int) round(($current / $total) * 100)));
+
+    return sprintf(
+        '%1$s<section class="post-part-continue" aria-label="%2$s"><div class="post-part-continue__progress" aria-hidden="true"><span style="width:%3$d%%"></span></div><p class="eyebrow">%4$s</p><h2>%5$s</h2><p>%6$s</p>%7$s</section>',
+        $ad,
+        esc_attr(kepoli_ui_text('Continua articolul', 'Continue article')),
+        $progress,
+        esc_html(sprintf(kepoli_ui_text('Partea %1$d din %2$d', 'Part %1$d of %2$d'), $current, $total)),
+        esc_html(kepoli_ui_text('Continua lectura', 'Keep reading')),
+        esc_html(kepoli_ui_text('Articolul continua pe pagina urmatoare, cu aceeasi reteta si fara redirectionari ascunse.', 'The article continues on the next page, with the same post and no hidden redirects.')),
+        $link
+    );
+}
+
 function kepoli_admin_adsense_notice(): void
 {
     if (!is_admin() || !current_user_can('manage_options')) {
