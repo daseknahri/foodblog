@@ -3280,7 +3280,7 @@ function kepoli_ad_shortcode(array $atts): string
 }
 add_shortcode('kepoli_ad', 'kepoli_ad_shortcode');
 
-function kepoli_display_ads_should_render(): bool
+function kepoli_display_ads_should_render(bool $allow_listing = false): bool
 {
     if (!kepoli_display_ads_enabled()) {
         return false;
@@ -3294,7 +3294,19 @@ function kepoli_display_ads_should_render(): bool
         return false;
     }
 
-    return is_singular('post');
+    if (is_singular('post')) {
+        return true;
+    }
+
+    if (!$allow_listing) {
+        return false;
+    }
+
+    if (is_front_page() || is_home() || is_archive()) {
+        return true;
+    }
+
+    return is_page([kepoli_profile_slug('recipes'), kepoli_profile_slug('guides'), kepoli_profile_slug('author')]);
 }
 
 function kepoli_display_ad_code(string $slot): string
@@ -3313,9 +3325,9 @@ function kepoli_display_ad_code(string $slot): string
     return trim($decoded);
 }
 
-function kepoli_display_ad_slot(string $slot, string $classes = ''): string
+function kepoli_display_ad_slot(string $slot, string $classes = '', bool $allow_listing = false): string
 {
-    if (!kepoli_display_ads_should_render()) {
+    if (!kepoli_display_ads_should_render($allow_listing)) {
         return '';
     }
 
@@ -3336,6 +3348,11 @@ function kepoli_display_ad_slot(string $slot, string $classes = ''): string
         esc_attr($label),
         $ad_code
     );
+}
+
+function kepoli_display_card_grid_ad(): string
+{
+    return kepoli_display_ad_slot('card_grid', 'ad-slot--card-grid', true);
 }
 
 function kepoli_admin_adsense_notice(): void

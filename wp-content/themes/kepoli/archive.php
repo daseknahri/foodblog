@@ -50,9 +50,14 @@ $article_archive_meta = ($archive_term instanceof WP_Term && kepoli_is_editorial
     <div class="post-grid">
         <?php
         if (have_posts()) :
+            $card_index = 0;
             while (have_posts()) :
                 the_post();
+                $card_index++;
                 get_template_part('template-parts-card');
+                if ($card_index === 6) {
+                    echo kepoli_display_card_grid_ad();
+                }
             endwhile;
         else :
             echo '<p>' . esc_html(kepoli_ui_text('Nu am gasit continut in aceasta arhiva.', 'No content was found in this archive.')) . '</p>';

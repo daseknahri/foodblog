@@ -9,6 +9,13 @@ const compose = readFile('docker-compose.yml');
 const functionsPhp = readFile('wp-content/themes/kepoli/functions.php');
 const singlePhp = readFile('wp-content/themes/kepoli/single.php');
 const sidebarPhp = readFile('wp-content/themes/kepoli/template-parts-sidebar.php');
+const listingGridPhp = [
+  readFile('wp-content/themes/kepoli/archive.php'),
+  readFile('wp-content/themes/kepoli/index.php'),
+  readFile('wp-content/themes/kepoli/page-recipes.php'),
+  readFile('wp-content/themes/kepoli/page-guides.php'),
+  readFile('wp-content/themes/kepoli/page-about-author.php'),
+].join('\n');
 const styleCss = readFile('wp-content/themes/kepoli/style.css');
 const styleMinCss = readFile('wp-content/themes/kepoli/style.min.css');
 const docs = readFile('docs/display-ads-readiness.md');
@@ -84,6 +91,7 @@ function checkEnv() {
     ['DISPLAY_AD_READING_OPTION_BASE64', ''],
     ['DISPLAY_AD_MID_CONTENT_BASE64', ''],
     ['DISPLAY_AD_BELOW_CONTENT_BASE64', ''],
+    ['DISPLAY_AD_CARD_GRID_BASE64', ''],
     ['DISPLAY_AD_SIDEBAR_BASE64', ''],
   ]);
 
@@ -105,6 +113,7 @@ function checkCompose() {
     'DISPLAY_AD_READING_OPTION_BASE64',
     'DISPLAY_AD_MID_CONTENT_BASE64',
     'DISPLAY_AD_BELOW_CONTENT_BASE64',
+    'DISPLAY_AD_CARD_GRID_BASE64',
     'DISPLAY_AD_SIDEBAR_BASE64',
   ]) {
     if (occurrences(compose, key) < 2) {
@@ -119,6 +128,7 @@ function checkTheme() {
     /function\s+kepoli_display_ads_should_render\s*\(/,
     /function\s+kepoli_display_ad_code\s*\(/,
     /function\s+kepoli_display_ad_slot\s*\(/,
+    /function\s+kepoli_display_card_grid_ad\s*\(/,
     /function\s+kepoli_content_display_ads\s*\(/,
     /DISPLAY_ADS_ENABLE/,
     /DISPLAY_ADS_PROVIDER/,
@@ -146,6 +156,10 @@ function checkTheme() {
     /add_filter\('the_content',\s*'kepoli_content_display_ads',\s*12\)/,
   ]);
 
+  requireIncludes('listing grid display ads', listingGridPhp, [
+    /kepoli_display_card_grid_ad\(\)/,
+  ]);
+
   requireIncludes('single post display slots', singlePhp, [
     /kepoli_ad_slot\('below_content'\)/,
   ]);
@@ -162,6 +176,7 @@ function checkStyles() {
     /\.ad-slot__creative/,
     /\.ad-slot--after-intro/,
     /\.ad-slot--mid-content/,
+    /\.ad-slot--card-grid/,
   ]);
 
   requireIncludes('style.min.css display ad styles', styleMinCss, [
@@ -178,6 +193,7 @@ function checkDocs() {
     /DISPLAY_AD_READING_OPTION_BASE64=/,
     /DISPLAY_AD_MID_CONTENT_BASE64=/,
     /DISPLAY_AD_BELOW_CONTENT_BASE64=/,
+    /DISPLAY_AD_CARD_GRID_BASE64=/,
     /DISPLAY_AD_SIDEBAR_BASE64=/,
     /base64/i,
     /homepage/i,

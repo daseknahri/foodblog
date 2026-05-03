@@ -117,9 +117,14 @@ $page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_conte
             'meta_key' => '_kepoli_post_kind',
             'meta_value' => 'recipe',
         ]);
+        $card_index = 0;
         while ($recipes->have_posts()) :
             $recipes->the_post();
+            $card_index++;
             get_template_part('template-parts-card');
+            if ($card_index === 6) {
+                echo kepoli_display_card_grid_ad();
+            }
         endwhile;
         wp_reset_postdata();
         ?>

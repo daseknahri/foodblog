@@ -410,6 +410,17 @@ textarea {
   margin: 26px auto;
 }
 
+.ad-slot--card-grid {
+  width: 100%;
+  min-height: 0;
+  margin: 0;
+  align-self: stretch;
+}
+
+.ad-slot--card-grid .ad-slot__creative {
+  min-height: 250px;
+}
+
 .home-hero {
   position: relative;
   isolation: isolate;

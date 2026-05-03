@@ -20,6 +20,7 @@ DISPLAY_AD_AFTER_INTRO_BASE64=
 DISPLAY_AD_READING_OPTION_BASE64=
 DISPLAY_AD_MID_CONTENT_BASE64=
 DISPLAY_AD_BELOW_CONTENT_BASE64=
+DISPLAY_AD_CARD_GRID_BASE64=
 DISPLAY_AD_SIDEBAR_BASE64=
 ```
 
@@ -30,6 +31,7 @@ The theme supports these placements:
 - `reading_option`: automatically inserted after the sixth paragraph on single posts, intended for a native/display unit that looks like sponsored reading suggestions while remaining clearly labeled as an ad.
 - `mid_content`: automatically inserted near the middle of single posts.
 - `below_content`: after the main post body.
+- `card_grid`: optional sponsored card inside recipe/guide/archive grids, inserted after six real cards.
 - `sidebar`: near the bottom of the sidebar.
 
 The display layer does not render on homepage, search, 404, feeds, static pages, legal/policy pages, or logged-in admin views.
@@ -55,6 +57,7 @@ DISPLAY_AD_AFTER_INTRO_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_READING_OPTION_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_MID_CONTENT_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_BELOW_CONTENT_BASE64=PASTE_BASE64_HERE
+DISPLAY_AD_CARD_GRID_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_SIDEBAR_BASE64=PASTE_BASE64_HERE
 ```
 
@@ -66,8 +69,9 @@ Start with cleaner display/native placements:
 2. `mid_content`: one native/banner unit.
 3. `below_content`: one native/banner unit.
 4. `reading_option`: optional next test, preferably a native recommendation unit.
-5. `sidebar`: optional desktop-friendly native/banner unit.
-6. Skip `header` at first unless revenue is weak.
+5. `card_grid`: optional listing-page test, preferably a native card or 300x250 unit.
+6. `sidebar`: optional desktop-friendly native/banner unit.
+7. Skip `header` at first unless revenue is weak.
 
 Do not add fake download buttons, misleading labels, or SmartLink-style CTAs inside display slots. The wrapper already labels the placement as "Advertisement".
 
