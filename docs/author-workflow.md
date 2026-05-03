@@ -7,8 +7,8 @@ This repo includes a small `kepoli-author-tools` plugin for writing posts. The p
 - Posts use the classic WordPress editor, so `Add New Post` shows a clear title field and one main content editor.
 - Pages keep the normal WordPress editor.
 - The post editor toolbar includes `Break`, `2 parts`, and `3 parts` buttons for WordPress post pagination.
-- The split buttons try to break long posts at clean section boundaries, especially around `H2` and `H3` headings.
-- The setup box includes `Auto split`, so a writer can choose 2 or 3 parts and let the tool apply the split on save. If manual `nextpage` breaks already exist, the plugin leaves them alone.
+- The split buttons try to break long posts at clean section boundaries, especially around `H2` and `H3` headings. If content is pasted as one large paragraph, the splitter falls back to sentence and word chunks instead of silently skipping the split.
+- The setup box includes `Auto split`, so a writer can choose 2 or 3 parts and let the tool apply the split on save. If manual `nextpage` breaks already exist, the plugin leaves them alone. Smart split is tuned for KuchniaTwist monetization tests: about `420+` words becomes 2 parts, and about `1100+` words becomes 3 parts.
 - The `Post setup` box lets the writer choose `Recipe` or `Article`, then review excerpt, SEO, related links, image metadata, and recipe structured data.
 - The main action is `Auto fill`. Extra helper actions stay under `More tools` so the editor remains simple.
 - Manual SEO title, meta description, and related-link slugs stay inside `SEO and links`.

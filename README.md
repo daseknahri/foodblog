@@ -1,6 +1,6 @@
 # kuchniatwist WordPress Blog
 
-kuchniatwist is a GitHub-driven WordPress food blog for English recipes and practical kitchen guides. The repo contains the Docker Compose stack, custom theme, launch content, image plan, featured images, and WP-CLI bootstrap used by Coolify.
+kuchniatwist is a GitHub-driven WordPress food blog for English recipes and practical kitchen guides. The repo contains the Docker Compose stack, custom theme, launch content, image plan, featured images, and WP-CLI bootstrap used by Coolify. For current operating status and next-session handoff, use `docs/project-status.md`.
 
 ## What This Repo Builds
 
@@ -29,7 +29,7 @@ kuchniatwist is a GitHub-driven WordPress food blog for English recipes and prac
 5. Assign `https://kuchniatwist.pl` to the `wordpress` service on port `80`. The compose file also exposes `SERVICE_FQDN_WORDPRESS_80=https://kuchniatwist.pl` for Coolify's proxy routing.
 6. Keep the `seed` profile disabled for normal deploys. WordPress self-seeds only on first launch, before real content exists.
 7. After launch, keep `KEPOLI_FORCE_RESEED=0`. Set `KEPOLI_FORCE_RESEED=1` only for an intentional one-time repair, then turn it off again.
-7. Enable GitHub auto-deploy on push.
+8. Enable GitHub auto-deploy on push.
 
 The `CANONICAL_REDIRECT_HOSTS` value should include hostnames that may reach the app, such as `www.kuchniatwist.pl`. The MU plugin redirects those hosts to `SITE_URL` so readers and search engines see one canonical site.
 
@@ -46,19 +46,20 @@ This clone is currently the controlled instant-monetization test site. Monetag i
 ```env
 ADSENSE_ENABLE=0
 MONETAG_ENABLE=0
-MONETAG_SCRIPT_SRC=
-MONETAG_ZONE_ID=
-MONETAG_CFASYNC=false
 MONETAG_INPAGE_PUSH_BASE64=
 MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
+MONETAG_INPAGE_PUSH_MINUTES=0
+MONETAG_VIGNETTE_MINUTES=0
+MONETAG_ONCLICK_MINUTES=0
+MONETAG_PUSH_MINUTES=0
 MONETAG_POST_ONLY=1
 MONETAG_INSTALL_CHECK=0
 MONETAG_SW_JS_BASE64=
 ```
 
-When Monetag is enabled, the theme renders configured individual snippets or one Multitag only on public single posts and never for logged-in admins, search, 404, feeds, static pages, or legal/policy pages. The homepage remains clean unless `MONETAG_INSTALL_CHECK=1` is temporarily enabled for Monetag's checker. The MU plugin serves Monetag's optional HTTPS service worker at `/sw.js` from `MONETAG_SW_JS_BASE64` or the bundled `content/monetag/sw.js` file. Use `docs/monetag-readiness.md` for the exact dashboard setup, traffic ramp, and acceptance checks.
+When Monetag is enabled, the theme renders configured individual snippets or one Multitag only on public single posts and never for logged-in admins, search, 404, feeds, static pages, or legal/policy pages. The homepage remains clean unless `MONETAG_INSTALL_CHECK=1` is temporarily enabled for Monetag's checker. The MU plugin serves Monetag's optional HTTPS service worker at `/sw.js` from `MONETAG_SW_JS_BASE64` or the bundled `content/monetag/sw.js` file. Legacy direct script env vars are intentionally removed; use the base64 per-format variables only. Use `docs/monetag-readiness.md` for the exact dashboard setup, traffic ramp, and acceptance checks.
 
 ## Display Ad Notes
 
