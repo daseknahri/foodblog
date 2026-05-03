@@ -3420,7 +3420,7 @@ function kepoli_multipart_page_links(): string
     );
 }
 
-function kepoli_multipart_continue_panel(): string
+function kepoli_multipart_continue_ad(): string
 {
     if (!kepoli_is_multipart_post()) {
         return '';
@@ -3432,31 +3432,7 @@ function kepoli_multipart_continue_panel(): string
         return '';
     }
 
-    $next = $current + 1;
-    $ad = kepoli_ad_slot('part_continue', 'ad-slot--part-continue');
-    $link = kepoli_post_part_anchor(
-        $next,
-        sprintf(kepoli_ui_text('Continua cu partea %d', 'Continue to part %d'), $next),
-        'post-part-continue__button button'
-    );
-
-    if ($link === '') {
-        return '';
-    }
-
-    $link = str_replace('<a ', '<a data-ad-intent-action="continue_part" ', $link);
-    $progress = max(1, min(100, (int) round(($current / $total) * 100)));
-
-    return sprintf(
-        '%1$s<section class="post-part-continue" aria-label="%2$s"><div class="post-part-continue__progress" aria-hidden="true"><span style="width:%3$d%%"></span></div><p class="eyebrow">%4$s</p><h2>%5$s</h2><p>%6$s</p>%7$s</section>',
-        $ad,
-        esc_attr(kepoli_ui_text('Continua articolul', 'Continue article')),
-        $progress,
-        esc_html(sprintf(kepoli_ui_text('Partea %1$d din %2$d', 'Part %1$d of %2$d'), $current, $total)),
-        esc_html(kepoli_ui_text('Continua lectura', 'Keep reading')),
-        esc_html(kepoli_ui_text('Articolul continua pe pagina urmatoare, cu aceeasi reteta si fara redirectionari ascunse.', 'The article continues on the next page, with the same post and no hidden redirects.')),
-        $link
-    );
+    return kepoli_ad_slot('part_continue', 'ad-slot--part-continue');
 }
 
 function kepoli_admin_adsense_notice(): void
