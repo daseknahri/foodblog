@@ -49,14 +49,9 @@ $gravatar_profile_url = kepoli_writer_gravatar_url();
     <div class="post-grid">
         <?php
         $author_posts = new WP_Query(['post_type' => 'post', 'posts_per_page' => 6]);
-        $card_index = 0;
         while ($author_posts->have_posts()) :
             $author_posts->the_post();
-            $card_index++;
             get_template_part('template-parts-card');
-            if ($card_index === 6) {
-                echo kepoli_display_card_grid_ad();
-            }
         endwhile;
         wp_reset_postdata();
         ?>

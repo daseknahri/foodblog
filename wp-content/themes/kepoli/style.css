@@ -39,6 +39,7 @@ Text Domain: kepoli
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
+  overflow-x: hidden;
 }
 
 body {
@@ -48,6 +49,7 @@ body {
   font-family: Georgia, "Times New Roman", serif;
   line-height: 1.65;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
 ::selection {
@@ -400,9 +402,18 @@ textarea {
 }
 
 .ad-slot__creative {
+  max-width: 100%;
   min-height: 90px;
   display: grid;
   place-items: center;
+  overflow: hidden;
+}
+
+.ad-slot__creative iframe,
+.ad-slot__creative img,
+.ad-slot__creative ins,
+.ad-slot__creative div {
+  max-width: 100%;
 }
 
 .ad-slot--after-intro,
@@ -1458,6 +1469,8 @@ a.page-header-meta__value:focus-visible {
 }
 
 .browse-link {
+  max-width: 100%;
+  min-width: 0;
   min-height: 38px;
   display: inline-flex;
   align-items: center;
@@ -1482,6 +1495,7 @@ a.page-header-meta__value:focus-visible {
 .browse-link strong,
 .browse-link span {
   display: block;
+  min-width: 0;
 }
 
 .browse-link strong {
@@ -3620,6 +3634,19 @@ a.page-header-meta__value:focus-visible {
 
   .browse-links {
     display: flex;
+  }
+
+  .browse-links--trust {
+    gap: 6px;
+  }
+
+  .browse-links--trust .browse-link {
+    min-height: 34px;
+    padding: 0 10px;
+  }
+
+  .browse-links--trust .browse-link span {
+    display: none;
   }
 
   .page-header-meta {

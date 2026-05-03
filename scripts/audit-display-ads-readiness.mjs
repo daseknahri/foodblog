@@ -160,9 +160,9 @@ function checkTheme() {
     /add_filter\('the_content',\s*'kepoli_content_display_ads',\s*12\)/,
   ]);
 
-  requireIncludes('listing grid display ads', listingGridPhp, [
-    /kepoli_display_card_grid_ad\(\)/,
-  ]);
+  if (listingGridPhp.includes('kepoli_display_card_grid_ad()')) {
+    failures.push('Listing templates must not inject card-grid ads automatically; keep listing pages clean and stable.');
+  }
 
   requireIncludes('single post display slots', singlePhp, [
     /kepoli_ad_slot\('below_content'\)/,

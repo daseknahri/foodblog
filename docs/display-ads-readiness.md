@@ -33,7 +33,7 @@ The theme supports these placements:
 - `mid_content`: automatically inserted near the middle of single posts.
 - `part_continue`: optional ad before the honest "continue to part 2/3" panel on paginated posts.
 - `below_content`: after the main post body.
-- `card_grid`: optional sponsored card inside recipe/guide/archive grids, inserted after six real cards.
+- `card_grid`: reserved for future controlled tests. Do not inject it automatically into listing grids because third-party native widgets can break mobile layout or listing stability.
 - `sidebar`: near the bottom of the sidebar.
 
 The display layer does not render on homepage, search, 404, feeds, static pages, legal/policy pages, or logged-in admin views.
@@ -60,7 +60,7 @@ DISPLAY_AD_READING_OPTION_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_MID_CONTENT_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_PART_CONTINUE_BASE64=PASTE_BASE64_HERE
 DISPLAY_AD_BELOW_CONTENT_BASE64=PASTE_BASE64_HERE
-DISPLAY_AD_CARD_GRID_BASE64=PASTE_BASE64_HERE
+DISPLAY_AD_CARD_GRID_BASE64=
 DISPLAY_AD_SIDEBAR_BASE64=PASTE_BASE64_HERE
 ```
 
@@ -73,7 +73,7 @@ Start with cleaner display/native placements:
 3. `below_content`: one native/banner unit.
 4. `reading_option`: optional next test, preferably a native recommendation unit.
 5. `part_continue`: optional 320x50 or 300x250 unit for posts split into 2-3 parts.
-6. `card_grid`: optional listing-page test, preferably a native card or 300x250 unit.
+6. `card_grid`: keep empty unless we intentionally re-test listing ads later.
 7. `sidebar`: optional desktop-friendly native/banner unit.
 8. Skip `header` at first unless revenue is weak.
 
