@@ -1,0 +1,227 @@
+# KuchniaTwist ad code inventory
+
+This file is the source of truth for the current Adsterra and Monetag codes. Keep these codes controlled through Coolify environment variables, not pasted directly into WordPress, the theme editor, or random plugins.
+
+## Recommended env now
+
+Use this as the current controlled display stack.
+
+```env
+DISPLAY_ADS_ENABLE=1
+DISPLAY_ADS_PROVIDER=adsterra
+DISPLAY_AD_AFTER_INTRO_BASE64=PHNjcmlwdD4KICBhdE9wdGlvbnMgPSB7CiAgICAna2V5JyA6ICcyNjJhOTZjMmNkMTVkOThiNDljMWY2NTE0YTM1YzcxOCcsCiAgICAnZm9ybWF0JyA6ICdpZnJhbWUnLAogICAgJ2hlaWdodCcgOiAyNTAsCiAgICAnd2lkdGgnIDogMzAwLAogICAgJ3BhcmFtcycgOiB7fQogIH07Cjwvc2NyaXB0Pgo8c2NyaXB0IHNyYz0iaHR0cHM6Ly93d3cuaGlnaHBlcmZvcm1hbmNlZm9ybWF0LmNvbS8yNjJhOTZjMmNkMTVkOThiNDljMWY2NTE0YTM1YzcxOC9pbnZva2UuanMiPjwvc2NyaXB0Pg==
+DISPLAY_AD_READING_OPTION_BASE64=PHNjcmlwdCBhc3luYz0iYXN5bmMiIGRhdGEtY2Zhc3luYz0iZmFsc2UiIHNyYz0iaHR0cHM6Ly9wbDI5MzE4MDA3LnByb2ZpdGFibGVjcG1yYXRlbmV0d29yay5jb20vMjNhNmE0NDliYTg3YmU4ZGNjMjM1ZjFjMzhlMmNkZDIvaW52b2tlLmpzIj48L3NjcmlwdD4KPGRpdiBpZD0iY29udGFpbmVyLTIzYTZhNDQ5YmE4N2JlOGRjYzIzNWYxYzM4ZTJjZGQyIj48L2Rpdj4=
+DISPLAY_AD_MID_CONTENT_BASE64=PHNjcmlwdD4KICBhdE9wdGlvbnMgPSB7CiAgICAna2V5JyA6ICdhNDdlZDk1N2JhYWZlZDhkMWFkODhiOTJiZGEwOTA4ZScsCiAgICAnZm9ybWF0JyA6ICdpZnJhbWUnLAogICAgJ2hlaWdodCcgOiA2MCwKICAgICd3aWR0aCcgOiA0NjgsCiAgICAncGFyYW1zJyA6IHt9CiAgfTsKPC9zY3JpcHQ+CjxzY3JpcHQgc3JjPSJodHRwczovL3d3dy5oaWdocGVyZm9ybWFuY2Vmb3JtYXQuY29tL2E0N2VkOTU3YmFhZmVkOGQxYWQ4OGI5MmJkYTA5MDhlL2ludm9rZS5qcyI+PC9zY3JpcHQ+
+DISPLAY_AD_PART_CONTINUE_BASE64=PHNjcmlwdD4KICBhdE9wdGlvbnMgPSB7CiAgICAna2V5JyA6ICc4ZGU3ODJlYTA5ZjNjY2M2N2U4Y2ZmMjQxOTQ5NWZhNCcsCiAgICAnZm9ybWF0JyA6ICdpZnJhbWUnLAogICAgJ2hlaWdodCcgOiA1MCwKICAgICd3aWR0aCcgOiAzMjAsCiAgICAncGFyYW1zJyA6IHt9CiAgfTsKPC9zY3JpcHQ+CjxzY3JpcHQgc3JjPSJodHRwczovL3d3dy5oaWdocGVyZm9ybWFuY2Vmb3JtYXQuY29tLzhkZTc4MmVhMDlmM2NjYzY3ZThjZmYyNDE5NDk1ZmE0L2ludm9rZS5qcyI+PC9zY3JpcHQ+
+DISPLAY_AD_BELOW_CONTENT_BASE64=PHNjcmlwdD4KICBhdE9wdGlvbnMgPSB7CiAgICAna2V5JyA6ICc4ZGU3ODJlYTA5ZjNjY2M2N2U4Y2ZmMjQxOTQ5NWZhNCcsCiAgICAnZm9ybWF0JyA6ICdpZnJhbWUnLAogICAgJ2hlaWdodCcgOiA1MCwKICAgICd3aWR0aCcgOiAzMjAsCiAgICAncGFyYW1zJyA6IHt9CiAgfTsKPC9zY3JpcHQ+CjxzY3JpcHQgc3JjPSJodHRwczovL3d3dy5oaWdocGVyZm9ybWFuY2Vmb3JtYXQuY29tLzhkZTc4MmVhMDlmM2NjYzY3ZThjZmYyNDE5NDk1ZmE0L2ludm9rZS5qcyI+PC9zY3JpcHQ+
+DISPLAY_AD_CARD_GRID_BASE64=
+DISPLAY_AD_SIDEBAR_BASE64=
+DISPLAY_AD_HEADER_BASE64=
+```
+
+Use this Monetag baseline. Keep push, popunder, and vignette disabled until tracking is working and we intentionally test them.
+
+```env
+MONETAG_ENABLE=1
+MONETAG_POST_ONLY=1
+MONETAG_INSTALL_CHECK=0
+MONETAG_INPAGE_PUSH_BASE64=PHNjcmlwdD4oZnVuY3Rpb24ocyl7cy5kYXRhc2V0LnpvbmU9Jzk5MTIwNjUnLHMuc3JjPSdodHRwczovL25hcDVrLmNvbS90YWcubWluLmpzJ30pKFtkb2N1bWVudC5kb2N1bWVudEVsZW1lbnQsIGRvY3VtZW50LmJvZHldLmZpbHRlcihCb29sZWFuKS5wb3AoKS5hcHBlbmRDaGlsZChkb2N1bWVudC5jcmVhdGVFbGVtZW50KCdzY3JpcHQnKSkpPC9zY3JpcHQ+
+MONETAG_INPAGE_PUSH_MINUTES=0
+MONETAG_VIGNETTE_BASE64=
+MONETAG_VIGNETTE_MINUTES=0
+MONETAG_ONCLICK_BASE64=
+MONETAG_ONCLICK_MINUTES=60
+MONETAG_PUSH_BASE64=
+MONETAG_PUSH_MINUTES=0
+MONETAG_SW_JS_BASE64=
+```
+
+## Future test env values
+
+Only add these when testing a specific strategy.
+
+```env
+MONETAG_ONCLICK_BASE64=PHNjcmlwdD4oZnVuY3Rpb24ocyl7cy5kYXRhc2V0LnpvbmU9JzEwOTUzOTMzJyxzLnNyYz0naHR0cHM6Ly9hbDVzbS5jb20vdGFnLm1pbi5qcyd9KShbZG9jdW1lbnQuZG9jdW1lbnRFbGVtZW50LCBkb2N1bWVudC5ib2R5XS5maWx0ZXIoQm9vbGVhbikucG9wKCkuYXBwZW5kQ2hpbGQoZG9jdW1lbnQuY3JlYXRlRWxlbWVudCgnc2NyaXB0JykpKTwvc2NyaXB0Pg==
+MONETAG_VIGNETTE_BASE64=PHNjcmlwdD4oZnVuY3Rpb24ocyl7cy5kYXRhc2V0LnpvbmU9Jzk5MTIwNjYnLHMuc3JjPSdodHRwczovL242d3htLmNvbS92aWduZXR0ZS5taW4uanMnfSkoW2RvY3VtZW50LmRvY3VtZW50RWxlbWVudCwgZG9jdW1lbnQuYm9keV0uZmlsdGVyKEJvb2xlYW4pLnBvcCgpLmFwcGVuZENoaWxkKGRvY3VtZW50LmNyZWF0ZUVsZW1lbnQoJ3NjcmlwdCcpKSk8L3NjcmlwdD4=
+MONETAG_PUSH_BASE64=PHNjcmlwdCBzcmM9Imh0dHBzOi8vNWd2Y2kuY29tL2FjdC9maWxlcy90YWcubWluLmpzP3o9OTkxMTU4OSIgZGF0YS1jZmFzeW5jPSJmYWxzZSIgYXN5bmM+PC9zY3JpcHQ+
+MONETAG_SW_JS_BASE64=c2VsZi5vcHRpb25zID0gewogICAgImRvbWFpbiI6ICJjb3VwaGFpdGh1cGgubmV0IiwKICAgICJ6b25lSWQiOiA5OTExNTg5Cn0Kc2VsZi5sYXJ5ID0gIiIKaW1wb3J0U2NyaXB0cygnaHR0cHM6Ly9jb3VwaGFpdGh1cGgubmV0L2FjdC9maWxlcy9zZXJ2aWNlLXdvcmtlci5taW4uanM/cj1zdycp
+```
+
+Direct link, not an env value yet:
+
+```text
+https://omg10.com/4/9911453
+```
+
+Use the direct link only as a real optional CTA later, such as a clearly labeled "More recipe ideas" experiment. Do not use it as fake navigation.
+
+## Placement map
+
+Recommended current mapping:
+
+- `DISPLAY_AD_AFTER_INTRO_BASE64`: Adsterra `300x250`.
+- `DISPLAY_AD_READING_OPTION_BASE64`: Adsterra `Native Banner`.
+- `DISPLAY_AD_MID_CONTENT_BASE64`: Adsterra `468x60`.
+- `DISPLAY_AD_PART_CONTINUE_BASE64`: Adsterra `320x50`.
+- `DISPLAY_AD_BELOW_CONTENT_BASE64`: Adsterra `320x50`.
+- `MONETAG_INPAGE_PUSH_BASE64`: Monetag `In-Page Push`.
+
+Reserve these:
+
+- `DISPLAY_AD_SIDEBAR_BASE64`: Adsterra `160x600`, desktop-only style test later.
+- `DISPLAY_AD_HEADER_BASE64`: Adsterra `728x90`, desktop-only style test later.
+- `MONETAG_ONCLICK_BASE64`: only in `KT_AD_MODE=medium` or `aggressive` after tracking works.
+- `MONETAG_VIGNETTE_BASE64`: aggressive test only.
+- `MONETAG_PUSH_BASE64` plus `MONETAG_SW_JS_BASE64`: push subscription test only, not baseline.
+
+## Raw Adsterra codes
+
+### Native Banner
+
+```html
+<script async="async" data-cfasync="false" src="https://pl29318007.profitablecpmratenetwork.com/23a6a449ba87be8dcc235f1c38e2cdd2/invoke.js"></script>
+<div id="container-23a6a449ba87be8dcc235f1c38e2cdd2"></div>
+```
+
+### Banner 320x50
+
+```html
+<script>
+  atOptions = {
+    'key' : '8de782ea09f3ccc67e8cff2419495fa4',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/8de782ea09f3ccc67e8cff2419495fa4/invoke.js"></script>
+```
+
+### Banner 160x300
+
+```html
+<script>
+  atOptions = {
+    'key' : '5e4160ee6d9611bfefc0016e383296bf',
+    'format' : 'iframe',
+    'height' : 300,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/5e4160ee6d9611bfefc0016e383296bf/invoke.js"></script>
+```
+
+### Banner 468x60
+
+```html
+<script>
+  atOptions = {
+    'key' : 'a47ed957baafed8d1ad88b92bda0908e',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/a47ed957baafed8d1ad88b92bda0908e/invoke.js"></script>
+```
+
+### Banner 300x250
+
+```html
+<script>
+  atOptions = {
+    'key' : '262a96c2cd15d98b49c1f6514a35c718',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/262a96c2cd15d98b49c1f6514a35c718/invoke.js"></script>
+```
+
+### Banner 160x600
+
+```html
+<script>
+  atOptions = {
+    'key' : '5fc971ff3d357fd062ffc754ef5e1116',
+    'format' : 'iframe',
+    'height' : 600,
+    'width' : 160,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/5fc971ff3d357fd062ffc754ef5e1116/invoke.js"></script>
+```
+
+### Banner 728x90
+
+```html
+<script>
+  atOptions = {
+    'key' : 'ffb55b3c459422a448ce5484b9ecb1ff',
+    'format' : 'iframe',
+    'height' : 90,
+    'width' : 728,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/ffb55b3c459422a448ce5484b9ecb1ff/invoke.js"></script>
+```
+
+## Raw Monetag codes
+
+### In-Page Push
+
+```html
+<script>(function(s){s.dataset.zone='9912065',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+```
+
+### OnClick Popunder
+
+```html
+<script>(function(s){s.dataset.zone='10953933',s.src='https://al5sm.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+```
+
+### Vignette Banner
+
+```html
+<script>(function(s){s.dataset.zone='9912066',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')))</script>
+```
+
+### Push Notifications
+
+```html
+<script src="https://5gvci.com/act/files/tag.min.js?z=9911589" data-cfasync="false" async></script>
+```
+
+Push service worker code:
+
+```js
+self.options = {
+    "domain": "couphaithuph.net",
+    "zoneId": 9911589
+}
+self.lary = ""
+importScripts('https://couphaithuph.net/act/files/service-worker.min.js?r=sw')
+```
+
+The theme/MU plugin serves the service worker at:
+
+```text
+https://kuchniatwist.pl/sw.js
+```
+
+To enable push later, set both:
+
+```env
+MONETAG_PUSH_BASE64=PHNjcmlwdCBzcmM9Imh0dHBzOi8vNWd2Y2kuY29tL2FjdC9maWxlcy90YWcubWluLmpzP3o9OTkxMTU4OSIgZGF0YS1jZmFzeW5jPSJmYWxzZSIgYXN5bmM+PC9zY3JpcHQ+
+MONETAG_SW_JS_BASE64=c2VsZi5vcHRpb25zID0gewogICAgImRvbWFpbiI6ICJjb3VwaGFpdGh1cGgubmV0IiwKICAgICJ6b25lSWQiOiA5OTExNTg5Cn0Kc2VsZi5sYXJ5ID0gIiIKaW1wb3J0U2NyaXB0cygnaHR0cHM6Ly9jb3VwaGFpdGh1cGgubmV0L2FjdC9maWxlcy9zZXJ2aWNlLXdvcmtlci5taW4uanM/cj1zdycp
+```
+
+Keep push disabled until we intentionally test it, because push subscriptions can feel aggressive and may hurt user trust.
+
