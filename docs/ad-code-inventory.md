@@ -2,6 +2,8 @@
 
 This file is the source of truth for the current Adsterra and Monetag codes. Keep these codes controlled through Coolify environment variables, not pasted directly into WordPress, the theme editor, or random plugins.
 
+For the step-by-step operating path, use `docs/ad-operations-manual.md`. This inventory answers "what code do we have?" The operations manual answers "where should we put it, when should we test it, and how do we pause it?"
+
 ## Recommended env now
 
 Use this as the current controlled display stack.
@@ -224,4 +226,3 @@ MONETAG_SW_JS_BASE64=c2VsZi5vcHRpb25zID0gewogICAgImRvbWFpbiI6ICJjb3VwaGFpdGh1cGg
 ```
 
 Keep push disabled until we intentionally test it, because push subscriptions can feel aggressive and may hurt user trust.
-

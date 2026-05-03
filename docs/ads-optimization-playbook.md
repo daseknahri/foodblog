@@ -2,6 +2,8 @@
 
 This site is the controlled instant-monetization test. The goal is not to show the maximum number of ads on day one. The goal is to find the best revenue per 1,000 Facebook clicks while keeping the site believable, readable, and safe for future cleanup.
 
+Use `docs/ad-operations-manual.md` for the exact add/remove/test workflow. Use this playbook for strategy and decision-making.
+
 ## Current baseline
 
 Use this as the default stack while the site is young:
