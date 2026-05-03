@@ -44,6 +44,10 @@ const checks = [
     label: 'Pre-lander readiness',
     command: ['node', 'scripts/audit-prelander-readiness.mjs'],
   },
+  {
+    label: 'Histats readiness',
+    command: ['node', 'scripts/audit-histats-readiness.mjs'],
+  },
 ];
 
 if (liveUrl !== '') {
@@ -135,6 +139,7 @@ Default checks:
 - Display ads readiness
 - Ad operations readiness
 - Pre-lander readiness
+- Histats readiness
 
 With --live:
 - live Ezoic readiness
