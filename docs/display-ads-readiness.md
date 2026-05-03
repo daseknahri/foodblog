@@ -70,9 +70,9 @@ Start with cleaner display/native placements:
 
 1. `after_intro`: one native/banner unit.
 2. `mid_content`: one native/banner unit.
-3. `below_content`: one native/banner unit.
+3. `part_continue`: one small unit for posts split into 2-3 honest parts.
 4. `reading_option`: optional next test, preferably a native recommendation unit.
-5. `part_continue`: optional 320x50 or 300x250 unit for posts split into 2-3 parts.
+5. `below_content`: optional, only if readability remains good.
 6. `card_grid`: keep empty unless we intentionally re-test listing ads later.
 7. `sidebar`: optional desktop-friendly native/banner unit.
 8. Skip `header` at first unless revenue is weak.

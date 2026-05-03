@@ -14,6 +14,13 @@ KT_ACTION_AD_MIN_SECONDS=45
 KT_ACTION_AD_MIN_SCROLL=35
 DISPLAY_ADS_ENABLE=1
 DISPLAY_ADS_PROVIDER=adsterra
+DISPLAY_AD_AFTER_INTRO_BASE64=PASTE_300X250_OR_NATIVE_BASE64
+DISPLAY_AD_MID_CONTENT_BASE64=PASTE_300X250_OR_468X60_BASE64
+DISPLAY_AD_PART_CONTINUE_BASE64=PASTE_320X50_OR_300X250_BASE64
+DISPLAY_AD_READING_OPTION_BASE64=
+DISPLAY_AD_BELOW_CONTENT_BASE64=
+DISPLAY_AD_CARD_GRID_BASE64=
+DISPLAY_AD_SIDEBAR_BASE64=
 MONETAG_ENABLE=1
 MONETAG_POST_ONLY=1
 MONETAG_INSTALL_CHECK=0
@@ -33,6 +40,7 @@ Recommended visible display stack:
 
 - Keep `DISPLAY_AD_AFTER_INTRO_BASE64` active.
 - Keep `DISPLAY_AD_MID_CONTENT_BASE64` active.
+- Keep `DISPLAY_AD_PART_CONTINUE_BASE64` active for long posts that use 2-3 parts.
 - Keep `DISPLAY_AD_BELOW_CONTENT_BASE64` empty at first.
 - Test `DISPLAY_AD_READING_OPTION_BASE64` next if you want a native ad that appears like sponsored reading suggestions, clearly labeled as an ad.
 - Test `DISPLAY_AD_PART_CONTINUE_BASE64` only for posts split into 2-3 honest parts. It appears before the "continue to part 2/3" panel.
@@ -135,6 +143,17 @@ MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
 ```
+
+## Posting workflow for the current monetization setup
+
+Use this workflow before we add aggressive ads:
+
+1. Create the post from the external AI title and clean content.
+2. Select `Recipe` or `Article`.
+3. Leave `Automatic split` on `Smart: 2-3 parts for long posts`.
+4. Click `Auto fill` or `Prepare for publishing`.
+5. Preview on mobile. Long posts should show a real "Continue to part 2/3" button, not a redirect.
+6. Publish only if the first page still has enough useful content before the continue panel.
 
 To test same-domain Facebook pre-landers:
 
