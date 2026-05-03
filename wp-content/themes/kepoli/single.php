@@ -124,7 +124,6 @@ get_header();
             <div class="entry-content">
                 <?php the_content(); ?>
             </div>
-            <?php echo kepoli_multipart_continue_panel(); ?>
             <?php echo kepoli_multipart_page_links(); ?>
             <?php if ($show_after_article && !empty($post_next_steps['items'])) : ?>
                 <section class="entry-next-steps">

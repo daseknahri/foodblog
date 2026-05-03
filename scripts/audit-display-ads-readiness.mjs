@@ -131,7 +131,6 @@ function checkTheme() {
     /function\s+kepoli_display_ad_code\s*\(/,
     /function\s+kepoli_display_ad_slot\s*\(/,
     /function\s+kepoli_display_card_grid_ad\s*\(/,
-    /function\s+kepoli_multipart_continue_panel\s*\(/,
     /function\s+kepoli_multipart_page_links\s*\(/,
     /function\s+kepoli_content_display_ads\s*\(/,
     /DISPLAY_ADS_ENABLE/,
@@ -166,7 +165,6 @@ function checkTheme() {
 
   requireIncludes('single post display slots', singlePhp, [
     /kepoli_ad_slot\('below_content'\)/,
-    /kepoli_multipart_continue_panel\(\)/,
     /kepoli_multipart_page_links\(\)/,
   ]);
 

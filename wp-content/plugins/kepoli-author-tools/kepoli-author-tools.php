@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Food Blog Author Tools
  * Description: Simplifies the post editor with split tools, excerpt and SEO helpers, internal-link suggestions, and featured-image metadata.
- * Version: 1.9.7
+ * Version: 1.9.8
  * Author: Site tools
  * Text Domain: kepoli-author-tools
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class Food_Blog_Author_Tools
 {
-    private const VERSION = '1.9.7';
+    private const VERSION = '1.9.8';
     private const AUTO_INTERNAL_LINKS_START = '<!-- kepoli-auto-internal-links:start -->';
     private const AUTO_INTERNAL_LINKS_END = '<!-- kepoli-auto-internal-links:end -->';
     private const AUTO_FAQ_START = '<!-- kepoli-auto-faq:start -->';
@@ -1521,7 +1521,7 @@ final class Food_Blog_Author_Tools
         }
 
         $preferred = self::preferred_block_break_indexes($blocks);
-        $breaks = self::compute_split_breaks(count($blocks), $parts, $preferred);
+        $breaks = self::compute_split_breaks($blocks, $parts, $preferred);
         if (!$breaks) {
             return $content;
         }
@@ -1590,36 +1590,75 @@ final class Food_Blog_Author_Tools
         return $indexes;
     }
 
-    private static function compute_split_breaks(int $total, int $parts, array $preferred): array
+    private static function block_word_count(string $block): int
     {
+        return max(1, self::word_count($block));
+    }
+
+    private static function compute_split_breaks(array $blocks, int $parts, array $preferred): array
+    {
+        $total = count($blocks);
+        if ($total <= $parts) {
+            return [];
+        }
+
+        $weights = array_map([self::class, 'block_word_count'], $blocks);
+        $total_words = array_sum($weights);
+        if ($total_words <= 0) {
+            return [];
+        }
+
+        $preferred_lookup = array_flip($preferred);
         $breaks = [];
         $used = [];
-        $tolerance = max(1, (int) floor($total / ($parts * 2)));
+        $min_words_per_part = max(80, (int) floor(($total_words / $parts) * 0.35));
 
         for ($index = 1; $index < $parts; $index++) {
-            $target = max(1, (int) round(($total * $index) / $parts));
-            $chosen = $target;
+            $target_words = (int) round(($total_words * $index) / $parts);
+            $chosen = 0;
+            $best_score = PHP_INT_MAX;
+            $running_words = 0;
 
-            foreach ($preferred as $candidate) {
-                if (isset($used[$candidate]) || $candidate <= 0 || $candidate >= $total) {
+            for ($candidate = 1; $candidate < $total; $candidate++) {
+                $running_words += $weights[$candidate - 1];
+
+                if (isset($used[$candidate])) {
                     continue;
                 }
 
-                if (abs($candidate - $target) <= $tolerance && abs($candidate - $target) < abs($chosen - $target)) {
+                $previous_break = $breaks ? max($breaks) : 0;
+                if ($candidate <= $previous_break) {
+                    continue;
+                }
+
+                $current_part_words = array_sum(array_slice($weights, $previous_break, $candidate - $previous_break));
+                $remaining_words = array_sum(array_slice($weights, $candidate));
+                $remaining_parts = $parts - $index;
+                if ($current_part_words < $min_words_per_part || $remaining_words < ($min_words_per_part * $remaining_parts)) {
+                    continue;
+                }
+
+                $score = abs($running_words - $target_words);
+                if (isset($preferred_lookup[$candidate])) {
+                    $score = max(0, $score - 30);
+                }
+
+                if ($score < $best_score) {
+                    $best_score = $score;
                     $chosen = $candidate;
                 }
             }
 
-            while (isset($used[$chosen]) && $chosen < ($total - 1)) {
-                $chosen++;
+            if ($chosen <= 0) {
+                $chosen = max(1, min($total - 1, (int) round(($total * $index) / $parts)));
             }
 
-            $chosen = max(1, min($total - 1, $chosen));
             $used[$chosen] = true;
             $breaks[] = $chosen;
         }
 
-        return $breaks;
+        sort($breaks);
+        return array_values(array_unique($breaks));
     }
 
     private static function build_recipe_faq_block(int $post_id, string $content): string

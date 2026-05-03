@@ -16,7 +16,7 @@ DISPLAY_ADS_ENABLE=1
 DISPLAY_ADS_PROVIDER=adsterra
 DISPLAY_AD_AFTER_INTRO_BASE64=PASTE_300X250_OR_NATIVE_BASE64
 DISPLAY_AD_MID_CONTENT_BASE64=PASTE_300X250_OR_468X60_BASE64
-DISPLAY_AD_PART_CONTINUE_BASE64=PASTE_320X50_OR_300X250_BASE64
+DISPLAY_AD_PART_CONTINUE_BASE64=
 DISPLAY_AD_READING_OPTION_BASE64=
 DISPLAY_AD_BELOW_CONTENT_BASE64=
 DISPLAY_AD_CARD_GRID_BASE64=
@@ -40,10 +40,10 @@ Recommended visible display stack:
 
 - Keep `DISPLAY_AD_AFTER_INTRO_BASE64` active.
 - Keep `DISPLAY_AD_MID_CONTENT_BASE64` active.
-- Keep `DISPLAY_AD_PART_CONTINUE_BASE64` active for long posts that use 2-3 parts.
+- Keep `DISPLAY_AD_PART_CONTINUE_BASE64` empty for now. Multi-part posts should use the simple part navigation only.
 - Keep `DISPLAY_AD_BELOW_CONTENT_BASE64` empty at first.
 - Test `DISPLAY_AD_READING_OPTION_BASE64` next if you want a native ad that appears like sponsored reading suggestions, clearly labeled as an ad.
-- Test `DISPLAY_AD_PART_CONTINUE_BASE64` only for posts split into 2-3 honest parts. It appears before the "continue to part 2/3" panel.
+- Keep `DISPLAY_AD_PART_CONTINUE_BASE64` empty for now. We can retest it later only if the simple navigation earns too little.
 - Keep `DISPLAY_AD_CARD_GRID_BASE64` empty for now; listing grids should stay fast, clean, and stable on mobile.
 - Keep `DISPLAY_AD_SIDEBAR_BASE64` empty at first.
 - Add `below_content` only if RPM is weak and mobile readability stays good.
@@ -117,7 +117,7 @@ Use this order. Do not jump to the bottom early.
 3. Pre-lander test: set `KT_PRELANDER_ENABLE=1` and send Facebook links to `/prelander/{post-slug}/`.
 4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64` only after adding a stable recipe intent hook, such as a tested same-page CTA that does not pretend to be navigation. Keep the default 45-second and 35% scroll guard.
 5. In-Page Push test: set `KT_AD_MODE=medium` and use `MONETAG_INPAGE_PUSH_BASE64` only if baseline RPM is too weak and user experience stays acceptable.
-6. Multi-part posts: use the editor's `2 parts` or `3 parts` split, then test `part_continue` as the ad before the next-part button.
+6. Multi-part posts: use the editor's smart split or manual `2 parts` / `3 parts`, with simple part navigation only.
 7. More display: add `reading_option` first. Do not re-add `card_grid` unless we run a controlled test.
 8. Vignette test: only try Vignette in `aggressive` after traffic is stable, with a 10-15 minute cooldown, and stop immediately if it traps users or redirects on close.
 9. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
@@ -152,7 +152,7 @@ Use this workflow before we add aggressive ads:
 2. Select `Recipe` or `Article`.
 3. Leave `Automatic split` on `Smart: 2-3 parts for long posts`.
 4. Click `Auto fill` or `Prepare for publishing`.
-5. Preview on mobile. Long posts should show a real "Continue to part 2/3" button, not a redirect.
+5. Preview on mobile. Long posts should show simple `Part 1`, `Part 2`, and sometimes `Part 3` navigation, not a big continue box.
 6. Publish only if the first page still has enough useful content before the continue panel.
 
 To test same-domain Facebook pre-landers:
