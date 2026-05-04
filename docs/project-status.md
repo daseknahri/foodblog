@@ -56,6 +56,7 @@ For live deploy checks, temporarily set `KEPOLI_DEPLOY_FINGERPRINT=1`, redeploy,
 
 ## Key Docs
 
+- `docs/ai-content-growth-strategy.md`: future AI, content, Facebook, SEO, and monetization direction.
 - `docs/ad-operations-manual.md`: daily ad operations and pause order.
 - `docs/ad-code-inventory.md`: provider snippets and base64 values.
 - `docs/ads-optimization-playbook.md`: testing strategy and stop rules.
