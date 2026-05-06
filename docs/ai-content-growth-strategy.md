@@ -6,9 +6,9 @@ The goal is to use AI as an editorial and optimization system, not as uncontroll
 
 ## Site Goals
 
-### Kepoli
+### Romanian Sister Site
 
-Kepoli is the Romanian, AdSense-first site.
+The Romanian sister site is the AdSense-first site.
 
 Primary goals:
 - Keep the site clean, trustworthy, and AdSense-safe.
@@ -31,7 +31,7 @@ KuchniaTwist is the English, Facebook-first monetization test site.
 Primary goals:
 - Build content that Facebook readers over 40 want to open and continue reading.
 - Increase finalized revenue per 1,000 Facebook clicks.
-- Use monetization more aggressively than Kepoli, but keep it controlled enough to avoid destroying user trust, Facebook reach, or ad-network payment quality.
+- Use monetization more aggressively than the Romanian sister site, but keep it controlled enough to avoid destroying user trust, Facebook reach, or ad-network payment quality.
 - Treat SEO as a secondary benefit, not the first growth channel.
 
 Best content types:
@@ -112,7 +112,7 @@ Questions:
 - Which content should be evergreen for SEO versus short-term Facebook traffic?
 
 Possible paths:
-- Kepoli publishes fewer, cleaner posts focused on trust and AdSense.
+- The Romanian sister site publishes fewer, cleaner posts focused on trust and AdSense.
 - KuchniaTwist publishes faster and tests headline angles with Facebook traffic.
 - Build a monthly content calendar with recipes, articles, and Facebook caption variants.
 - Keep a small performance log of title, topic, traffic source, clicks, revenue, and reader behavior.
@@ -151,17 +151,17 @@ Useful tools:
 Questions:
 - Which ad combinations maximize revenue without making the site feel spammy?
 - Should KuchniaTwist test more aggressive formats only on engaged users?
-- When should Kepoli add AdSense units after approval?
+- When should the Romanian sister site add AdSense units after approval?
 
 Possible paths:
-- Keep Kepoli clean until AdSense is approved and stable.
+- Keep the Romanian sister site clean until AdSense is approved and stable.
 - Keep KuchniaTwist as the ad test site.
 - Test one ad change at a time.
 - Measure finalized revenue per 1,000 Facebook clicks, not just dashboard RPM.
 - Keep aggressive ads behind time, scroll, or click-intent gates.
 
 Useful tools:
-- AdSense for Kepoli.
+- AdSense for the Romanian sister site.
 - Adsterra and Monetag for KuchniaTwist.
 - Histats.
 - Coolify environment variables.
@@ -214,7 +214,7 @@ Do this after the manual workflow is stable.
 Do this once the sites have enough posts to compare.
 
 - Create a 30-day calendar for each site.
-- Kepoli focuses on AdSense-safe trust and SEO.
+- The Romanian sister site focuses on AdSense-safe trust and SEO.
 - KuchniaTwist focuses on Facebook reader curiosity and monetized continuation.
 - Review performance weekly.
 - Repeat winning topics and remove weak formats.
@@ -231,7 +231,7 @@ Do this after real traffic data exists.
 
 ## Default 30-Day Content Plan
 
-### Kepoli
+### Romanian Sister Site
 
 Target: 3-4 posts per week.
 
@@ -286,7 +286,7 @@ For articles:
 
 ## Success Metrics
 
-Kepoli:
+Romanian sister site:
 - AdSense approval.
 - Clean policy pages.
 - Stable indexing.
