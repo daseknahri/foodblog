@@ -44,6 +44,7 @@ Recommended active slots:
 | `DISPLAY_AD_PART_CONTINUE_BASE64` | Adsterra `320x50` | Before simple Part 1 / Part 2 navigation | Low |
 | `DISPLAY_AD_READING_OPTION_BASE64` | Adsterra Native Banner | After the reader has consumed more content | Medium |
 | `DISPLAY_AD_BELOW_CONTENT_BASE64` | Adsterra `320x50` | After post content | Low-medium |
+| `DISPLAY_AD_STICKY_BOTTOM_BASE64` | Adsterra `320x50` | Mobile-only sticky slot after time + scroll gates | Medium |
 | `MONETAG_INPAGE_PUSH_BASE64` | Monetag In-Page Push | Single posts only, if mode allows it | Medium |
 
 Recommended empty slots for now:
@@ -52,6 +53,7 @@ Recommended empty slots for now:
 DISPLAY_AD_HEADER_BASE64=
 DISPLAY_AD_CARD_GRID_BASE64=
 DISPLAY_AD_SIDEBAR_BASE64=
+DISPLAY_AD_STICKY_BOTTOM_BASE64=
 MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
@@ -69,6 +71,8 @@ MONETAG_SW_JS_BASE64=
 `reading_option` is for Native Banner only. It can earn, but it must stay clearly labeled by the wrapper as an ad. Do not make it look like site navigation.
 
 `below_content` is optional. It is safer than popups, but can make the page feel ad-heavy if every earlier slot is already active.
+
+`sticky_bottom` is a mobile-only high-viewability test. Use a `320x50` unit, keep the close button, and keep the default time/scroll/cooldown gates.
 
 `card_grid` must stay empty unless we intentionally test it. Third-party native widgets can break mobile listing pages.
 
@@ -134,6 +138,7 @@ KT_AD_MODE=baseline
 DISPLAY_AD_CARD_GRID_BASE64=
 DISPLAY_AD_HEADER_BASE64=
 DISPLAY_AD_SIDEBAR_BASE64=
+DISPLAY_AD_STICKY_BOTTOM_BASE64=
 MONETAG_VIGNETTE_BASE64=
 MONETAG_ONCLICK_BASE64=
 MONETAG_PUSH_BASE64=
@@ -147,7 +152,8 @@ If users report forced redirects, pause in this order:
 3. `MONETAG_PUSH_BASE64`
 4. `MONETAG_INPAGE_PUSH_BASE64`
 5. `DISPLAY_AD_READING_OPTION_BASE64`
-6. `DISPLAY_AD_BELOW_CONTENT_BASE64`
+6. `DISPLAY_AD_STICKY_BOTTOM_BASE64`
+7. `DISPLAY_AD_BELOW_CONTENT_BASE64`
 
 ## Test ladder
 
@@ -156,11 +162,12 @@ Use this order when increasing monetization:
 1. Baseline display: `after_intro`, `mid_content`, `part_continue`.
 2. Add `below_content` if mobile still feels clean.
 3. Add `reading_option` with Native Banner.
-4. Add Monetag In-Page Push only if display RPM is weak.
-5. Test prelander links for selected Facebook posts.
-6. Test `medium` mode with action-triggered OnClick only after tracking is working.
-7. Test Vignette only in a short `aggressive` window with cooldown.
-8. Test Direct Link only as a real optional "more ideas" link, never as fake navigation.
+4. Add `sticky_bottom` with a `320x50` unit only if mobile still feels clean.
+5. Add Monetag In-Page Push only if display RPM is weak.
+6. Test prelander links for selected Facebook posts.
+7. Test `medium` mode with action-triggered OnClick only after tracking is working.
+8. Test Vignette only in a short `aggressive` window with cooldown.
+9. Test Direct Link only as a real optional "more ideas" link, never as fake navigation.
 
 ## Do not use yet
 

@@ -432,6 +432,60 @@ textarea {
   min-height: 250px;
 }
 
+.ad-slot--sticky-bottom {
+  position: fixed;
+  right: 12px;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  left: 12px;
+  z-index: 80;
+  width: min(100% - 24px, 360px);
+  min-height: 0;
+  margin: 0 auto;
+  padding: 8px 34px 8px 8px;
+  border: 1px solid rgba(79, 85, 37, 0.2);
+  border-radius: 18px;
+  background: rgba(255, 253, 248, 0.96);
+  box-shadow: 0 18px 42px rgba(41, 31, 18, 0.24);
+  transform: translateY(130%);
+  transition: transform 180ms ease, opacity 180ms ease;
+}
+
+.ad-slot--sticky-bottom.is-visible {
+  transform: translateY(0);
+}
+
+.ad-slot--sticky-bottom .ad-slot__label {
+  margin-bottom: 4px;
+  font-size: 0.58rem;
+}
+
+.ad-slot--sticky-bottom .ad-slot__creative {
+  min-height: 50px;
+}
+
+.ad-slot__close {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  width: 24px;
+  height: 24px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(79, 85, 37, 0.18);
+  border-radius: 999px;
+  background: #fffdf8;
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+@media (min-width: 781px) {
+  .ad-slot--sticky-bottom {
+    display: none;
+  }
+}
+
 .home-hero {
   position: relative;
   isolation: isolate;

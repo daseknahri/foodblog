@@ -21,6 +21,10 @@ DISPLAY_AD_MID_CONTENT_BASE64=PASTE_300X250_OR_468X60_BASE64
 DISPLAY_AD_PART_CONTINUE_BASE64=PASTE_320X50_OR_300X250_BASE64
 DISPLAY_AD_READING_OPTION_BASE64=
 DISPLAY_AD_BELOW_CONTENT_BASE64=
+DISPLAY_AD_STICKY_BOTTOM_BASE64=
+DISPLAY_AD_STICKY_BOTTOM_MIN_SECONDS=35
+DISPLAY_AD_STICKY_BOTTOM_MIN_SCROLL=30
+DISPLAY_AD_STICKY_BOTTOM_COOLDOWN_MINUTES=30
 DISPLAY_AD_CARD_GRID_BASE64=
 DISPLAY_AD_SIDEBAR_BASE64=
 MONETAG_ENABLE=1
@@ -44,6 +48,7 @@ Recommended visible display stack:
 - Keep `DISPLAY_AD_BELOW_CONTENT_BASE64` empty at first.
 - Test `DISPLAY_AD_READING_OPTION_BASE64` next if you want a native ad that appears like sponsored reading suggestions, clearly labeled as an ad.
 - Keep `DISPLAY_AD_PART_CONTINUE_BASE64` active if the ad is light and clearly labeled.
+- Test `DISPLAY_AD_STICKY_BOTTOM_BASE64` only after baseline display is stable. Use a `320x50` unit, and keep the default 35-second / 30% scroll gate.
 - Keep `DISPLAY_AD_CARD_GRID_BASE64` empty for now; listing grids should stay fast, clean, and stable on mobile.
 - Keep `DISPLAY_AD_SIDEBAR_BASE64` empty at first.
 - Add `below_content` only if RPM is weak and mobile readability stays good.
@@ -118,7 +123,7 @@ Use this order. Do not jump to the bottom early.
 4. Medium mode: set `KT_AD_MODE=medium` and add `MONETAG_ONCLICK_BASE64` only after adding a stable recipe intent hook, such as a tested same-page CTA that does not pretend to be navigation. Keep the default 45-second and 35% scroll guard.
 5. In-Page Push test: set `KT_AD_MODE=medium` and use `MONETAG_INPAGE_PUSH_BASE64` only if baseline RPM is too weak and user experience stays acceptable.
 6. Multi-part posts: use the editor's smart split or manual `2 parts` / `3 parts`; the part_continue ad can appear before the simple navigation.
-7. More display: add `reading_option` first. Do not re-add `card_grid` unless we run a controlled test.
+7. More display: add `reading_option` first, then `sticky_bottom` if mobile still feels clean. Do not re-add `card_grid` unless we run a controlled test.
 8. Vignette test: only try Vignette in `aggressive` after traffic is stable, with a 10-15 minute cooldown, and stop immediately if it traps users or redirects on close.
 9. Aggressive test: use `KT_AD_MODE=aggressive` only on short controlled traffic windows.
 10. Direct/SmartLink test: only use as a real "more recipe ideas" link, never as fake navigation or a fake button.
@@ -190,6 +195,7 @@ To make the page cleaner without disabling display entirely:
 
 ```env
 DISPLAY_AD_BELOW_CONTENT_BASE64=
+DISPLAY_AD_STICKY_BOTTOM_BASE64=
 DISPLAY_AD_SIDEBAR_BASE64=
 ```
 

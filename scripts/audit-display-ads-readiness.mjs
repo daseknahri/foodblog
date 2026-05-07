@@ -94,6 +94,10 @@ function checkEnv() {
     ['DISPLAY_AD_BELOW_CONTENT_BASE64', ''],
     ['DISPLAY_AD_CARD_GRID_BASE64', ''],
     ['DISPLAY_AD_SIDEBAR_BASE64', ''],
+    ['DISPLAY_AD_STICKY_BOTTOM_BASE64', ''],
+    ['DISPLAY_AD_STICKY_BOTTOM_MIN_SECONDS', '35'],
+    ['DISPLAY_AD_STICKY_BOTTOM_MIN_SCROLL', '30'],
+    ['DISPLAY_AD_STICKY_BOTTOM_COOLDOWN_MINUTES', '30'],
   ]);
 
   for (const [key, expected] of defaults.entries()) {
@@ -117,6 +121,10 @@ function checkCompose() {
     'DISPLAY_AD_BELOW_CONTENT_BASE64',
     'DISPLAY_AD_CARD_GRID_BASE64',
     'DISPLAY_AD_SIDEBAR_BASE64',
+    'DISPLAY_AD_STICKY_BOTTOM_BASE64',
+    'DISPLAY_AD_STICKY_BOTTOM_MIN_SECONDS',
+    'DISPLAY_AD_STICKY_BOTTOM_MIN_SCROLL',
+    'DISPLAY_AD_STICKY_BOTTOM_COOLDOWN_MINUTES',
   ]) {
     if (occurrences(compose, key) < 2) {
       failures.push(`docker-compose.yml must pass ${key} to both wordpress and wp-init.`);
@@ -130,6 +138,7 @@ function checkTheme() {
     /function\s+kepoli_display_ads_should_render\s*\(/,
     /function\s+kepoli_display_ad_code\s*\(/,
     /function\s+kepoli_display_ad_slot\s*\(/,
+    /function\s+kepoli_display_sticky_bottom_ad\s*\(/,
     /function\s+kepoli_display_card_grid_ad\s*\(/,
     /function\s+kepoli_multipart_continue_ad\s*\(/,
     /function\s+kepoli_multipart_page_links\s*\(/,
@@ -139,6 +148,7 @@ function checkTheme() {
     /DISPLAY_AD_'\s*\.\s*\$slot_key\s*\.\s*'_BASE64/,
     /base64_decode\(\$encoded,\s*true\)/,
     /data-display-ad-slot/,
+    /data-sticky-bottom-ad/,
     /ad-slot__label/,
   ]);
 
@@ -183,12 +193,14 @@ function checkStyles() {
     /\.ad-slot--after-intro/,
     /\.ad-slot--mid-content/,
     /\.ad-slot--card-grid/,
+    /\.ad-slot--sticky-bottom/,
   ]);
 
   requireIncludes('style.min.css display ad styles', styleMinCss, [
     /\.ad-slot--display/,
     /\.ad-slot__label/,
     /\.ad-slot__creative/,
+    /\.ad-slot--sticky-bottom/,
   ]);
 }
 
@@ -202,6 +214,7 @@ function checkDocs() {
     /DISPLAY_AD_BELOW_CONTENT_BASE64=/,
     /DISPLAY_AD_CARD_GRID_BASE64=/,
     /DISPLAY_AD_SIDEBAR_BASE64=/,
+    /DISPLAY_AD_STICKY_BOTTOM_BASE64=/,
     /base64/i,
     /homepage/i,
     /legal/i,

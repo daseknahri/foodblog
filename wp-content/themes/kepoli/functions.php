@@ -3337,6 +3337,121 @@ function kepoli_display_ad_slot(string $slot, string $classes = '', bool $allow_
     );
 }
 
+function kepoli_display_sticky_bottom_ad(): void
+{
+    if (!kepoli_display_ads_should_render(false) || !is_singular('post')) {
+        return;
+    }
+
+    $ad_code = kepoli_display_ad_code('sticky_bottom');
+    if ($ad_code === '') {
+        return;
+    }
+
+    $label = kepoli_is_english() ? 'Advertisement' : 'Publicitate';
+    $settings = [
+        'html' => $ad_code,
+        'minSeconds' => kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_MIN_SECONDS', 35, 0, 600),
+        'minScroll' => kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_MIN_SCROLL', 30, 0, 100),
+        'cooldownMinutes' => kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_COOLDOWN_MINUTES', 30, 0, 10080),
+        'storageKey' => 'kepoli_display_sticky_bottom_closed',
+    ];
+    ?>
+    <aside class="ad-slot ad-slot--display ad-slot--live ad-slot--sticky-bottom" data-sticky-bottom-ad hidden aria-label="<?php echo esc_attr($label); ?>">
+        <button class="ad-slot__close" type="button" data-sticky-bottom-ad-close aria-label="<?php echo esc_attr(kepoli_ui_text('Inchide reclama', 'Close advertisement')); ?>">&times;</button>
+        <span class="ad-slot__label"><?php echo esc_html($label); ?></span>
+        <div class="ad-slot__creative" data-sticky-bottom-ad-creative></div>
+    </aside>
+    <script>
+    (function () {
+      var config = <?php echo wp_json_encode($settings, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE); ?>;
+      var slot = document.querySelector('[data-sticky-bottom-ad]');
+      var creative = document.querySelector('[data-sticky-bottom-ad-creative]');
+      var close = document.querySelector('[data-sticky-bottom-ad-close]');
+      if (!slot || !creative || !config.html || !window.matchMedia('(max-width: 780px)').matches) {
+        return;
+      }
+
+      var startedAt = Date.now();
+      var loaded = false;
+      var storageKey = String(config.storageKey || 'kepoli_display_sticky_bottom_closed');
+      var cooldownMs = Math.max(0, Number(config.cooldownMinutes || 0)) * 60000;
+
+      try {
+        var lastClosed = parseInt(window.localStorage.getItem(storageKey) || '0', 10);
+        if (lastClosed && cooldownMs > 0 && Date.now() - lastClosed < cooldownMs) {
+          return;
+        }
+      } catch (error) {}
+
+      function scrollPercent() {
+        var doc = document.documentElement;
+        var max = Math.max(1, (doc.scrollHeight || 0) - window.innerHeight);
+        return Math.max(0, Math.min(100, Math.round(((window.scrollY || doc.scrollTop || 0) / max) * 100)));
+      }
+
+      function appendAdHtml() {
+        var holder = document.createElement('div');
+        holder.innerHTML = config.html;
+        Array.prototype.slice.call(holder.childNodes).forEach(function (node) {
+          if (node.nodeName && node.nodeName.toLowerCase() === 'script') {
+            var script = document.createElement('script');
+            Array.prototype.slice.call(node.attributes || []).forEach(function (attr) {
+              script.setAttribute(attr.name, attr.value);
+            });
+            if (node.text) {
+              script.text = node.text;
+            }
+            creative.appendChild(script);
+            return;
+          }
+
+          creative.appendChild(node.cloneNode(true));
+        });
+      }
+
+      function maybeShow() {
+        if (loaded) {
+          return;
+        }
+
+        var waitedEnough = Date.now() - startedAt >= Math.max(0, Number(config.minSeconds || 0)) * 1000;
+        var scrolledEnough = scrollPercent() >= Math.max(0, Number(config.minScroll || 0));
+        if (!waitedEnough || !scrolledEnough) {
+          return;
+        }
+
+        loaded = true;
+        appendAdHtml();
+        slot.hidden = false;
+        slot.classList.add('is-visible');
+        if (window.dataLayer && Array.isArray(window.dataLayer)) {
+          window.dataLayer.push({ event: 'display_ad_sticky_bottom_show' });
+        }
+      }
+
+      if (close) {
+        close.addEventListener('click', function () {
+          slot.hidden = true;
+          slot.classList.remove('is-visible');
+          try {
+            window.localStorage.setItem(storageKey, String(Date.now()));
+          } catch (error) {}
+          if (window.dataLayer && Array.isArray(window.dataLayer)) {
+            window.dataLayer.push({ event: 'display_ad_sticky_bottom_close' });
+          }
+        });
+      }
+
+      window.addEventListener('scroll', maybeShow, { passive: true });
+      window.addEventListener('resize', maybeShow);
+      window.setTimeout(maybeShow, Math.max(0, Number(config.minSeconds || 0)) * 1000 + 250);
+    }());
+    </script>
+    <?php
+}
+add_action('wp_footer', 'kepoli_display_sticky_bottom_ad', 20);
+
 function kepoli_display_card_grid_ad(): string
 {
     return kepoli_display_ad_slot('card_grid', 'ad-slot--card-grid', true);
