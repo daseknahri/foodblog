@@ -74,6 +74,8 @@ MONETAG_SW_JS_BASE64=
 
 `sticky_bottom` is a mobile-only high-viewability test. Use a `320x50` unit, keep the close button, and keep the default time/scroll/cooldown gates.
 
+To debug `sticky_bottom`, open a public single post with `?kt_sticky_debug=1`. This proves the slot is active without waiting for mobile width, scroll, time, or close cooldown. Never share that debug URL with traffic.
+
 `card_grid` must stay empty unless we intentionally test it. Third-party native widgets can break mobile listing pages.
 
 `sidebar` is desktop-only testing territory. It is not important for Facebook/mobile traffic.

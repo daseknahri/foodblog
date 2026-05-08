@@ -43,6 +43,8 @@ The theme supports these placements:
 
 The display layer does not render on homepage, search, 404, feeds, static pages, legal/policy pages, or logged-in admin views.
 
+For debugging only, append `?kt_sticky_debug=1` to a single post URL after deployment. This bypasses the mobile, time, scroll, and close-cooldown gates for that request so you can confirm the sticky slot is configured and rendered. Do not use the debug URL in Facebook posts.
+
 ## Encoding provider snippets
 
 Create the native/banner zone in the provider dashboard, then encode the exact HTML/JS snippet before adding it to Coolify.
@@ -102,4 +104,5 @@ Manual checks after deploy:
 2. With `DISPLAY_ADS_ENABLE=1`, a public post should show configured display slots.
 3. Homepage, legal pages, search, 404, feeds, and logged-in admin views should not show display snippets.
 4. Confirm Monetag still works on public posts if `MONETAG_ENABLE=1`.
-5. Watch mobile layout and Facebook engagement for the first 48-72 hours.
+5. Confirm the sticky slot with `?kt_sticky_debug=1`, then test the normal URL on mobile after the time and scroll gates.
+6. Watch mobile layout and Facebook engagement for the first 48-72 hours.

@@ -149,6 +149,7 @@ function checkTheme() {
     /base64_decode\(\$encoded,\s*true\)/,
     /data-display-ad-slot/,
     /data-sticky-bottom-ad/,
+    /kt_sticky_debug/,
     /ad-slot__label/,
   ]);
 
@@ -215,6 +216,7 @@ function checkDocs() {
     /DISPLAY_AD_CARD_GRID_BASE64=/,
     /DISPLAY_AD_SIDEBAR_BASE64=/,
     /DISPLAY_AD_STICKY_BOTTOM_BASE64=/,
+    /kt_sticky_debug/,
     /base64/i,
     /homepage/i,
     /legal/i,

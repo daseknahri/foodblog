@@ -3339,7 +3339,13 @@ function kepoli_display_ad_slot(string $slot, string $classes = '', bool $allow_
 
 function kepoli_display_sticky_bottom_ad(): void
 {
-    if (!kepoli_display_ads_should_render(false) || !is_singular('post')) {
+    $debug = isset($_GET['kt_sticky_debug']) && sanitize_text_field(wp_unslash($_GET['kt_sticky_debug'])) === '1';
+
+    if (!is_singular('post')) {
+        return;
+    }
+
+    if (!$debug && !kepoli_display_ads_should_render(false)) {
         return;
     }
 
@@ -3351,13 +3357,14 @@ function kepoli_display_sticky_bottom_ad(): void
     $label = kepoli_is_english() ? 'Advertisement' : 'Publicitate';
     $settings = [
         'html' => $ad_code,
-        'minSeconds' => kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_MIN_SECONDS', 35, 0, 600),
-        'minScroll' => kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_MIN_SCROLL', 30, 0, 100),
-        'cooldownMinutes' => kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_COOLDOWN_MINUTES', 30, 0, 10080),
+        'debug' => $debug,
+        'minSeconds' => $debug ? 0 : kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_MIN_SECONDS', 35, 0, 600),
+        'minScroll' => $debug ? 0 : kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_MIN_SCROLL', 30, 0, 100),
+        'cooldownMinutes' => $debug ? 0 : kepoli_env_int('DISPLAY_AD_STICKY_BOTTOM_COOLDOWN_MINUTES', 30, 0, 10080),
         'storageKey' => 'kepoli_display_sticky_bottom_closed',
     ];
     ?>
-    <aside class="ad-slot ad-slot--display ad-slot--live ad-slot--sticky-bottom" data-sticky-bottom-ad hidden aria-label="<?php echo esc_attr($label); ?>">
+    <aside class="ad-slot ad-slot--display ad-slot--live ad-slot--sticky-bottom" data-sticky-bottom-ad<?php echo $debug ? ' data-sticky-bottom-ad-debug="1"' : ''; ?> hidden aria-label="<?php echo esc_attr($label); ?>">
         <button class="ad-slot__close" type="button" data-sticky-bottom-ad-close aria-label="<?php echo esc_attr(kepoli_ui_text('Inchide reclama', 'Close advertisement')); ?>">&times;</button>
         <span class="ad-slot__label"><?php echo esc_html($label); ?></span>
         <div class="ad-slot__creative" data-sticky-bottom-ad-creative></div>
@@ -3368,7 +3375,11 @@ function kepoli_display_sticky_bottom_ad(): void
       var slot = document.querySelector('[data-sticky-bottom-ad]');
       var creative = document.querySelector('[data-sticky-bottom-ad-creative]');
       var close = document.querySelector('[data-sticky-bottom-ad-close]');
-      if (!slot || !creative || !config.html || !window.matchMedia('(max-width: 780px)').matches) {
+      if (!slot || !creative || !config.html) {
+        return;
+      }
+
+      if (!config.debug && !window.matchMedia('(max-width: 780px)').matches) {
         return;
       }
 
@@ -3377,12 +3388,14 @@ function kepoli_display_sticky_bottom_ad(): void
       var storageKey = String(config.storageKey || 'kepoli_display_sticky_bottom_closed');
       var cooldownMs = Math.max(0, Number(config.cooldownMinutes || 0)) * 60000;
 
-      try {
-        var lastClosed = parseInt(window.localStorage.getItem(storageKey) || '0', 10);
-        if (lastClosed && cooldownMs > 0 && Date.now() - lastClosed < cooldownMs) {
-          return;
-        }
-      } catch (error) {}
+      if (!config.debug) {
+        try {
+          var lastClosed = parseInt(window.localStorage.getItem(storageKey) || '0', 10);
+          if (lastClosed && cooldownMs > 0 && Date.now() - lastClosed < cooldownMs) {
+            return;
+          }
+        } catch (error) {}
+      }
 
       function scrollPercent() {
         var doc = document.documentElement;
@@ -3446,6 +3459,7 @@ function kepoli_display_sticky_bottom_ad(): void
       window.addEventListener('scroll', maybeShow, { passive: true });
       window.addEventListener('resize', maybeShow);
       window.setTimeout(maybeShow, Math.max(0, Number(config.minSeconds || 0)) * 1000 + 250);
+      maybeShow();
     }());
     </script>
     <?php
