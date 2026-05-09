@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Dr Purg Jr. icon</title>
+  <desc id="desc">Square health facts icon with a pulse line and journal dot.</desc>
+  <rect width="512" height="512" rx="88" fill="#f3f8f5"/>
+  <rect x="92" y="104" width="328" height="304" rx="56" fill="#ffffff" stroke="#2f6f73" stroke-width="28"/>
+  <path d="M132 266h62l34-92 54 176 44-84h54" fill="none" stroke="#8a4f7d" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="350" cy="168" r="31" fill="#b65f3a"/>
+</svg>

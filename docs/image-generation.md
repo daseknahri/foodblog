@@ -1,6 +1,6 @@
-# kuchniatwist Image Generation Workflow
+# Dr Purg Jr. Image Generation Workflow
 
-kuchniatwist now keeps launch-image planning in `content/image-plan.json`.
+Dr Purg Jr. now keeps launch-image planning in `content/image-plan.json`.
 
 ## What The Plan Stores
 
@@ -20,7 +20,7 @@ Each post entry includes:
 2. Keep the image realistic, food-first, and free from text overlays, logos, or watermarks.
 3. Prefer a compressed `webp` export and save it as the exact filename in `content/images/`.
 4. Redeploy or rerun the seed.
-5. kuchniatwist imports the image into WordPress and sets it as the featured image for that post.
+5. Dr Purg Jr. imports the image into WordPress and sets it as the featured image for that post.
 
 You can check repo coverage with:
 

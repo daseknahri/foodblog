@@ -1,7 +1,7 @@
 (function () {
   const PAGE_BREAK = '<!--nextpage-->';
   const CONFIG = window.kepoliAuthorTools || {};
-  const SITE_NAME = CONFIG.siteName || 'Food Blog';
+  const SITE_NAME = CONFIG.siteName || 'Dr Purg Jr.';
   const PUBLIC_IS_ENGLISH = CONFIG.publicIsEnglish !== undefined ? !!CONFIG.publicIsEnglish : !!CONFIG.isEnglish;
   const AI_EXTRACTION_ENABLED = !!CONFIG.aiExtractionEnabled && !!CONFIG.ajaxUrl && !!CONFIG.aiNonce;
 
@@ -667,7 +667,7 @@
       }
 
       const categoryLabel = normalizeWords([category.slug, category.name, category.description].join(' ')).join(' ');
-      return ['guides', 'articles', 'articole'].includes(category.slug) || categoryLabel.includes('article') || categoryLabel.includes('guide');
+      return ['guides', 'articles', 'guides'].includes(category.slug) || categoryLabel.includes('article') || categoryLabel.includes('guide');
     };
 
     const articleCategory = categories.find(isArticleCategory) || null;

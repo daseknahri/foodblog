@@ -1,6 +1,6 @@
 <?php
 /**
- * kuchniatwist theme functions.
+ * Dr Purg Jr. theme functions.
  */
 
 if (!defined('ABSPATH')) {
@@ -22,11 +22,11 @@ function kepoli_site_host(): string
 
 function kepoli_public_contact_email(): string
 {
-    $email = sanitize_email((string) kepoli_profile_value(['brand', 'site_email'], kepoli_env('SITE_EMAIL', 'contact@kuchniatwist.pl')));
+    $email = sanitize_email((string) kepoli_profile_value(['brand', 'site_email'], kepoli_env('SITE_EMAIL', 'contact@health.ibnbatoutaweb.com')));
     $host = preg_replace('/^www\./', '', kepoli_site_host());
 
     if ($email === '' || str_contains(strtolower($email), '@' . 'kepoli' . '.com')) {
-        return $host !== '' ? 'contact@' . $host : 'contact@kuchniatwist.pl';
+        return $host !== '' ? 'contact@' . $host : 'contact@health.ibnbatoutaweb.com';
     }
 
     return $email;
@@ -60,15 +60,15 @@ function kepoli_default_site_profile(): array
 
     $is_english = str_starts_with(strtolower($public_locale), 'en');
     $default_tagline = $is_english
-        ? 'Recipes, kitchen guides, and practical home cooking notes'
-        : 'Retete pentru acasa, articole culinare si ghiduri practice.';
+        ? 'Shocking health facts, explained calmly for curious mobile readers.'
+        : 'Fapte surprinzatoare despre sanatate, explicate calm pentru cititori curiosi.';
 
     return [
         'brand' => [
-            'name' => get_bloginfo('name') ?: 'Food Blog',
+            'name' => get_bloginfo('name') ?: 'Dr Purg Jr.',
             'tagline' => get_bloginfo('description') ?: $default_tagline,
             'description' => get_bloginfo('description') ?: '',
-            'site_email' => kepoli_env('SITE_EMAIL', get_option('admin_email') ?: 'contact@kuchniatwist.pl'),
+            'site_email' => kepoli_env('SITE_EMAIL', get_option('admin_email') ?: 'contact@health.ibnbatoutaweb.com'),
         ],
         'locales' => [
             'public' => $public_locale,
@@ -76,22 +76,22 @@ function kepoli_default_site_profile(): array
             'force_admin' => true,
         ],
         'writer' => [
-            'name' => 'Isalune Merovik',
-            'email' => kepoli_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'),
-            'gravatar_url' => 'https://gravatar.com/isalunemerovik',
+            'name' => 'Dr Purg Jr Editorial Desk',
+            'email' => kepoli_env('WRITER_EMAIL', 'editor@health.ibnbatoutaweb.com'),
+            'gravatar_url' => '',
             'bio' => '',
         ],
         'assets' => [
-            'wordmark' => 'kuchniatwist-wordmark',
-            'icon' => 'kuchniatwist-icon',
-            'social_cover' => 'kuchniatwist-social-cover',
+            'wordmark' => 'dr-purg-jr-wordmark',
+            'icon' => 'dr-purg-jr-icon',
+            'social_cover' => 'dr-purg-jr-social-cover',
         ],
         'slugs' => [
             'home' => $is_english ? 'home' : 'acasa',
-            'recipes' => $is_english ? 'recipes' : 'retete',
-            'guides' => $is_english ? 'guides' : 'articole',
-            'about' => $is_english ? 'about-kuchniatwist' : 'despre-kuchniatwist',
-            'author' => $is_english ? 'about-author' : 'despre-autor',
+            'recipes' => $is_english ? 'recipes' : 'recipes',
+            'guides' => $is_english ? 'guides' : 'guides',
+            'about' => $is_english ? 'about-dr-purg-jr' : 'despre-dr-purg-jr',
+            'author' => $is_english ? 'about-author' : 'about-author',
             'privacy' => $is_english ? 'privacy-policy' : 'politica-de-confidentialitate',
             'cookies' => $is_english ? 'cookie-policy' : 'politica-de-cookies',
             'advertising' => $is_english ? 'advertising-and-consent' : 'publicitate-si-consimtamant',
@@ -199,10 +199,10 @@ function kepoli_resolve_profile_page_template(string $template): string
     }
 
     $template_map = [
-        kepoli_profile_slug('about', kepoli_is_english() ? 'about-kuchniatwist' : 'despre-kuchniatwist') => 'page-about-kuchniatwist.php',
-        kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor') => 'page-about-author.php',
-        kepoli_profile_slug('recipes', kepoli_is_english() ? 'recipes' : 'retete') => 'page-recipes.php',
-        kepoli_profile_slug('guides', kepoli_is_english() ? 'guides' : 'articole') => 'page-guides.php',
+        kepoli_profile_slug('about', kepoli_is_english() ? 'about-dr-purg-jr' : 'despre-dr-purg-jr') => 'page-about-dr-purg-jr.php',
+        kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'about-author') => 'page-about-author.php',
+        kepoli_profile_slug('recipes', kepoli_is_english() ? 'recipes' : 'recipes') => 'page-recipes.php',
+        kepoli_profile_slug('guides', kepoli_is_english() ? 'guides' : 'guides') => 'page-guides.php',
     ];
 
     $target = $template_map[(string) $page->post_name] ?? '';
@@ -236,27 +236,27 @@ function kepoli_profile_asset(string $key, string $fallback): string
 
 function kepoli_wordmark_asset(): string
 {
-    return kepoli_profile_asset('wordmark', 'kuchniatwist-wordmark');
+    return kepoli_profile_asset('wordmark', 'dr-purg-jr-wordmark');
 }
 
 function kepoli_icon_asset(): string
 {
-    return kepoli_profile_asset('icon', 'kuchniatwist-icon');
+    return kepoli_profile_asset('icon', 'dr-purg-jr-icon');
 }
 
 function kepoli_social_cover_asset(): string
 {
-    return kepoli_profile_asset('social_cover', 'kuchniatwist-social-cover');
+    return kepoli_profile_asset('social_cover', 'dr-purg-jr-social-cover');
 }
 
 function kepoli_asset_dimensions(string $basename): array
 {
     $dimensions = [
         'hero-homepage' => [1536, 1024],
-        'kuchniatwist-social-cover' => [1536, 1024],
+        'dr-purg-jr-social-cover' => [1536, 1024],
         'writer-photo' => [1024, 1024],
-        'kuchniatwist-wordmark' => [760, 360],
-        'kuchniatwist-icon' => [512, 512],
+        'dr-purg-jr-wordmark' => [760, 360],
+        'dr-purg-jr-icon' => [512, 512],
     ];
 
     return $dimensions[$basename] ?? [];
@@ -368,7 +368,7 @@ function kepoli_ui_text(string $ro, string $en): string
 function kepoli_site_name(): string
 {
     $name = trim((string) kepoli_profile_value(['brand', 'name'], ''));
-    return $name !== '' ? $name : (get_bloginfo('name') ?: 'Food Blog');
+    return $name !== '' ? $name : (get_bloginfo('name') ?: 'Dr Purg Jr.');
 }
 
 function kepoli_find_page_by_candidates(array $slugs): ?WP_Post
@@ -397,14 +397,14 @@ function kepoli_recipes_page(): ?WP_Post
         return $page;
     }
 
-    $page = kepoli_find_page_by_candidates(array_unique(array_filter([kepoli_profile_slug('recipes', ''), 'recipes', 'retete'])));
+    $page = kepoli_find_page_by_candidates(array_unique(array_filter([kepoli_profile_slug('recipes', ''), 'recipes', 'recipes'])));
     return $page instanceof WP_Post ? $page : null;
 }
 
 function kepoli_recipes_page_url(): string
 {
     $page = kepoli_recipes_page();
-    return $page ? get_permalink($page) : home_url('/' . kepoli_profile_slug('recipes', kepoli_is_english() ? 'recipes' : 'retete') . '/');
+    return $page ? get_permalink($page) : home_url('/' . kepoli_profile_slug('recipes', kepoli_is_english() ? 'recipes' : 'recipes') . '/');
 }
 
 function kepoli_guides_page(): ?WP_Post
@@ -415,14 +415,14 @@ function kepoli_guides_page(): ?WP_Post
         return $page;
     }
 
-    $page = kepoli_find_page_by_candidates(array_unique(array_filter([kepoli_profile_slug('guides', ''), 'guides', 'articles', 'articole'])));
+    $page = kepoli_find_page_by_candidates(array_unique(array_filter([kepoli_profile_slug('guides', ''), 'guides', 'articles', 'guides'])));
     return $page instanceof WP_Post ? $page : null;
 }
 
 function kepoli_guides_page_url(): string
 {
     $page = kepoli_guides_page();
-    return $page ? get_permalink($page) : home_url('/' . kepoli_profile_slug('guides', kepoli_is_english() ? 'guides' : 'articole') . '/');
+    return $page ? get_permalink($page) : home_url('/' . kepoli_profile_slug('guides', kepoli_is_english() ? 'guides' : 'guides') . '/');
 }
 
 function kepoli_editorial_category_slugs(): array
@@ -431,7 +431,7 @@ function kepoli_editorial_category_slugs(): array
         kepoli_profile_slug('guides', ''),
         'guides',
         'articles',
-        'articole',
+        'guides',
     ])));
 }
 
@@ -444,8 +444,8 @@ function kepoli_is_editorial_category_slug(string $slug): bool
 
 function kepoli_author_page_url(): string
 {
-    $author_slug = kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor');
-    $page = kepoli_find_page_by_candidates(array_unique(array_filter([$author_slug, 'about-author', 'despre-autor'])));
+    $author_slug = kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'about-author');
+    $page = kepoli_find_page_by_candidates(array_unique(array_filter([$author_slug, 'about-author', 'about-author'])));
     return $page ? get_permalink($page) : home_url('/' . $author_slug . '/');
 }
 
@@ -457,8 +457,8 @@ function kepoli_about_page(): ?WP_Post
         return $about_page;
     }
 
-    $about_slug = kepoli_profile_slug('about', kepoli_is_english() ? 'about-kuchniatwist' : 'despre-kuchniatwist');
-    $page = kepoli_find_page_by_candidates(array_unique(array_filter([$about_slug, 'about-kuchniatwist', 'despre-kuchniatwist'])));
+    $about_slug = kepoli_profile_slug('about', kepoli_is_english() ? 'about-dr-purg-jr' : 'despre-dr-purg-jr');
+    $page = kepoli_find_page_by_candidates(array_unique(array_filter([$about_slug, 'about-dr-purg-jr', 'despre-dr-purg-jr'])));
     if ($page instanceof WP_Post) {
         $about_page = $page;
         return $about_page;
@@ -471,7 +471,7 @@ function kepoli_about_page(): ?WP_Post
 
     foreach ($pages as $candidate) {
         $slug = (string) $candidate->post_name;
-        if ((str_starts_with($slug, 'despre-') || str_starts_with($slug, 'about-')) && !in_array($slug, ['despre-autor', 'about-author'], true)) {
+        if ((str_starts_with($slug, 'despre-') || str_starts_with($slug, 'about-')) && !in_array($slug, ['about-author', 'about-author'], true)) {
             $about_page = $candidate;
             return $about_page;
         }
@@ -484,7 +484,7 @@ function kepoli_about_page(): ?WP_Post
 function kepoli_about_page_url(): string
 {
     $page = kepoli_about_page();
-    return $page ? get_permalink($page) : home_url('/' . kepoli_profile_slug('about', kepoli_is_english() ? 'about-kuchniatwist' : 'despre-kuchniatwist') . '/');
+    return $page ? get_permalink($page) : home_url('/' . kepoli_profile_slug('about', kepoli_is_english() ? 'about-dr-purg-jr' : 'despre-dr-purg-jr') . '/');
 }
 
 function kepoli_contact_page_url(): string
@@ -663,10 +663,10 @@ function kepoli_current_description(): string
         $description = kepoli_brand_description();
     } elseif (is_page()) {
         $page_descriptions = [
-            kepoli_profile_slug('about', kepoli_is_english() ? 'about-kuchniatwist' : 'despre-kuchniatwist') => kepoli_is_english()
+            kepoli_profile_slug('about', kepoli_is_english() ? 'about-dr-purg-jr' : 'despre-dr-purg-jr') => kepoli_is_english()
                 ? sprintf('Learn what %s publishes, who it is for, and how the publication approaches recipes, guides, corrections, and advertising.', kepoli_site_name())
                 : sprintf('Afla ce publica %s si cum abordeaza retetele, articolele, corecturile si publicitatea.', kepoli_site_name()),
-            kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor') => kepoli_is_english()
+            kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'about-author') => kepoli_is_english()
                 ? sprintf('Meet %s, the writer behind %s, and learn how the site approaches practical home-cooking guidance.', kepoli_writer_name(), kepoli_site_name())
                 : sprintf('Afla cine este %s si cum abordeaza %s ghidurile si retetele pentru gatit acasa.', kepoli_writer_name(), kepoli_site_name()),
             'contact' => kepoli_is_english()
@@ -682,14 +682,14 @@ function kepoli_current_description(): string
                 ? sprintf('Understand how advertising, consent, and third-party monetization tools may work on %s when enabled.', kepoli_site_name())
                 : sprintf('Intelege cum pot functiona publicitatea, consimtamantul si instrumentele terte pe %s.', kepoli_site_name()),
             kepoli_profile_slug('editorial', kepoli_is_english() ? 'editorial-policy' : 'politica-editoriala') => kepoli_is_english()
-                ? sprintf('Review the editorial standards that guide recipes, kitchen articles, corrections, and sponsored material on %s.', kepoli_site_name())
-                : sprintf('Vezi standardele editoriale care ghideaza retetele, articolele si corecturile pe %s.', kepoli_site_name()),
+                ? sprintf('Review the editorial standards that guide health explainers, corrections, and sponsored material on %s.', kepoli_site_name())
+                : sprintf('Vezi standardele editoriale care ghideaza explicatiile despre sanatate si corecturile pe %s.', kepoli_site_name()),
             kepoli_profile_slug('terms', kepoli_is_english() ? 'terms-and-conditions' : 'termeni-si-conditii') => kepoli_is_english()
                 ? sprintf('Read the terms that apply to using %s, including content use, availability, and limitations of liability.', kepoli_site_name())
                 : sprintf('Citeste termenii care se aplica folosirii %s, inclusiv utilizarea continutului si limitarile de raspundere.', kepoli_site_name()),
             kepoli_profile_slug('disclaimer', kepoli_is_english() ? 'culinary-disclaimer' : 'disclaimer-culinar') => kepoli_is_english()
-                ? sprintf('Read the cooking, allergen, substitution, and food-safety disclaimer that applies to recipes and food guides on %s.', kepoli_site_name())
-                : sprintf('Citeste disclaimerul culinar despre alergeni, substitutii si siguranta alimentara aplicabil pe %s.', kepoli_site_name()),
+                ? sprintf('Read the health disclaimer that applies to general education, body-signal explainers, and wellness guides on %s.', kepoli_site_name())
+                : sprintf('Citeste disclaimerul de sanatate aplicabil explicatiilor generale publicate pe %s.', kepoli_site_name()),
         ];
 
         $page_slug = kepoli_current_page_slug();
@@ -792,7 +792,7 @@ function kepoli_current_seo_title(): string
         $title = $seo_title !== '' ? $seo_title : single_post_title('', false);
     } elseif (is_front_page()) {
         $title = kepoli_is_english()
-            ? 'Easy recipes and practical kitchen guides | ' . $site_name
+            ? 'Shocking health facts and careful body-signal guides | ' . $site_name
             : 'Retete romanesti pentru acasa | ' . $site_name;
     } elseif (($recipes_page = kepoli_recipes_page()) && is_page($recipes_page->ID)) {
         $title = kepoli_is_english()
@@ -812,8 +812,8 @@ function kepoli_current_seo_title(): string
         $title = (kepoli_is_english() ? 'Page not found | ' : 'Pagina negasita | ') . $site_name;
     } elseif (is_page()) {
         $page_titles = [
-            kepoli_profile_slug('about', kepoli_is_english() ? 'about-kuchniatwist' : 'despre-kuchniatwist') => kepoli_is_english() ? 'About the publication' : 'Despre publicatie',
-            kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor') => kepoli_is_english() ? 'About the author' : 'Despre autor',
+            kepoli_profile_slug('about', kepoli_is_english() ? 'about-dr-purg-jr' : 'despre-dr-purg-jr') => kepoli_is_english() ? 'About the publication' : 'Despre publicatie',
+            kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'about-author') => kepoli_is_english() ? 'About the author' : 'Despre autor',
             'contact' => kepoli_is_english() ? 'Contact and corrections' : 'Contact si corecturi',
             kepoli_profile_slug('privacy', kepoli_is_english() ? 'privacy-policy' : 'politica-de-confidentialitate') => kepoli_is_english() ? 'Privacy policy' : 'Politica de confidentialitate',
             kepoli_profile_slug('cookies', kepoli_is_english() ? 'cookie-policy' : 'politica-de-cookies') => kepoli_is_english() ? 'Cookie policy' : 'Politica de cookies',
@@ -1487,18 +1487,18 @@ function kepoli_render_reader_trust_links(string $class = 'browse-links browse-l
 function kepoli_official_page_slugs(): array
 {
     return array_values(array_unique(array_filter([
-        kepoli_profile_slug('about', kepoli_is_english() ? 'about-kuchniatwist' : 'despre-kuchniatwist'),
-        kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor'),
+        kepoli_profile_slug('about', kepoli_is_english() ? 'about-dr-purg-jr' : 'despre-dr-purg-jr'),
+        kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'about-author'),
         kepoli_profile_slug('privacy', kepoli_is_english() ? 'privacy-policy' : 'politica-de-confidentialitate'),
         kepoli_profile_slug('cookies', kepoli_is_english() ? 'cookie-policy' : 'politica-de-cookies'),
         kepoli_profile_slug('advertising', kepoli_is_english() ? 'advertising-and-consent' : 'publicitate-si-consimtamant'),
         kepoli_profile_slug('editorial', kepoli_is_english() ? 'editorial-policy' : 'politica-editoriala'),
         kepoli_profile_slug('terms', kepoli_is_english() ? 'terms-and-conditions' : 'termeni-si-conditii'),
         kepoli_profile_slug('disclaimer', kepoli_is_english() ? 'culinary-disclaimer' : 'disclaimer-culinar'),
-        'about-kuchniatwist',
-        'despre-kuchniatwist',
+        'about-dr-purg-jr',
+        'despre-dr-purg-jr',
         'about-author',
-        'despre-autor',
+        'about-author',
         'contact',
         'privacy-policy',
         'politica-de-confidentialitate',
@@ -1542,7 +1542,7 @@ function kepoli_official_page_header_items(): array
         ],
     ];
 
-    if (kepoli_current_page_slug() === kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor')) {
+    if (kepoli_current_page_slug() === kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'about-author')) {
         $items[2] = [
             'label' => kepoli_ui_text('Profil', 'Profile'),
             'value' => 'Gravatar',
@@ -1826,8 +1826,8 @@ function kepoli_page_resource_links(): array
 
     $slug = (string) get_post_field('post_name', $page_id);
     $about_page = kepoli_about_page();
-    $about_slug = $about_page instanceof WP_Post ? (string) $about_page->post_name : kepoli_profile_slug('about', kepoli_is_english() ? 'about-kuchniatwist' : 'despre-kuchniatwist');
-    $author_slug = kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'despre-autor');
+    $about_slug = $about_page instanceof WP_Post ? (string) $about_page->post_name : kepoli_profile_slug('about', kepoli_is_english() ? 'about-dr-purg-jr' : 'despre-dr-purg-jr');
+    $author_slug = kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'about-author');
     $editorial_slug = kepoli_profile_slug('editorial', kepoli_is_english() ? 'editorial-policy' : 'politica-editoriala');
     $privacy_slug = kepoli_profile_slug('privacy', kepoli_is_english() ? 'privacy-policy' : 'politica-de-confidentialitate');
     $cookies_slug = kepoli_profile_slug('cookies', kepoli_is_english() ? 'cookie-policy' : 'politica-de-cookies');
@@ -4040,7 +4040,7 @@ function kepoli_static_page_json_ld(): void
             'mainEntity' => ['@id' => home_url('/#organization')],
             'about' => ['@id' => home_url('/#organization')],
         ];
-    } elseif (($author_page = kepoli_find_page_by_candidates(array_unique(array_filter([kepoli_profile_slug('author', ''), 'about-author', 'despre-autor'])))) && is_page($author_page->ID)) {
+    } elseif (($author_page = kepoli_find_page_by_candidates(array_unique(array_filter([kepoli_profile_slug('author', ''), 'about-author', 'about-author'])))) && is_page($author_page->ID)) {
         $schema = [
             '@context' => 'https://schema.org',
             '@type' => 'ProfilePage',

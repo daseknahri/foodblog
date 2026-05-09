@@ -27,7 +27,7 @@ function kepoli_newsletter_site_name(): string
 {
     $profile = get_option('kepoli_site_profile');
     $profile_name = is_array($profile) ? trim((string) ($profile['brand']['name'] ?? '')) : '';
-    return $profile_name !== '' ? $profile_name : (get_bloginfo('name') ?: 'Food Blog');
+    return $profile_name !== '' ? $profile_name : (get_bloginfo('name') ?: 'Dr Purg Jr.');
 }
 
 function kepoli_newsletter_normalize_email(string $email): string

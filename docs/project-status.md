@@ -1,10 +1,10 @@
 # Project Status
 
-This is the handoff note for future work on KuchniaTwist.
+This is the handoff note for future work on Dr Purg Jr.
 
 ## Current Role
 
-This repo is the English monetization test site. Keep the Romanian sister site separate and AdSense-clean; use this repo for controlled instant-ad experiments.
+This repo is now the English, Facebook/mobile-first health-facts site for `health.ibnbatoutaweb.com`. It is built from the shared engine, but the public identity, pages, categories, article pack, and images are all Dr Purg Jr. specific.
 
 ## Production Defaults
 
@@ -14,23 +14,23 @@ KT_AD_MODE=baseline
 KT_PRELANDER_ENABLE=0
 KEPOLI_AUTOSEED_ENABLE=1
 KEPOLI_FORCE_RESEED=0
-DISPLAY_ADS_ENABLE=1
-MONETAG_ENABLE=1
+DISPLAY_ADS_ENABLE=0
+MONETAG_ENABLE=0
 MONETAG_POST_ONLY=1
-HISTATS_ENABLE=1
+HISTATS_ENABLE=0
 HISTATS_EXCLUDE_ADMINS=1
 ```
 
-Keep `MONETAG_ONCLICK_BASE64`, `MONETAG_VIGNETTE_BASE64`, `MONETAG_PUSH_BASE64`, `DISPLAY_AD_HEADER_BASE64`, `DISPLAY_AD_CARD_GRID_BASE64`, `DISPLAY_AD_SIDEBAR_BASE64`, and `DISPLAY_AD_STICKY_BOTTOM_BASE64` empty unless running a deliberate short test.
+Keep AdSense IDs blank. Add instant/native ad snippets only as base64 Coolify variables, one slot at a time. Keep `MONETAG_ONCLICK_BASE64`, `MONETAG_VIGNETTE_BASE64`, `MONETAG_PUSH_BASE64`, `DISPLAY_AD_HEADER_BASE64`, `DISPLAY_AD_CARD_GRID_BASE64`, `DISPLAY_AD_SIDEBAR_BASE64`, and `DISPLAY_AD_STICKY_BOTTOM_BASE64` empty unless running a deliberate short test.
 
 ## Content Workflow
 
 - Admin stays English.
 - Public content stays English.
-- Use the external AI prompt to generate only title and clean plain-text content.
-- In WordPress, choose `Recipe` or `Article`, then use `Auto fill`.
+- Use the external AI prompt to generate only title and clean plain-text article content.
+- In WordPress, choose `Article`, then use `Auto fill`.
 - For long posts, use `Auto split` or `2 parts` / `3 parts`.
-- Smart split is tuned for monetization tests: `420+` words for 2 parts and `1100+` words for 3 parts.
+- Smart split is tuned for monetization tests: `420+` words becomes 2 parts and `1100+` words becomes 3 parts when the split improves reading flow.
 
 ## Ad Workflow
 
@@ -38,6 +38,7 @@ Keep `MONETAG_ONCLICK_BASE64`, `MONETAG_VIGNETTE_BASE64`, `MONETAG_PUSH_BASE64`,
 - Do not paste ad code into WordPress widgets, posts, plugins, or theme editor.
 - Add one ad slot at a time and wait at least 48 hours or enough Facebook clicks before judging.
 - If redirects or bad ads appear, pause Monetag first, then reading-option/below-content display slots.
+- Health content must not promise cures, diagnoses, treatment outcomes, or personal medical guidance.
 
 ## Deployment Rules
 
@@ -52,11 +53,12 @@ node scripts\preflight-launch.mjs
 git diff --check
 ```
 
-For live deploy checks, temporarily set `KEPOLI_DEPLOY_FINGERPRINT=1`, redeploy, run `node scripts\preflight-launch.mjs --live https://kuchniatwist.pl`, then turn the fingerprint off.
+For live deploy checks, temporarily set `KEPOLI_DEPLOY_FINGERPRINT=1`, redeploy, run `node scripts\preflight-launch.mjs --live https://health.ibnbatoutaweb.com`, then turn the fingerprint off.
 
 ## Key Docs
 
 - `docs/ai-content-growth-strategy.md`: future AI, content, Facebook, SEO, and monetization direction.
+- `docs/site-brief-dr-purg-jr.md`: launch brief, audience, content guardrails, and ad strategy for this clone.
 - `docs/ad-operations-manual.md`: daily ad operations and pause order.
 - `docs/ad-code-inventory.md`: provider snippets and base64 values.
 - `docs/ads-optimization-playbook.md`: testing strategy and stop rules.

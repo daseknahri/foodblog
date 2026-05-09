@@ -3,14 +3,14 @@
 1. Connect the GitHub repository to Coolify as a Docker Compose application.
 2. Set the branch to `main`.
 3. Use the root `docker-compose.yml` only.
-4. Let Coolify build the repo image `kuchniatwist-wordpress`.
-5. Assign the domain `https://kuchniatwist.pl` to service `wordpress`, port `80`.
-   - The compose file also defines `SERVICE_FQDN_WORDPRESS_80=https://kuchniatwist.pl` and `PORT=80` for Coolify's proxy routing.
+4. Let Coolify build the repo image `dr-purg-jr-wordpress`.
+5. Assign the domain `https://health.ibnbatoutaweb.com` to service `wordpress`, port `80`.
+   - The compose file also defines `SERVICE_FQDN_WORDPRESS_80=https://health.ibnbatoutaweb.com` and `PORT=80` for Coolify's proxy routing.
    - Do not publish host port `80` with a `ports:` mapping in production; Coolify's proxy should route to the container's internal port `80`.
 6. Add persistent volumes created by Compose:
-   - `kuchniatwist_db`
-   - `kuchniatwist_wordpress`
-   - `kuchniatwist_uploads`
+   - `dr_purg_jr_db`
+   - `dr_purg_jr_wordpress`
+   - `dr_purg_jr_uploads`
 7. Add all required variables from `.env.example`.
 8. Enable GitHub auto-deploy.
 9. Leave the `seed` profile disabled for normal deploys. The `wordpress` container self-seeds only on a fresh install, before real site content exists.
@@ -28,12 +28,12 @@ Then set `KEPOLI_FORCE_RESEED=0` immediately after the repair. `wp-init` is inte
 
 Do not use `docker-compose.local.yml` in Coolify. That override publishes host port `8080` for local development and can fail on shared servers when the port is already allocated. Production should use domain routing to the `wordpress` service on container port `80`.
 
-If Coolify skips or stops the one-shot service during the first launch, the `wordpress` image already contains `seed` and `content`; the `kepoli-autoseed` MU plugin runs the seed once on the next request and activates the kuchniatwist theme. Once `kepoli_seed_version` exists or real content exists, auto-seed stops and future deploys do not touch posts again.
+If Coolify skips or stops the one-shot service during the first launch, the `wordpress` image already contains `seed` and `content`; the `kepoli-autoseed` MU plugin runs the seed once on the next request and activates the Dr Purg Jr. theme. Once `kepoli_seed_version` exists or real content exists, auto-seed stops and future deploys do not touch posts again.
 
 For a temporary deploy check, set `KEPOLI_DEPLOY_FINGERPRINT=1`, redeploy, then verify the public site is actually on the current repo build:
 
 ```sh
-node scripts/check-live-deploy.mjs https://kuchniatwist.pl
+node scripts/check-live-deploy.mjs https://health.ibnbatoutaweb.com
 ```
 
 What the result means:
@@ -47,5 +47,5 @@ Turn `KEPOLI_DEPLOY_FINGERPRINT` back off after the check so normal production p
 For a broader release pass before redeploying or applying to a monetization platform, run:
 
 ```sh
-node scripts/preflight-launch.mjs --live https://kuchniatwist.pl
+node scripts/preflight-launch.mjs --live https://health.ibnbatoutaweb.com
 ```

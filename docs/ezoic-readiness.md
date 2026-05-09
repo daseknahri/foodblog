@@ -1,6 +1,6 @@
 # Ezoic Readiness
 
-This clone is prepared for Ezoic review as an English food blog on `https://kuchniatwist.pl`.
+This clone is prepared for Ezoic review as an English health-facts blog on `https://health.ibnbatoutaweb.com`.
 
 ## Before Submission
 
@@ -10,7 +10,7 @@ This clone is prepared for Ezoic review as an English food blog on `https://kuch
 - Keep direct ads disabled in hosting: `ADSENSE_ENABLE=0`.
 - Do not add popup newsletter code or Reader Revenue Manager scripts.
 - Keep the native newsletter form only on the home/about areas unless the design changes later.
-- Make sure `www.kuchniatwist.pl` redirects to `https://kuchniatwist.pl`.
+- Make sure `www.health.ibnbatoutaweb.com` redirects to `https://health.ibnbatoutaweb.com`.
 - Keep `/ads.txt` reachable. Before Ezoic gives you an Ads.txt Manager ID, the site serves a harmless placeholder. After Ezoic gives the ID, set `EZOIC_ADSTXT_ACCOUNT_ID`.
 - Keep `EZOIC_PLUGIN_ENABLE=0` until you intentionally enable the Ezoic WordPress plugin from the Ezoic dashboard flow.
 
@@ -27,7 +27,7 @@ EZOIC_ADSTXT_ACCOUNT_ID=19390
 If Ezoic gives a custom redirect URL instead of just an account ID, use:
 
 ```env
-EZOIC_ADSTXT_REDIRECT_URL=https://srv.adstxtmanager.com/19390/kuchniatwist.pl
+EZOIC_ADSTXT_REDIRECT_URL=https://srv.adstxtmanager.com/19390/health.ibnbatoutaweb.com
 ```
 
 - Configure consent/privacy messaging from the monetization platform or approved CMP path before personalized ads are shown.
@@ -38,10 +38,10 @@ EZOIC_ADSTXT_REDIRECT_URL=https://srv.adstxtmanager.com/19390/kuchniatwist.pl
 For the initial Ezoic submission:
 
 ```env
-SITE_URL=https://kuchniatwist.pl
-SITE_EMAIL=contact@kuchniatwist.pl
+SITE_URL=https://health.ibnbatoutaweb.com
+SITE_EMAIL=contact@health.ibnbatoutaweb.com
 WP_LOCALE=en_US
-CANONICAL_REDIRECT_HOSTS=www.kuchniatwist.pl
+CANONICAL_REDIRECT_HOSTS=www.health.ibnbatoutaweb.com
 ADSENSE_ENABLE=0
 EZOIC_ADSTXT_ACCOUNT_ID=
 EZOIC_ADSTXT_REDIRECT_URL=
@@ -62,5 +62,5 @@ node scripts/audit-ezoic-readiness.mjs
 To check the live site too:
 
 ```sh
-node scripts/audit-ezoic-readiness.mjs --live https://kuchniatwist.pl
+node scripts/audit-ezoic-readiness.mjs --live https://health.ibnbatoutaweb.com
 ```

@@ -1,6 +1,6 @@
 # Author Workflow
 
-This repo includes a small `kepoli-author-tools` plugin for writing posts. The plugin keeps its internal name, but the admin workflow is English and designed for beginner publishers running cloned food blogs.
+This repo includes a small `kepoli-author-tools` plugin for writing posts. The plugin keeps its internal name, but the admin workflow is English and designed for beginner publishers running cloned health-facts blogs.
 
 ## What Changes In WordPress Admin
 
@@ -9,7 +9,7 @@ This repo includes a small `kepoli-author-tools` plugin for writing posts. The p
 - The post editor toolbar includes `Break`, `2 parts`, and `3 parts` buttons for WordPress post pagination.
 - The split buttons try to break long posts at clean section boundaries, especially around `H2` and `H3` headings. If content is pasted as one large plain-text paragraph, the splitter may fall back to sentence and word chunks. Formatted content keeps its paragraphs, headings, lists, and line breaks; if there is no safe structural split point, the plugin leaves the post unsplit instead of flattening it.
 - If a formatted post has only a few large paragraph blocks, the splitter can break those large paragraphs by word-count sentence groups while keeping them as paragraphs.
-- The setup box includes `Auto split`, so a writer can choose 2 or 3 parts and let the tool apply the split on save. If manual `nextpage` breaks already exist, the plugin leaves them alone. Smart split is tuned for KuchniaTwist monetization tests: about `420+` words becomes 2 parts, and about `1100+` words becomes 3 parts.
+- The setup box includes `Auto split`, so a writer can choose 2 or 3 parts and let the tool apply the split on save. If manual `nextpage` breaks already exist, the plugin leaves them alone. Smart split is tuned for Dr Purg Jr. monetization tests: about `420+` words becomes 2 parts, and about `1100+` words becomes 3 parts.
 - The `Post setup` box lets the writer choose `Recipe` or `Article`, then review excerpt, SEO, related links, image metadata, and recipe structured data.
 - The main action is `Auto fill`. Extra helper actions stay under `More tools` so the editor remains simple.
 - Manual SEO title, meta description, and related-link slugs stay inside `SEO and links`.

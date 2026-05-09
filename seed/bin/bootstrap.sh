@@ -11,10 +11,10 @@ cd /var/www/html
 : "${WP_ADMIN_PASSWORD:?WP_ADMIN_PASSWORD is required}"
 : "${WP_ADMIN_EMAIL:?WP_ADMIN_EMAIL is required}"
 
-SITE_URL="${SITE_URL:-https://kuchniatwist.pl}"
+SITE_URL="${SITE_URL:-https://health.ibnbatoutaweb.com}"
 WP_LOCALE="${WP_LOCALE:-en_US}"
 WP_ADMIN_LOCALE="${WP_ADMIN_LOCALE:-en_US}"
-SITE_EMAIL="${SITE_EMAIL:-contact@kuchniatwist.pl}"
+SITE_EMAIL="${SITE_EMAIL:-contact@health.ibnbatoutaweb.com}"
 SITE_NAME="${SITE_NAME:-}"
 
 if [ -z "$SITE_NAME" ]; then
@@ -24,7 +24,7 @@ if [ -z "$SITE_NAME" ]; then
   if [ -n "$site_host" ]; then
     SITE_NAME=$(printf '%s' "$site_host" | cut -d. -f1)
   else
-    SITE_NAME="Food Blog"
+    SITE_NAME="Dr Purg Jr."
   fi
 fi
 
@@ -72,8 +72,8 @@ if (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strpos((string) $_SERVER['HTTP
 if (!empty($_SERVER['HTTP_X_FORWARDED_HOST'])) {
     $_SERVER['HTTP_HOST'] = (string) $_SERVER['HTTP_X_FORWARDED_HOST'];
 }
-define('WP_HOME', getenv('SITE_URL') ?: 'https://kuchniatwist.pl');
-define('WP_SITEURL', getenv('SITE_URL') ?: 'https://kuchniatwist.pl');
+define('WP_HOME', getenv('SITE_URL') ?: 'https://health.ibnbatoutaweb.com');
+define('WP_SITEURL', getenv('SITE_URL') ?: 'https://health.ibnbatoutaweb.com');
 define('FORCE_SSL_ADMIN', true);
 define('DISALLOW_FILE_EDIT', true);
 define('WP_POST_REVISIONS', 5);
@@ -97,8 +97,8 @@ if ! grep -q "HTTP_X_FORWARDED_PROTO" wp-config.php; then
               "if (!empty($_SERVER['\''HTTP_X_FORWARDED_HOST'\''])) {\n" \
               "    $_SERVER['\''HTTP_HOST'\''] = (string) $_SERVER['\''HTTP_X_FORWARDED_HOST'\''];\n" \
               "}\n" \
-              "define('\''WP_HOME'\'', getenv('\''SITE_URL'\'') ?: '\''https://kuchniatwist.pl'\'');\n" \
-              "define('\''WP_SITEURL'\'', getenv('\''SITE_URL'\'') ?: '\''https://kuchniatwist.pl'\'');\n" \
+              "define('\''WP_HOME'\'', getenv('\''SITE_URL'\'') ?: '\''https://health.ibnbatoutaweb.com'\'');\n" \
+              "define('\''WP_SITEURL'\'', getenv('\''SITE_URL'\'') ?: '\''https://health.ibnbatoutaweb.com'\'');\n" \
               "define('\''FORCE_SSL_ADMIN'\'', true);\n"
     }
     /\/\* That'\''s all, stop editing! Happy publishing\. \*\// && inserted == 0 {

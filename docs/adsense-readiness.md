@@ -1,10 +1,10 @@
 # AdSense Readiness Notes
 
-This project can support direct AdSense later, but the current kuchniatwist launch is configured for Ezoic-first review. Google makes the final decision for any future AdSense approval.
+This project can support direct AdSense later, but the current Dr Purg Jr. launch is configured for Ezoic-first review. Google makes the final decision for any future AdSense approval.
 
 Implemented readiness items:
 
-- Public pages for privacy, cookies, terms, culinary disclaimer, contact, author, and about.
+- Public pages for privacy, cookies, terms, health disclaimer, contact, author, and about.
 - Public editorial policy page that explains originality, corrections, and advertising separation.
 - Twenty published English food posts at launch.
 - Clear category navigation and internal links.
@@ -18,7 +18,7 @@ Implemented readiness items:
 - `ads.txt` generated only after `ADSENSE_PUB_ID` is configured.
 - `/.well-known/security.txt` served with contact and canonical metadata for a basic public trust/contact endpoint.
 - Google Site Kit installed for later account connection.
-- A small native newsletter form appears on the front page and About kuchniatwist page, with signups stored directly in WordPress admin.
+- A small native newsletter form appears on the front page and About Dr Purg Jr. page, with signups stored directly in WordPress admin.
 - Dedicated public page for `Advertising and Consent`.
 - Repo checks for risky claim language and key trust-policy pages.
 
@@ -40,7 +40,7 @@ Before applying for direct AdSense later:
 
 Search Console domain variants:
 
-- Use the production host `https://kuchniatwist.pl/` unless the extra hosts are intentionally configured.
-- If Search Console lists `www.kuchniatwist.pl`, `api.kuchniatwist.pl`, or `recipe.kuchniatwist.pl` with `robots.txt` not fetched, fix that in DNS/Coolify by either removing those properties from Search Console or routing those hosts to the WordPress service.
-- When those hosts reach WordPress, the kuchniatwist MU plugin redirects them to the canonical `SITE_URL`; keep `CANONICAL_REDIRECT_HOSTS` aligned with any extra Search Console hostnames.
+- Use the production host `https://health.ibnbatoutaweb.com/` unless the extra hosts are intentionally configured.
+- If Search Console lists `www.health.ibnbatoutaweb.com`, `api.health.ibnbatoutaweb.com`, or `recipe.health.ibnbatoutaweb.com` with `robots.txt` not fetched, fix that in DNS/Coolify by either removing those properties from Search Console or routing those hosts to the WordPress service.
+- When those hosts reach WordPress, the Dr Purg Jr. MU plugin redirects them to the canonical `SITE_URL`; keep `CANONICAL_REDIRECT_HOSTS` aligned with any extra Search Console hostnames.
 - The WordPress app can serve robots.txt only for hostnames that reach the `wordpress` service.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Food Blog Author Tools
+ * Plugin Name: Dr Purg Jr. Author Tools
  * Description: Simplifies the post editor with split tools, excerpt and SEO helpers, internal-link suggestions, and featured-image metadata.
  * Version: 1.10.3
  * Author: Site tools
@@ -85,7 +85,7 @@ final class Food_Blog_Author_Tools
 
         $default = [
             'brand' => [
-                'name' => get_bloginfo('name') ?: 'Food Blog',
+                'name' => get_bloginfo('name') ?: 'Dr Purg Jr.',
                 'site_email' => get_option('admin_email') ?: 'contact@example.com',
             ],
             'locales' => [
@@ -218,7 +218,7 @@ final class Food_Blog_Author_Tools
     private static function site_name(): string
     {
         $name = trim((string) self::profile_value(['brand', 'name'], ''));
-        return $name !== '' ? $name : (get_bloginfo('name') ?: 'Food Blog');
+        return $name !== '' ? $name : (get_bloginfo('name') ?: 'Dr Purg Jr.');
     }
 
     private static function profile_slug(string $key, string $fallback): string
@@ -233,7 +233,7 @@ final class Food_Blog_Author_Tools
             self::profile_slug('guides', 'guides'),
             'guides',
             'articles',
-            'articole',
+            'guides',
         ])));
     }
 

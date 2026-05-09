@@ -1,4 +1,4 @@
-# Ads optimization playbook for KuchniaTwist
+# Ads optimization playbook for Dr Purg Jr.
 
 This site is the controlled instant-monetization test. The goal is not to show the maximum number of ads on day one. The goal is to find the best revenue per 1,000 Facebook clicks while keeping the site believable, readable, and safe for future cleanup.
 
@@ -169,7 +169,7 @@ KT_PRELANDER_ENABLE=1
 Then use this URL shape:
 
 ```text
-https://kuchniatwist.pl/prelander/post-slug/?utm_source=facebook&utm_medium=social&utm_campaign=kuchnia_monetag_test&utm_content=hook_name
+https://health.ibnbatoutaweb.com/prelander/post-slug/?utm_source=facebook&utm_medium=social&utm_campaign=kuchnia_monetag_test&utm_content=hook_name
 ```
 
 To pause only Vignette:

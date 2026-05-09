@@ -85,7 +85,7 @@ If the new site will use AdSense after approval, fill `ADSENSE_CLIENT_ID` and `A
 - `wp-content/themes/kepoli/style.css`: change the public theme header: theme name, URI, author, author URI, and description.
 - `wp-content/themes/kepoli/assets/img/`: replace logo, social cover, homepage hero, icon, and writer photo. If you rename logo/icon/social-cover files, update `content/site-profile.json` `assets`.
 - `wp-content/themes/kepoli/functions.php`: this should read public identity from `kepoli_site_profile`; avoid adding new brand-specific fallback copy here.
-- `wp-content/themes/kepoli/header.php`, `footer.php`, `front-page.php`, `page-about-kuchniatwist.php`, `page-about-author.php`, `page-recipes.php`, and `page-guides.php`: keep these as layout templates. Public authenticity copy should come from `content/pages.json`; template labels can stay structural and locale-aware.
+- `wp-content/themes/kepoli/header.php`, `footer.php`, `front-page.php`, `page-about-dr-purg-jr.php`, `page-about-author.php`, `page-recipes.php`, and `page-guides.php`: keep these as layout templates. Public authenticity copy should come from `content/pages.json`; template labels can stay structural and locale-aware.
 - `wp-content/mu-plugins/kepoli-adtech.php`: manifest name, short name, description, locale, email, and icon are profile-driven; only review this file for host/ads behavior.
 - `wp-content/mu-plugins/kepoli-newsletter.php`: admin labels stay English and visible fallback source labels read the site profile; internal function names can stay.
 - `seed/bootstrap.php`: imports `content/site-profile.json` into the `kepoli_site_profile` option and seeds title, tagline, page slugs, locale, and writer identity from that profile. A quick manual review is still wise, but new clones should not need direct seed-code identity edits.
@@ -96,7 +96,7 @@ If the new site switches language, run the mechanical clone scripts first, then 
 
 ## Content Reset
 
-Do not reuse the kuchniatwist launch posts or images on the new site. For AdSense and SEO, the new blog should look like a real independent publication, not a copy.
+Do not reuse the Dr Purg Jr. launch posts or images on the new site. For AdSense and SEO, the new blog should look like a real independent publication, not a copy.
 
 Replace these:
 
@@ -128,7 +128,7 @@ node scripts/audit-replica-readiness.mjs --min-posts 20
 node scripts/verify-content.mjs
 node scripts/image-status.mjs
 node scripts/audit-rebrand.mjs
-node scripts/audit-rebrand.mjs --old-brand kuchniatwist --old-domain kuchniatwist.pl --old-email contact@kuchniatwist.pl
+node scripts/audit-rebrand.mjs --old-brand Dr Purg Jr. --old-domain health.ibnbatoutaweb.com --old-email contact@health.ibnbatoutaweb.com
 git diff --check
 ```
 
@@ -139,7 +139,7 @@ If you want a manual second look, search for old identity leftovers too:
 ```powershell
 Get-ChildItem -Recurse -File |
   Where-Object { $_.FullName -notmatch '\\.git\\' -and $_.Name -ne 'env.tmp' } |
-  Select-String -Pattern 'kuchniatwist','kuchniatwist.pl','contact@old-domain'
+  Select-String -Pattern 'Dr Purg Jr.','health.ibnbatoutaweb.com','contact@old-domain'
 ```
 
 Public leftovers should be fixed. Internal code handles can wait unless you want a deeper white-label cleanup later.

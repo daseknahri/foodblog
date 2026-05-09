@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Food Blog Auto Seed
+ * Plugin Name: Dr Purg Jr. Auto Seed
  * Description: Self-heals a fresh WordPress install when the one-shot WP-CLI seed did not run in the host platform.
  */
 
