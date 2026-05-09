@@ -1,6 +1,6 @@
 # Histats Readiness
 
-Dr Purg Jr. can use Histats as a simple live-traffic counter while revenue tests are running. Keep it env-controlled so analytics can be enabled, replaced, or removed without editing theme files.
+KuchniaTwist can use Histats as a simple live-traffic counter while revenue tests are running. Keep it env-controlled so analytics can be enabled, replaced, or removed without editing theme files.
 
 ## Recommended Setup
 

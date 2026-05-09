@@ -1,6 +1,6 @@
 <?php
 /**
- * Idempotent content and site bootstrap for Dr Purg Jr.
+ * Idempotent content and site bootstrap for kuchniatwist.
  */
 
 require_once __DIR__ . '/version.php';
@@ -18,13 +18,13 @@ function kepoli_seed_env(string $key, string $default = ''): string
 function kepoli_seed_public_contact_email(): string
 {
     $profile = kepoli_seed_current_site_profile();
-    $email = sanitize_email((string) kepoli_seed_profile_value($profile, ['brand', 'site_email'], kepoli_seed_env('SITE_EMAIL', 'contact@health.ibnbatoutaweb.com')));
+    $email = sanitize_email((string) kepoli_seed_profile_value($profile, ['brand', 'site_email'], kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl')));
     $site_url = kepoli_seed_env('SITE_URL', home_url('/'));
     $host = wp_parse_url($site_url, PHP_URL_HOST);
     $host = is_string($host) ? preg_replace('/^www\./', '', strtolower($host)) : '';
 
     if ($email === '' || str_contains(strtolower($email), '@' . 'kepoli' . '.com')) {
-        return $host !== '' ? 'contact@' . $host : 'contact@health.ibnbatoutaweb.com';
+        return $host !== '' ? 'contact@' . $host : 'contact@kuchniatwist.pl';
     }
 
     return $email;
@@ -147,7 +147,7 @@ function kepoli_seed_site_about_slug(array $pages): string
         return $slug;
     }
 
-    return 'about-dr-purg-jr';
+    return 'about-kuchniatwist';
 }
 
 function kepoli_seed_home_page_slug(array $pages): string
@@ -189,7 +189,7 @@ function kepoli_seed_legacy_site_name(array $pages): string
     }
 
     $name = trim((string) get_bloginfo('name'));
-    return $name !== '' ? $name : 'Dr Purg Jr.';
+    return $name !== '' ? $name : 'Food Blog';
 }
 
 function kepoli_seed_profile_slug(array $profile, string $key, string $fallback): string
@@ -214,19 +214,19 @@ function kepoli_seed_default_tagline(string $site_name): string
     }
 
     if (kepoli_seed_is_english()) {
-        return sprintf('%s publishes careful health facts, body-signal explainers, and everyday wellness context.', $site_name);
+        return sprintf('%s publishes home-cooking recipes, food articles, and practical kitchen guides.', $site_name);
     }
 
-    return 'Fapte surprinzatoare despre sanatate, explicate calm pentru cititori curiosi.';
+    return 'Retete pentru acasa, articole culinare si ghiduri practice.';
 }
 
 function kepoli_seed_default_profile_description(string $site_name, bool $is_english): string
 {
     if ($is_english) {
-        return sprintf('%s publishes careful health facts, body-signal explainers, and everyday wellness context.', $site_name);
+        return sprintf('%s publishes practical recipes, food guides, and kitchen articles for home cooks.', $site_name);
     }
 
-    return sprintf('%s publica explicatii despre sanatate, obiceiuri zilnice si semnale ale corpului.', $site_name);
+    return sprintf('%s publica retete pentru acasa, articole culinare si ghiduri practice.', $site_name);
 }
 
 function kepoli_seed_normalize_site_profile(array $profile, array $pages): array
@@ -235,16 +235,16 @@ function kepoli_seed_normalize_site_profile(array $profile, array $pages): array
     $public_locale = $public_locale !== '' ? $public_locale : 'en_US';
     $is_english = str_starts_with(strtolower($public_locale), 'en');
     $site_name = trim((string) kepoli_seed_profile_value($profile, ['brand', 'name'], kepoli_seed_legacy_site_name($pages)));
-    $site_name = $site_name !== '' ? $site_name : 'Dr Purg Jr.';
+    $site_name = $site_name !== '' ? $site_name : 'Food Blog';
 
     $defaults = [
         'brand' => [
             'name' => $site_name,
             'tagline' => $is_english
-                ? sprintf('%s publishes careful health facts, body-signal explainers, and everyday wellness context.', $site_name)
-                : 'Fapte surprinzatoare despre sanatate, explicate calm pentru cititori curiosi.',
+                ? sprintf('%s publishes home-cooking recipes, food articles, and practical kitchen guides.', $site_name)
+                : 'Retete pentru acasa, articole culinare si ghiduri practice.',
             'description' => kepoli_seed_default_profile_description($site_name, $is_english),
-            'site_email' => kepoli_seed_env('SITE_EMAIL', 'contact@health.ibnbatoutaweb.com'),
+            'site_email' => kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl'),
         ],
         'locales' => [
             'public' => $public_locale,
@@ -252,16 +252,16 @@ function kepoli_seed_normalize_site_profile(array $profile, array $pages): array
             'force_admin' => true,
         ],
         'writer' => [
-            'name' => 'Dr Purg Jr Editorial Desk',
-            'email' => kepoli_seed_env('WRITER_EMAIL', 'editor@health.ibnbatoutaweb.com'),
+            'name' => 'Isalune Merovik',
+            'email' => kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'),
             'bio' => $is_english
-                ? sprintf('Prepares careful health explainers and myth checks for %s.', $site_name)
-                : sprintf('Pregateste explicatii despre sanatate si verificari de mituri pentru %s.', $site_name),
+                ? sprintf('Writes practical recipes and kitchen guides for %s.', $site_name)
+                : sprintf('Scrie retete si ghiduri practice pentru %s.', $site_name),
         ],
         'assets' => [
-            'wordmark' => 'dr-purg-jr-wordmark',
-            'icon' => 'dr-purg-jr-icon',
-            'social_cover' => 'dr-purg-jr-social-cover',
+            'wordmark' => 'kuchniatwist-wordmark',
+            'icon' => 'kuchniatwist-icon',
+            'social_cover' => 'kuchniatwist-social-cover',
         ],
         'slugs' => [
             'home' => kepoli_seed_home_page_slug($pages) ?: ($is_english ? 'home' : 'acasa'),
@@ -371,8 +371,8 @@ function kepoli_seed_upsert_page(array $page, int $author_id): int
 {
     $existing = get_page_by_path($page['slug'], OBJECT, 'page');
     $profile = kepoli_seed_current_site_profile();
-    $site_email = (string) kepoli_seed_profile_value($profile, ['brand', 'site_email'], kepoli_seed_env('SITE_EMAIL', 'contact@health.ibnbatoutaweb.com'));
-    $writer_email = (string) kepoli_seed_profile_value($profile, ['writer', 'email'], kepoli_seed_env('WRITER_EMAIL', 'editor@health.ibnbatoutaweb.com'));
+    $site_email = (string) kepoli_seed_profile_value($profile, ['brand', 'site_email'], kepoli_seed_env('SITE_EMAIL', 'contact@kuchniatwist.pl'));
+    $writer_email = (string) kepoli_seed_profile_value($profile, ['writer', 'email'], kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'));
     $postarr = [
         'post_type' => 'page',
         'post_status' => 'publish',
@@ -426,9 +426,9 @@ function kepoli_seed_ensure_category(array $category): int
 function kepoli_seed_ensure_author(array $pages, string $site_name, array $profile = []): int
 {
     $profile = $profile !== [] ? $profile : kepoli_seed_current_site_profile();
-    $email = (string) kepoli_seed_profile_value($profile, ['writer', 'email'], kepoli_seed_env('WRITER_EMAIL', 'editor@health.ibnbatoutaweb.com'));
-    $display_name = trim((string) kepoli_seed_profile_value($profile, ['writer', 'name'], 'Dr Purg Jr Editorial Desk'));
-    $display_name = $display_name !== '' ? $display_name : 'Dr Purg Jr Editorial Desk';
+    $email = (string) kepoli_seed_profile_value($profile, ['writer', 'email'], kepoli_seed_env('WRITER_EMAIL', 'isalunemerovik@gmail.com'));
+    $display_name = trim((string) kepoli_seed_profile_value($profile, ['writer', 'name'], 'Isalune Merovik'));
+    $display_name = $display_name !== '' ? $display_name : 'Isalune Merovik';
     $name_parts = preg_split('/\s+/', $display_name) ?: [];
     $first_name = (string) ($name_parts[0] ?? $display_name);
     $last_name = trim(implode(' ', array_slice($name_parts, 1)));
@@ -452,8 +452,8 @@ function kepoli_seed_ensure_author(array $pages, string $site_name, array $profi
     $description = trim((string) kepoli_seed_profile_value($profile, ['writer', 'bio'], ''));
     if ($description === '') {
         $description = kepoli_seed_is_english()
-            ? sprintf('Editorial desk at %s. Prepares careful health explainers, myth checks, and daily habit guides.', $site_name)
-            : sprintf('Redactie la %s. Pregateste explicatii despre sanatate, mituri si obiceiuri zilnice.', $site_name);
+            ? sprintf('Author at %s. Writes home-cooking recipes, food guides, and practical kitchen articles.', $site_name)
+            : sprintf('Autoare %s. Scrie retete si ghiduri practice pentru gatit acasa.', $site_name);
     }
 
     wp_update_user([

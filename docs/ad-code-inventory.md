@@ -1,4 +1,4 @@
-# Dr Purg Jr. ad code inventory
+# KuchniaTwist ad code inventory
 
 This file is the source of truth for the current Adsterra and Monetag codes. Keep these codes controlled through Coolify environment variables, not pasted directly into WordPress, the theme editor, or random plugins.
 
@@ -220,7 +220,7 @@ importScripts('https://couphaithuph.net/act/files/service-worker.min.js?r=sw')
 The theme/MU plugin serves the service worker at:
 
 ```text
-https://health.ibnbatoutaweb.com/sw.js
+https://kuchniatwist.pl/sw.js
 ```
 
 To enable push later, set both:

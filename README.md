@@ -1,22 +1,22 @@
-# Dr Purg Jr. WordPress Blog
+# kuchniatwist WordPress Blog
 
-Dr Purg Jr. is a GitHub-driven WordPress health-facts blog for English-speaking, mobile-first readers in the United States. The repo contains the Docker Compose stack, custom theme, launch content, image plan, featured images, and WP-CLI bootstrap used by Coolify. For current operating status and next-session handoff, use `docs/project-status.md`.
+kuchniatwist is a GitHub-driven WordPress food blog for English recipes and practical kitchen guides. The repo contains the Docker Compose stack, custom theme, launch content, image plan, featured images, and WP-CLI bootstrap used by Coolify. For current operating status and next-session handoff, use `docs/project-status.md`.
 
 ## What This Repo Builds
 
-- WordPress with MariaDB, deployed by Docker Compose with Dr Purg Jr.-specific images built from this repo.
-- A reusable internal `kepoli` theme focused on reading, article discovery, internal links, newsletter capture, and ad-ready layouts.
+- WordPress with MariaDB, deployed by Docker Compose with kuchniatwist-specific images built from this repo.
+- A reusable internal `kepoli` theme focused on reading, recipes, internal links, newsletter capture, and ad-safe layouts.
 - Production Apache settings for static asset caching, compression, and small security headers.
 - A one-shot `wp-init` seed profile for first launch, plus a guarded self-seeding MU plugin for platforms that skip the profile service.
-- A compact authoring plugin that keeps the WordPress admin in English and helps fill SEO, image, article, internal-link, and split-post fields.
+- A compact authoring plugin that keeps the WordPress admin in English and helps fill SEO, image, recipe, internal-link, and split-post fields.
 - Google Site Kit installation for later Search Console, Analytics, or AdSense connection from WordPress admin.
-- Env-gated monetization defaults: AdSense stays off, and instant/native ad providers stay controlled by environment variables.
+- Env-gated monetization defaults: AdSense, Ezoic, and Monetag stay off unless explicit environment variables enable them.
 
 ## Content Status
 
-- 20 original English launch posts: all health-fact articles built for Facebook/mobile readers.
+- 20 original English launch posts: 15 recipes and 5 guides.
 - Site identity, public locale, admin locale, writer identity, identity asset basenames, and canonical slugs are stored in `content/site-profile.json`.
-- 12 public pages: home, health facts, guides, about, author, contact, privacy, cookies, advertising/consent, editorial policy, terms, and health disclaimer.
+- 12 public pages: home, recipes, guides, about, author, contact, privacy, cookies, advertising/consent, editorial policy, terms, and culinary disclaimer.
 - 20 matching featured-image files in `content/images/`.
 - Image metadata and generation prompts are stored in `content/image-plan.json`.
 
@@ -26,12 +26,12 @@ Dr Purg Jr. is a GitHub-driven WordPress health-facts blog for English-speaking,
 2. In Coolify, create a Docker Compose application from the GitHub repo.
 3. Use only `docker-compose.yml`.
 4. Add the environment variables from `.env.example`.
-5. Assign `https://health.ibnbatoutaweb.com` to the `wordpress` service on port `80`. The compose file also exposes `SERVICE_FQDN_WORDPRESS_80=https://health.ibnbatoutaweb.com` for Coolify's proxy routing.
+5. Assign `https://kuchniatwist.pl` to the `wordpress` service on port `80`. The compose file also exposes `SERVICE_FQDN_WORDPRESS_80=https://kuchniatwist.pl` for Coolify's proxy routing.
 6. Keep the `seed` profile disabled for normal deploys. WordPress self-seeds only on first launch, before real content exists.
 7. After launch, keep `KEPOLI_FORCE_RESEED=0`. Set `KEPOLI_FORCE_RESEED=1` only for an intentional one-time repair, then turn it off again.
 8. Enable GitHub auto-deploy on push.
 
-The `CANONICAL_REDIRECT_HOSTS` value should include hostnames that may reach the app, such as `www.health.ibnbatoutaweb.com`. The MU plugin redirects those hosts to `SITE_URL` so readers and search engines see one canonical site.
+The `CANONICAL_REDIRECT_HOSTS` value should include hostnames that may reach the app, such as `www.kuchniatwist.pl`. The MU plugin redirects those hosts to `SITE_URL` so readers and search engines see one canonical site.
 
 If you need to manually reseed after launch, run:
 
@@ -63,7 +63,7 @@ When Monetag is enabled, the theme renders configured individual snippets or one
 
 ## Display Ad Notes
 
-Dr Purg Jr. also has an env-gated native/display layer for instant providers such as Adsterra. It stays disabled by default:
+KuchniaTwist also has an env-gated native/display layer for instant providers such as Adsterra. It stays disabled by default:
 
 ```env
 DISPLAY_ADS_ENABLE=0
@@ -96,18 +96,18 @@ For Ezoic Ads.txt Manager, set one of these in Coolify after Ezoic gives the val
 ```env
 EZOIC_ADSTXT_ACCOUNT_ID=19390
 # or
-EZOIC_ADSTXT_REDIRECT_URL=https://srv.adstxtmanager.com/19390/health.ibnbatoutaweb.com
+EZOIC_ADSTXT_REDIRECT_URL=https://srv.adstxtmanager.com/19390/kuchniatwist.pl
 ```
 
 ## Newsletter
 
-The newsletter signup is a small native WordPress form on the front page and the About Dr Purg Jr. page. Signups are stored in WordPress admin under `Newsletter`, where they can be reviewed or exported as CSV.
+The newsletter signup is a small native WordPress form on the front page and the About kuchniatwist page. Signups are stored in WordPress admin under `Newsletter`, where they can be reviewed or exported as CSV.
 
 ## Author Writing
 
-The `kepoli-author-tools` plugin keeps the writing workflow simple for beginner publishers. It can auto-fill excerpt, meta description, related links, featured-image metadata, category suggestions, tags, FAQ blocks, and post splits. See `docs/author-workflow.md` for the exact writing flow.
+The `kepoli-author-tools` plugin keeps the writing workflow simple for beginner publishers. It can auto-fill excerpt, meta description, related links, featured-image metadata, recipe schema fields, category suggestions, tags, FAQ blocks, and post splits. See `docs/author-workflow.md` for the exact writing flow.
 
-Optional OpenRouter AI repair can be enabled later for messy extraction workflows. Keep `AI_EXTRACTION_ENABLE=0` unless `AI_EXTRACTION_API_KEY` is set in Coolify; when enabled, the plugin still parses locally first and only asks AI to repair incomplete structured fields.
+Optional OpenRouter AI repair can be enabled for messy recipe extraction only. Keep `AI_EXTRACTION_ENABLE=0` unless `AI_EXTRACTION_API_KEY` is set in Coolify; when enabled, the plugin still parses locally first and only asks AI to repair incomplete recipe schema fields.
 
 ## Checks
 
@@ -120,15 +120,15 @@ node scripts/preflight-launch.mjs
 To include the live site too:
 
 ```sh
-node scripts/preflight-launch.mjs --live https://health.ibnbatoutaweb.com
+node scripts/preflight-launch.mjs --live https://kuchniatwist.pl
 ```
 
 ## Media
 
 The current repo includes SVG logo assets and generated starter featured images. If you add exact bitmap brand assets later, place them at:
 
-- `wp-content/themes/kepoli/assets/img/dr-purg-jr-wordmark.png`
-- `wp-content/themes/kepoli/assets/img/dr-purg-jr-icon.png`
+- `wp-content/themes/kepoli/assets/img/kuchniatwist-wordmark.png`
+- `wp-content/themes/kepoli/assets/img/kuchniatwist-icon.png`
 - `wp-content/themes/kepoli/assets/img/writer-photo.jpg`
 
 The theme automatically prefers those filenames when present.

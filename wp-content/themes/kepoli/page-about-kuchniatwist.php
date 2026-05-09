@@ -1,6 +1,6 @@
 <?php
 /**
- * About Dr Purg Jr. page.
+ * About kuchniatwist page.
  */
 get_header();
 $site_name = kepoli_site_name();

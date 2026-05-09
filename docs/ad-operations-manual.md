@@ -1,8 +1,8 @@
-# Dr Purg Jr. ad operations manual
+# KuchniaTwist ad operations manual
 
-This is the day-to-day operating guide for ads on Dr Purg Jr.. Use it when adding, removing, testing, or debugging ads. The goal is simple: keep the site profitable, readable, and controllable from Coolify.
+This is the day-to-day operating guide for ads on KuchniaTwist. Use it when adding, removing, testing, or debugging ads. The goal is simple: keep the site profitable, readable, and controllable from Coolify.
 
-The separate AdSense-clean site is not part of this setup and stays AdSense-clean.
+The Romanian sister site is not part of this setup and stays AdSense-clean.
 
 ## Control model
 

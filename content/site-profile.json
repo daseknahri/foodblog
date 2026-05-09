@@ -1,9 +1,9 @@
 {
   "brand": {
-    "name": "Dr Purg Jr.",
-    "tagline": "Shocking health facts, explained calmly for curious mobile readers.",
-    "description": "Dr Purg Jr. publishes surprising health facts, body-signal explainers, everyday wellness context, and careful myth checks for English-speaking readers in the United States.",
-    "site_email": "contact@health.ibnbatoutaweb.com"
+    "name": "kuchniatwist",
+    "tagline": "Recipes, kitchen guides, and practical home cooking notes",
+    "description": "kuchniatwist publishes easy recipes for home cooks, seasonal food ideas, and practical kitchen guides about ingredients, planning, serving, and storage.",
+    "site_email": "contact@kuchniatwist.pl"
   },
   "locales": {
     "public": "en_US",
@@ -11,21 +11,21 @@
     "force_admin": true
   },
   "writer": {
-    "name": "Dr Purg Jr Editorial Desk",
-    "email": "editor@health.ibnbatoutaweb.com",
-    "gravatar_url": "",
-    "bio": "The Dr Purg Jr Editorial Desk prepares careful health explainers, myth checks, and everyday wellness context without replacing professional medical advice."
+    "name": "Isalune Merovik",
+    "email": "isalunemerovik@gmail.com",
+    "gravatar_url": "https://gravatar.com/isalunemerovik",
+    "bio": "Writes approachable recipes and kitchen guides for kuchniatwist."
   },
   "assets": {
-    "wordmark": "dr-purg-jr-wordmark",
-    "icon": "dr-purg-jr-icon",
-    "social_cover": "dr-purg-jr-social-cover"
+    "wordmark": "kuchniatwist-wordmark",
+    "icon": "kuchniatwist-icon",
+    "social_cover": "kuchniatwist-social-cover"
   },
   "slugs": {
     "home": "home",
     "recipes": "recipes",
     "guides": "guides",
-    "about": "about-dr-purg-jr",
+    "about": "about-kuchniatwist",
     "author": "about-author",
     "privacy": "privacy-policy",
     "cookies": "cookie-policy",

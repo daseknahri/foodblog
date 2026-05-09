@@ -1,6 +1,6 @@
-# Monetag readiness for Dr Purg Jr.
+# Monetag readiness for KuchniaTwist
 
-Dr Purg Jr. uses Monetag as the instant monetization test while the separate AdSense-clean site waits for AdSense approval. Monetag is controlled only by environment variables in Coolify and is disabled by default in source.
+KuchniaTwist uses Monetag as the instant monetization test while the Romanian sister site waits for AdSense approval. Monetag is controlled only by environment variables in Coolify and is disabled by default in source.
 
 ## Coolify variables
 
@@ -79,7 +79,7 @@ Frequency values are optional client-side guards for individual base64 snippets.
 
 ## Monetag dashboard setup
 
-1. Add `health.ibnbatoutaweb.com`.
+1. Add `kuchniatwist.pl`.
 2. Verify ownership with the meta tag.
 3. For controlled optimization, create separate individual zones instead of one Multitag.
 4. Week 1 formats: keep Monetag page-load formats off and run the separate display/native stack.
@@ -106,7 +106,7 @@ If users report adult, dating, casino, misleading, or redirect-heavy ads, pause 
 Use UTM links for every Facebook post:
 
 ```text
-https://health.ibnbatoutaweb.com/post-slug/?utm_source=facebook&utm_medium=social&utm_campaign=kuchnia_monetag_test&utm_content=post_slug_or_hook
+https://kuchniatwist.pl/post-slug/?utm_source=facebook&utm_medium=social&utm_campaign=kuchnia_monetag_test&utm_content=post_slug_or_hook
 ```
 
 Ramp slowly:
@@ -140,7 +140,7 @@ Supporting KPIs:
 - Do not send Facebook traffic directly to SmartLink at first.
 - Do not judge ad quality only from your own country. Check at least one target audience country/device mix because remnant ads can look different by GEO.
 - Ask each network to block adult, dating, casino, malware, and misleading software/download categories when available.
-- If Dr Purg Jr. later applies to AdSense, remove aggressive Monetag formats and run clean for 30-60 days before submitting.
+- If KuchniaTwist later applies to AdSense, remove aggressive Monetag formats and run clean for 30-60 days before submitting.
 - Keep all changes repo-controlled so a redeploy can remove Monetag instantly by setting `MONETAG_ENABLE=0`.
 
 ## Acceptance checks
@@ -162,7 +162,7 @@ Manual checks after deploy:
 3. With `MONETAG_ENABLE=1` and individual base64 tags set, view source on one public recipe/article post. The enabled Monetag snippets should appear.
 4. With `MONETAG_ENABLE=1` and `MONETAG_INSTALL_CHECK=1`, view source on the homepage. The Monetag script should appear for the checker.
 5. After Monetag passes the installation check, set `MONETAG_INSTALL_CHECK=0`, redeploy, and confirm the homepage script disappears.
-6. With `MONETAG_ENABLE=1`, open `https://health.ibnbatoutaweb.com/sw.js`. It should return JavaScript, not an HTML page.
+6. With `MONETAG_ENABLE=1`, open `https://kuchniatwist.pl/sw.js`. It should return JavaScript, not an HTML page.
 7. Check search, 404, feeds, About, Contact, Privacy, Cookies, Advertising, Editorial, Terms, and Disclaimer pages. The Monetag script should not appear.
 8. Log in as admin and view a post. The Monetag script should not appear for the admin session.
 9. Check the first 3 days for counted impressions, no obvious mobile layout break, no Facebook reach collapse, and no payment or traffic-quality warning.

@@ -1,27 +1,27 @@
 [
   {
-    "name": "Body Signals",
-    "slug": "body-signals",
-    "description": "Surprising but careful explainers about everyday body signals, what they may reflect, and when readers should seek professional guidance."
+    "name": "Quick Recipes",
+    "slug": "quick-recipes",
+    "description": "Fast, dependable recipes for weekdays, busy evenings, and readers who want something useful on the table without guesswork."
   },
   {
-    "name": "Food Facts",
-    "slug": "food-facts",
-    "description": "Mobile-friendly health context about common foods, drinks, labels, and eating habits without promising medical outcomes or quick fixes."
+    "name": "Main Dishes",
+    "slug": "main-dishes",
+    "description": "Comforting lunch and dinner ideas with clear timing, serving notes, and practical guidance for home cooks."
   },
   {
-    "name": "Sleep and Energy",
-    "slug": "sleep-energy",
-    "description": "Readable facts about rest, daily energy, screens, caffeine, routines, and the small habits that shape how people feel."
+    "name": "Desserts",
+    "slug": "desserts",
+    "description": "Cakes, bakes, chilled sweets, and simple treats explained with texture cues, timing notes, and storage help."
   },
   {
-    "name": "Hidden Habits",
-    "slug": "hidden-habits",
-    "description": "Everyday behavior checks that help readers notice patterns around movement, stress, hydration, posture, and personal routines."
+    "name": "Seasonal Cooking",
+    "slug": "seasonal-cooking",
+    "description": "Ingredient-led ideas, seasonal menus, and timely recipes that help readers cook with what is actually available."
   },
   {
-    "name": "Health Guides",
+    "name": "Guides",
     "slug": "guides",
-    "description": "Editorial health explainers, myth checks, and practical context written for curious readers who want clarity without hype."
+    "description": "Practical food articles about ingredients, kitchen habits, planning, and techniques that support everyday cooking."
   }
 ]

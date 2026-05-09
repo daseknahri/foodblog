@@ -8,7 +8,7 @@ The goal is to use AI as an editorial and optimization system, not as uncontroll
 
 ### Romanian Sister Site
 
-The separate AdSense-clean site is the AdSense-first site.
+The Romanian sister site is the AdSense-first site.
 
 Primary goals:
 - Keep the site clean, trustworthy, and AdSense-safe.
@@ -24,14 +24,14 @@ Best content types:
 - Storage, meal planning, and kitchen mistake articles.
 - Soft health-adjacent food articles only when they are careful, non-medical, and useful.
 
-### Dr Purg Jr.
+### KuchniaTwist
 
-Dr Purg Jr. is the English, Facebook-first monetization test site.
+KuchniaTwist is the English, Facebook-first monetization test site.
 
 Primary goals:
 - Build content that Facebook readers over 40 want to open and continue reading.
 - Increase finalized revenue per 1,000 Facebook clicks.
-- Use monetization more aggressively than the separate AdSense-clean site, but keep it controlled enough to avoid destroying user trust, Facebook reach, or ad-network payment quality.
+- Use monetization more aggressively than the Romanian sister site, but keep it controlled enough to avoid destroying user trust, Facebook reach, or ad-network payment quality.
 - Treat SEO as a secondary benefit, not the first growth channel.
 
 Best content types:
@@ -112,8 +112,8 @@ Questions:
 - Which content should be evergreen for SEO versus short-term Facebook traffic?
 
 Possible paths:
-- The separate AdSense-clean site publishes fewer, cleaner posts focused on trust and AdSense.
-- Dr Purg Jr. publishes faster and tests headline angles with Facebook traffic.
+- The Romanian sister site publishes fewer, cleaner posts focused on trust and AdSense.
+- KuchniaTwist publishes faster and tests headline angles with Facebook traffic.
 - Build a monthly content calendar with recipes, articles, and Facebook caption variants.
 - Keep a small performance log of title, topic, traffic source, clicks, revenue, and reader behavior.
 
@@ -136,7 +136,7 @@ Possible paths:
 - Use warm curiosity instead of hard clickbait.
 - Generate three Facebook captions per post: practical, emotional, and curiosity-based.
 - Track every Facebook link with UTM parameters.
-- Use Dr Purg Jr. split posts only when the split improves reading flow.
+- Use KuchniaTwist split posts only when the split improves reading flow.
 - Increase ads only after the user has shown intent, such as scrolling, clicking next, or continuing to another part.
 
 Useful tools:
@@ -150,19 +150,19 @@ Useful tools:
 
 Questions:
 - Which ad combinations maximize revenue without making the site feel spammy?
-- Should Dr Purg Jr. test more aggressive formats only on engaged users?
-- When should the separate AdSense-clean site add AdSense units after approval?
+- Should KuchniaTwist test more aggressive formats only on engaged users?
+- When should the Romanian sister site add AdSense units after approval?
 
 Possible paths:
-- Keep the separate AdSense-clean site clean until AdSense is approved and stable.
-- Keep Dr Purg Jr. as the ad test site.
+- Keep the Romanian sister site clean until AdSense is approved and stable.
+- Keep KuchniaTwist as the ad test site.
 - Test one ad change at a time.
 - Measure finalized revenue per 1,000 Facebook clicks, not just dashboard RPM.
 - Keep aggressive ads behind time, scroll, or click-intent gates.
 
 Useful tools:
-- AdSense for the separate AdSense-clean site.
-- Adsterra and Monetag for Dr Purg Jr..
+- AdSense for the Romanian sister site.
+- Adsterra and Monetag for KuchniaTwist.
 - Histats.
 - Coolify environment variables.
 - Ad operations docs.
@@ -178,7 +178,7 @@ Possible paths:
 - Use Histats first because it is simple and fast.
 - Add GA4 later if deeper event tracking becomes necessary.
 - Track post URL, traffic source, device, pageviews/session, time on site, and revenue.
-- For Dr Purg Jr., add events for split navigation, related post clicks, scroll depth, and ad-trigger actions.
+- For KuchniaTwist, add events for split navigation, related post clicks, scroll depth, and ad-trigger actions.
 
 Useful tools:
 - Histats.
@@ -214,8 +214,8 @@ Do this after the manual workflow is stable.
 Do this once the sites have enough posts to compare.
 
 - Create a 30-day calendar for each site.
-- The separate AdSense-clean site focuses on AdSense-safe trust and SEO.
-- Dr Purg Jr. focuses on Facebook reader curiosity and monetized continuation.
+- The Romanian sister site focuses on AdSense-safe trust and SEO.
+- KuchniaTwist focuses on Facebook reader curiosity and monetized continuation.
 - Review performance weekly.
 - Repeat winning topics and remove weak formats.
 
@@ -247,12 +247,12 @@ Publishing rule:
 - Keep public tone Romanian and trustworthy.
 - Avoid aggressive monetization until AdSense is approved and stable.
 
-### Dr Purg Jr.
+### KuchniaTwist
 
 Target: 1 post per day.
 
 Suggested mix:
-- 15 fast health-fact explainers.
+- 15 recipes.
 - 8 problem/fix cooking articles.
 - 4 nostalgia or comfort-food articles.
 - 3 budget/pantry articles.
@@ -286,7 +286,7 @@ For articles:
 
 ## Success Metrics
 
-separate AdSense-clean site:
+Romanian sister site:
 - AdSense approval.
 - Clean policy pages.
 - Stable indexing.
@@ -294,7 +294,7 @@ separate AdSense-clean site:
 - Low SEO errors.
 - High trust and low policy risk.
 
-Dr Purg Jr.:
+KuchniaTwist:
 - Revenue per 1,000 Facebook clicks.
 - Facebook reach stability.
 - Mobile engagement.

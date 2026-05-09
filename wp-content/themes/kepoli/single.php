@@ -124,7 +124,6 @@ get_header();
             <div class="entry-content">
                 <?php the_content(); ?>
             </div>
-            <?php kepoli_render_reader_trust_links('browse-links browse-links--trust entry-trust-links'); ?>
             <?php echo kepoli_multipart_continue_ad(); ?>
             <?php echo kepoli_multipart_page_links(); ?>
             <?php if ($show_after_article && !empty($post_next_steps['items'])) : ?>

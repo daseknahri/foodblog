@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Dr Purg Jr. Ad and Verification Helpers
+ * Plugin Name: Food Blog Ad and Verification Helpers
  * Description: Handles ads.txt, canonical redirects, manifests, and lightweight verification output.
  */
 
@@ -43,7 +43,7 @@ function kepoli_mu_profile_value(array $path, $default = '')
 function kepoli_mu_site_name(): string
 {
     $name = trim((string) kepoli_mu_profile_value(['brand', 'name'], get_bloginfo('name')));
-    return $name !== '' ? $name : 'Dr Purg Jr.';
+    return $name !== '' ? $name : 'Food Blog';
 }
 
 function kepoli_mu_brand_description(): string
@@ -242,7 +242,7 @@ add_action('template_redirect', static function (): void {
     header('Content-Type: application/manifest+json; charset=utf-8');
 
     $site_name = kepoli_mu_site_name();
-    $icon_uri = kepoli_mu_asset_uri('icon', 'dr-purg-jr-icon');
+    $icon_uri = kepoli_mu_asset_uri('icon', 'kuchniatwist-icon');
     $icon_extension = strtolower(pathinfo((string) wp_parse_url($icon_uri, PHP_URL_PATH), PATHINFO_EXTENSION));
     $icon_type = match ($icon_extension) {
         'png' => 'image/png',

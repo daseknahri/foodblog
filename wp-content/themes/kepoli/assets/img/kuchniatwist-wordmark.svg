@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 360" role="img" aria-labelledby="title desc">
+  <title id="title">kuchniatwist</title>
+  <desc id="desc">kuchniatwist food blog wordmark with a simple bowl, steam, and herb mark.</desc>
+  <rect width="760" height="360" fill="none"/>
+  <g transform="translate(296 24)">
+    <circle cx="84" cy="96" r="70" fill="#fbf7ef" stroke="#eadcc3" stroke-width="18"/>
+    <path d="M31 104c18 41 51 62 98 62 47 0 80-21 98-62H31Z" transform="translate(-45 40)" fill="#c8743f"/>
+    <path d="M16 147h136" fill="none" stroke="#4f5525" stroke-width="18" stroke-linecap="round"/>
+    <path d="M52 58c-18-26 16-34 0-60M86 58c-18-26 16-34 0-60M120 58c-18-26 16-34 0-60" fill="none" stroke="#4f5525" stroke-width="12" stroke-linecap="round"/>
+    <path d="M154 80c32-8 58 2 76 30-34 7-60-3-76-30Zm-23-6c10-31 34-48 72-50-9 35-34 51-72 50Z" fill="#4f5525"/>
+  </g>
+  <text x="380" y="248" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="70" font-weight="800" fill="#252416">kuchnia</text>
+  <text x="380" y="310" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="800" fill="#c8743f">twist</text>
+</svg>

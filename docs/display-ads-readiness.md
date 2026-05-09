@@ -1,6 +1,6 @@
-# Display/native ad readiness for Dr Purg Jr.
+# Display/native ad readiness for KuchniaTwist
 
-Dr Purg Jr. can run clean native/display ad snippets alongside Monetag. This layer is disabled by default and controlled only from Coolify.
+KuchniaTwist can run clean native/display ad snippets alongside Monetag. This layer is disabled by default and controlled only from Coolify.
 
 ## Coolify variables
 
