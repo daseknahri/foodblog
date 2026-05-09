@@ -5,11 +5,13 @@
 ?>
 </main>
 <?php
-$footer_categories = get_categories([
+$footer_categories = array_values(array_filter(get_categories([
     'hide_empty' => true,
     'exclude' => [1],
     'taxonomy' => 'category',
-]);
+]), static function (WP_Term $category): bool {
+    return !kepoli_is_editorial_category_slug($category->slug);
+}));
 $footer_categories = array_slice($footer_categories, 0, 3);
 $author_page = kepoli_find_page_by_candidates(['about-author', 'about-author']);
 $author_label = $author_page instanceof WP_Post ? get_the_title($author_page) : kepoli_ui_text('Autor', 'Author');
@@ -31,7 +33,7 @@ $site_name = kepoli_site_name();
         <div class="site-footer__column">
             <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Exploreaza', 'Explore')); ?></p>
             <ul class="footer-links-list">
-                <li><a href="<?php echo esc_url(kepoli_recipes_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Fapte sanatate', 'Health facts')); ?></a></li>
+                <li><a href="<?php echo esc_url(kepoli_recipes_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Retete', 'Recipes')); ?></a></li>
                 <li><a href="<?php echo esc_url(kepoli_guides_page_url()); ?>"><?php echo esc_html(kepoli_ui_text('Articole', 'Guides')); ?></a></li>
                 <?php foreach ($footer_categories as $category) : ?>
                     <li><a href="<?php echo esc_url(get_category_link($category)); ?>"><?php echo esc_html($category->name); ?></a></li>
@@ -52,7 +54,7 @@ $site_name = kepoli_site_name();
         </div>
     </div>
     <div class="footer-bottom">
-        &copy; <?php echo esc_html(gmdate('Y')); ?> <?php echo esc_html($site_name); ?>. <?php echo esc_html(kepoli_ui_text('Continut informativ despre sanatate; nu inlocuieste sfatul unui specialist.', 'Informational health content; not a substitute for professional advice.')); ?>
+        &copy; <?php echo esc_html(gmdate('Y')); ?> <?php echo esc_html($site_name); ?>. <?php echo esc_html(kepoli_ui_text('Continut culinar informativ; adaptati retetele la ingredientele si nevoile proprii.', 'Informational food content; adapt recipes to your own ingredients and needs.')); ?>
     </div>
 </footer>
 <?php wp_footer(); ?>

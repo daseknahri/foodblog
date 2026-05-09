@@ -1,15 +1,17 @@
 <?php
 /**
- * Health facts landing page.
+ * Recipes landing page.
  */
 get_header();
 
-$fact_categories = get_categories([
+$recipe_categories = array_values(array_filter(get_categories([
     'hide_empty' => true,
     'exclude' => [1],
     'taxonomy' => 'category',
-]);
-$featured_fact = kepoli_latest_post_by_kind('article');
+]), static function (WP_Term $category): bool {
+    return !kepoli_is_editorial_category_slug($category->slug);
+}));
+$featured_recipe = kepoli_latest_post_by_kind('recipe');
 $page_id = get_queried_object_id();
 $page_title = $page_id ? get_the_title($page_id) : '';
 $page_content = $page_id ? trim((string) apply_filters('the_content', (string) get_post_field('post_content', $page_id))) : '';
@@ -17,9 +19,9 @@ $page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_conte
 ?>
 <header class="archive-header">
     <?php kepoli_breadcrumbs(); ?>
-    <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Fapte despre sanatate', 'Health facts')); ?></p>
-    <h1><?php echo esc_html($page_title !== '' ? $page_title : kepoli_ui_text('Fapte despre sanatate', 'Health facts')); ?></h1>
-    <p><?php echo esc_html($page_intro !== '' ? $page_intro : sprintf(kepoli_ui_text('Alege o categorie sau porneste de la cele mai noi articole %s.', 'Choose a category or start with the newest %s health facts.'), kepoli_site_name())); ?></p>
+    <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Retete', 'Recipes')); ?></p>
+    <h1><?php echo esc_html($page_title !== '' ? $page_title : kepoli_ui_text('Retete pentru acasa', 'Recipes')); ?></h1>
+    <p><?php echo esc_html($page_intro !== '' ? $page_intro : sprintf(kepoli_ui_text('Alege o categorie sau porneste de la cele mai noi retete %s.', 'Choose a category or start with the newest %s recipes.'), kepoli_site_name())); ?></p>
     <?php kepoli_render_reader_trust_links(); ?>
 </header>
 <?php if ($page_content !== '') : ?>
@@ -38,7 +40,7 @@ $page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_conte
             </div>
         </div>
         <div class="category-list category-list--showcase">
-            <?php foreach ($fact_categories as $category) : ?>
+            <?php foreach ($recipe_categories as $category) : ?>
                 <?php
                 $category_meta = kepoli_category_card_meta($category);
                 $category_image = kepoli_category_card_image_data($category);
@@ -57,7 +59,7 @@ $page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_conte
                     <?php endif; ?>
                     <span class="category-card__top">
                         <span class="category-card__icon" aria-hidden="true"><?php echo esc_html($category_meta['icon']); ?></span>
-                        <span class="category-card__count"><?php echo esc_html(sprintf(kepoli_is_english() ? _n('%d fact', '%d facts', $category->count, 'kepoli') : _n('%d fapt', '%d fapte', $category->count, 'kepoli'), $category->count)); ?></span>
+                        <span class="category-card__count"><?php echo esc_html(sprintf(kepoli_is_english() ? _n('%d recipe', '%d recipes', $category->count, 'kepoli') : _n('%d reteta', '%d retete', $category->count, 'kepoli'), $category->count)); ?></span>
                     </span>
                     <strong><?php echo esc_html($category->name); ?></strong>
                     <span class="category-card__description"><?php echo esc_html($category_description); ?></span>
@@ -78,23 +80,23 @@ $page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_conte
         </div>
     </div>
 </section>
-<?php if ($featured_fact) : ?>
+<?php if ($featured_recipe) : ?>
     <section class="section section--tight">
         <div class="section__header section__header--compact">
             <div>
                 <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Din prim-plan', 'Featured')); ?></p>
-                <h2><?php echo esc_html(kepoli_ui_text('Incepe cu acest articol', 'Start with this health fact')); ?></h2>
+                <h2><?php echo esc_html(kepoli_ui_text('Incepe cu reteta aceasta', 'Start with this recipe')); ?></h2>
             </div>
         </div>
-        <article class="lead-story <?php echo esc_attr(kepoli_post_tone_class($featured_fact->ID)); ?>">
-            <a class="lead-story__media" href="<?php echo esc_url(get_permalink($featured_fact)); ?>">
-                <?php echo kepoli_post_media_markup($featured_fact->ID, 'related'); ?>
+        <article class="lead-story <?php echo esc_attr(kepoli_post_tone_class($featured_recipe->ID)); ?>">
+            <a class="lead-story__media" href="<?php echo esc_url(get_permalink($featured_recipe)); ?>">
+                <?php echo kepoli_post_media_markup($featured_recipe->ID, 'related'); ?>
             </a>
             <div class="lead-story__body">
-                <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Fapt recomandat', 'Featured fact')); ?></p>
-                <h3><a href="<?php echo esc_url(get_permalink($featured_fact)); ?>"><?php echo esc_html(get_the_title($featured_fact)); ?></a></h3>
-                <p><?php echo esc_html(get_the_excerpt($featured_fact)); ?></p>
-                <?php echo kepoli_render_post_card_meta($featured_fact->ID, 'meta-strip meta-strip--inline', 'meta-strip__item'); ?>
+                <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Reteta recomandata', 'Recommended recipe')); ?></p>
+                <h3><a href="<?php echo esc_url(get_permalink($featured_recipe)); ?>"><?php echo esc_html(get_the_title($featured_recipe)); ?></a></h3>
+                <p><?php echo esc_html(get_the_excerpt($featured_recipe)); ?></p>
+                <?php echo kepoli_render_post_card_meta($featured_recipe->ID, 'meta-strip meta-strip--inline', 'meta-strip__item'); ?>
             </div>
         </article>
     </section>
@@ -102,21 +104,21 @@ $page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_conte
 <section class="section">
     <div class="section__header section__header--compact">
         <div>
-            <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Toate faptele', 'All health facts')); ?></p>
+            <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Toate retetele', 'All recipes')); ?></p>
             <h2><?php echo esc_html(sprintf(kepoli_ui_text('Biblioteca %s', '%s library'), kepoli_site_name())); ?></h2>
         </div>
-        <p><?php echo esc_html(kepoli_ui_text('Toate articolele intr-o lista simpla, usor de rasfoit.', 'All health facts in a simple list that is easy to browse.')); ?></p>
+        <p><?php echo esc_html(kepoli_ui_text('Toate retetele intr-o lista simpla, usor de rasfoit.', 'All recipes in a simple list that is easy to browse.')); ?></p>
     </div>
     <div class="post-grid">
         <?php
-        $facts = new WP_Query([
+        $recipes = new WP_Query([
             'post_type' => 'post',
             'posts_per_page' => 24,
             'meta_key' => '_kepoli_post_kind',
-            'meta_value' => 'article',
+            'meta_value' => 'recipe',
         ]);
-        while ($facts->have_posts()) :
-            $facts->the_post();
+        while ($recipes->have_posts()) :
+            $recipes->the_post();
             get_template_part('template-parts-card');
         endwhile;
         wp_reset_postdata();

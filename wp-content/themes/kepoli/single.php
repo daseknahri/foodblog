@@ -149,14 +149,14 @@ get_header();
                 <?php echo kepoli_ad_slot('below_content'); ?>
             <?php endif; ?>
             <?php
-            $related_posts = kepoli_related_posts_by_kind(get_the_ID(), 'article');
+            $related_posts = kepoli_related_posts_by_kind(get_the_ID(), $is_recipe ? 'article' : 'recipe');
             if ($show_after_article && $related_posts) :
                 ?>
                 <section class="related-posts related-posts--cards">
                     <div class="related-posts__heading">
-                        <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Articole recomandate', 'Recommended reads')); ?></p>
+                        <p class="eyebrow"><?php echo esc_html($is_recipe ? kepoli_ui_text('Articole recomandate', 'Recommended guides') : kepoli_ui_text('Retete recomandate', 'Recommended recipes')); ?></p>
                         <h2><?php echo esc_html($is_recipe ? kepoli_ui_text('Mai departe', 'Next reads') : kepoli_ui_text('Continua lectura', 'Keep reading')); ?></h2>
-                        <p><?php echo esc_html(kepoli_ui_text('Citeste mai departe cu articole care completeaza subiectul de mai sus.', 'Keep going with articles that support the topic above.')); ?></p>
+                        <p><?php echo esc_html($is_recipe ? kepoli_ui_text('Ghiduri utile care completeaza reteta de mai sus.', 'Useful guides that support the recipe above.') : kepoli_ui_text('Retete potrivite pentru a transforma articolul in ceva concret de pus pe masa.', 'Recipes that turn the article into something concrete for the table.')); ?></p>
                     </div>
                     <div class="related-grid">
                         <?php foreach ($related_posts as $related) : ?>

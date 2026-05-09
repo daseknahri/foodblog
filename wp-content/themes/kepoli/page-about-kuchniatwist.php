@@ -11,7 +11,7 @@ $site_name = kepoli_site_name();
             <?php kepoli_breadcrumbs(); ?>
             <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Identitate', 'About the publication')); ?></p>
             <h1><?php the_title(); ?></h1>
-            <p><?php echo esc_html(sprintf(kepoli_ui_text('Cine scrie pe %s, cum alegem subiectele si ce pot astepta cititorii de la fiecare articol publicat aici.', 'Who writes for %s, how topics are chosen, and what readers can expect from each article published here.'), $site_name)); ?></p>
+            <p><?php echo esc_html(sprintf(kepoli_ui_text('Cine scrie pe %s, cum alegem subiectele si ce pot astepta cititorii de la fiecare reteta sau articol publicat aici.', 'Who writes for %s, how topics are chosen, and what readers can expect from each recipe or article published here.'), $site_name)); ?></p>
         </header>
         <div class="content-layout content-layout--single">
             <div class="entry">
