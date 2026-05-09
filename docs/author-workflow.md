@@ -22,6 +22,7 @@ This repo includes a small `kepoli-author-tools` plugin for writing posts. The p
 
 - Excerpt, meta description, SEO title, category, tags, related links, and featured-image metadata can be generated from the current post.
 - Recipe schema can be extracted from recipe content when ingredients, steps, timing, and servings are present.
+- Recipe schema extraction runs local parsing first, then can use an optional OpenRouter AI repair pass when the parsed schema is incomplete. This is disabled by default and only runs when `AI_EXTRACTION_ENABLE=1` and an API key are configured.
 - Internal links can be added automatically when the body has no natural links yet.
 - Internal-link suggestions prefer related categories and avoid overusing the same few posts.
 - Article auto-links try to balance practical recipes and supporting guide articles.
@@ -45,6 +46,24 @@ This repo includes a small `kepoli-author-tools` plugin for writing posts. The p
 10. Open `Editorial checklist` only when you want the full list of missing items.
 11. Near Publish, use `Prepare for publishing` for one last automatic pass.
 12. Review generated fields and inserted page breaks before publishing.
+
+## Optional AI Extraction Repair
+
+The plugin does not need AI for normal posting. AI is only a fallback for messy recipes where local parsing cannot confidently fill ingredients, steps, servings, or timing.
+
+To enable OpenRouter repair in Coolify:
+
+```env
+AI_EXTRACTION_ENABLE=1
+AI_EXTRACTION_PROVIDER=openrouter
+AI_EXTRACTION_API_KEY=your-openrouter-token
+AI_EXTRACTION_MODEL=inclusionai/ling-2.6-1t:free
+AI_EXTRACTION_TIMEOUT_SECONDS=14
+AI_EXTRACTION_MAX_CHARS=9000
+AI_EXTRACTION_MAX_TOKENS=1400
+```
+
+Recommended workflow: paste title and clean recipe content, choose `Recipe`, click `Extract recipe schema`, then review the boxes before publishing.
 
 ## Image Workflow For Seeded Posts
 

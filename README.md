@@ -107,6 +107,8 @@ The newsletter signup is a small native WordPress form on the front page and the
 
 The `kepoli-author-tools` plugin keeps the writing workflow simple for beginner publishers. It can auto-fill excerpt, meta description, related links, featured-image metadata, recipe schema fields, category suggestions, tags, FAQ blocks, and post splits. See `docs/author-workflow.md` for the exact writing flow.
 
+Optional OpenRouter AI repair can be enabled for messy recipe extraction only. Keep `AI_EXTRACTION_ENABLE=0` unless `AI_EXTRACTION_API_KEY` is set in Coolify; when enabled, the plugin still parses locally first and only asks AI to repair incomplete recipe schema fields.
+
 ## Checks
 
 Run these before pushing a launch change:
