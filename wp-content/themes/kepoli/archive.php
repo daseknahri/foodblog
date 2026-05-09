@@ -14,7 +14,7 @@ $article_archive_meta = ($archive_term instanceof WP_Term && kepoli_is_editorial
     <p class="eyebrow">
         <?php
         if ($archive_term instanceof WP_Term) {
-            echo esc_html(kepoli_is_editorial_category_slug($archive_term->slug) ? sprintf(kepoli_ui_text('Ghiduri %s', '%s guides'), kepoli_site_name()) : sprintf(kepoli_ui_text('Retete %s', '%s recipes'), kepoli_site_name()));
+            echo esc_html(kepoli_is_editorial_category_slug($archive_term->slug) ? sprintf(kepoli_ui_text('Ghiduri %s', '%s guides'), kepoli_site_name()) : sprintf(kepoli_ui_text('Fapte %s', '%s facts'), kepoli_site_name()));
         } else {
             echo esc_html(kepoli_ui_text('Arhiva', 'Archive'));
         }
@@ -30,7 +30,7 @@ $article_archive_meta = ($archive_term instanceof WP_Term && kepoli_is_editorial
                 <?php endforeach; ?>
             <?php else : ?>
                 <span class="meta-strip__item"><?php echo esc_html(kepoli_archive_count_label($archive_term)); ?></span>
-                <span class="meta-strip__item"><?php echo esc_html(kepoli_ui_text('Pagini cu imagini, timpi si recomandari utile mai departe', 'Pages with images, timings, and useful next steps')); ?></span>
+                <span class="meta-strip__item"><?php echo esc_html(kepoli_ui_text('Pagini cu imagini, context si recomandari utile mai departe', 'Pages with images, context, and useful next steps')); ?></span>
             <?php endif; ?>
         </div>
     <?php endif; ?>

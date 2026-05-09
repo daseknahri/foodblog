@@ -49,7 +49,7 @@ function kepoli_mu_site_name(): string
 function kepoli_mu_brand_description(): string
 {
     $description = trim((string) kepoli_mu_profile_value(['brand', 'description'], get_bloginfo('description')));
-    return $description !== '' ? $description : 'Recipes, kitchen guides, and practical home cooking notes.';
+    return $description !== '' ? $description : 'Shocking health facts, body-signal explainers, and practical wellness context.';
 }
 
 function kepoli_mu_public_locale(): string

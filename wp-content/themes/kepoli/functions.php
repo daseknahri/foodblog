@@ -615,7 +615,7 @@ function kepoli_writer_description(): string
         return $description;
     }
 
-    return sprintf(kepoli_ui_text('Scrie retete si ghiduri practice pentru %s.', 'Writes practical recipes and kitchen guides for %s.'), kepoli_site_name());
+    return sprintf(kepoli_ui_text('Pregateste explicatii despre sanatate si ghiduri practice pentru %s.', 'Prepares careful health explainers and practical guides for %s.'), kepoli_site_name());
 }
 
 function kepoli_brand_description(): string
@@ -631,10 +631,10 @@ function kepoli_brand_description(): string
     }
 
     if (kepoli_is_english()) {
-        return sprintf('%s publishes practical recipes, food guides, and kitchen articles for home cooks.', kepoli_site_name());
+        return sprintf('%s publishes careful health facts, body-signal explainers, and everyday wellness context.', kepoli_site_name());
     }
 
-    return sprintf('%s publica retete pentru acasa, articole culinare si ghiduri practice.', kepoli_site_name());
+    return sprintf('%s publica explicatii despre sanatate, obiceiuri zilnice si semnale ale corpului.', kepoli_site_name());
 }
 
 function kepoli_current_page_slug(): string
@@ -664,11 +664,11 @@ function kepoli_current_description(): string
     } elseif (is_page()) {
         $page_descriptions = [
             kepoli_profile_slug('about', kepoli_is_english() ? 'about-dr-purg-jr' : 'despre-dr-purg-jr') => kepoli_is_english()
-                ? sprintf('Learn what %s publishes, who it is for, and how the publication approaches recipes, guides, corrections, and advertising.', kepoli_site_name())
-                : sprintf('Afla ce publica %s si cum abordeaza retetele, articolele, corecturile si publicitatea.', kepoli_site_name()),
+                ? sprintf('Learn what %s publishes, who it is for, and how the publication approaches health facts, corrections, and advertising.', kepoli_site_name())
+                : sprintf('Afla ce publica %s si cum abordeaza faptele despre sanatate, corecturile si publicitatea.', kepoli_site_name()),
             kepoli_profile_slug('author', kepoli_is_english() ? 'about-author' : 'about-author') => kepoli_is_english()
-                ? sprintf('Meet %s, the writer behind %s, and learn how the site approaches practical home-cooking guidance.', kepoli_writer_name(), kepoli_site_name())
-                : sprintf('Afla cine este %s si cum abordeaza %s ghidurile si retetele pentru gatit acasa.', kepoli_writer_name(), kepoli_site_name()),
+                ? sprintf('Meet %s, the editorial desk behind %s, and learn how the site approaches health explainers.', kepoli_writer_name(), kepoli_site_name())
+                : sprintf('Afla cine este %s si cum abordeaza %s explicatiile despre sanatate.', kepoli_writer_name(), kepoli_site_name()),
             'contact' => kepoli_is_english()
                 ? sprintf('Contact %s for editorial corrections, partnerships, privacy questions, advertising issues, or technical problems.', kepoli_site_name())
                 : sprintf('Contacteaza %s pentru corecturi, parteneriate, intrebari despre confidentialitate sau probleme tehnice.', kepoli_site_name()),
@@ -796,14 +796,14 @@ function kepoli_current_seo_title(): string
             : 'Retete romanesti pentru acasa | ' . $site_name;
     } elseif (($recipes_page = kepoli_recipes_page()) && is_page($recipes_page->ID)) {
         $title = kepoli_is_english()
-            ? 'Recipes for home cooks | ' . $site_name
-            : 'Retete pentru acasa | ' . $site_name;
+            ? 'Health facts for curious readers | ' . $site_name
+            : 'Fapte despre sanatate | ' . $site_name;
     } elseif (($guides_page = kepoli_guides_page()) && is_page($guides_page->ID)) {
         $title = kepoli_is_english()
-            ? 'Food guides and kitchen articles | ' . $site_name
-            : 'Articole culinare si ghiduri practice | ' . $site_name;
+            ? 'Health guides and myth checks | ' . $site_name
+            : 'Ghiduri despre sanatate | ' . $site_name;
     } elseif (is_category()) {
-        $title = single_cat_title('', false) . (kepoli_is_english() ? ' - Recipes and guides | ' : ' - Retete si articole | ') . $site_name;
+        $title = single_cat_title('', false) . (kepoli_is_english() ? ' - Health facts and guides | ' : ' - Fapte si ghiduri | ') . $site_name;
     } elseif (is_search()) {
         $title = kepoli_is_english()
             ? sprintf('Search: %s | %s', get_search_query(), $site_name)
@@ -820,7 +820,7 @@ function kepoli_current_seo_title(): string
             kepoli_profile_slug('advertising', kepoli_is_english() ? 'advertising-and-consent' : 'publicitate-si-consimtamant') => kepoli_is_english() ? 'Advertising and consent' : 'Publicitate si consimtamant',
             kepoli_profile_slug('editorial', kepoli_is_english() ? 'editorial-policy' : 'politica-editoriala') => kepoli_is_english() ? 'Editorial policy' : 'Politica editoriala',
             kepoli_profile_slug('terms', kepoli_is_english() ? 'terms-and-conditions' : 'termeni-si-conditii') => kepoli_is_english() ? 'Terms and conditions' : 'Termeni si conditii',
-            kepoli_profile_slug('disclaimer', kepoli_is_english() ? 'culinary-disclaimer' : 'disclaimer-culinar') => kepoli_is_english() ? 'Culinary disclaimer' : 'Disclaimer culinar',
+            kepoli_profile_slug('disclaimer', kepoli_is_english() ? 'culinary-disclaimer' : 'disclaimer-culinar') => kepoli_is_english() ? 'Health disclaimer' : 'Disclaimer de sanatate',
         ];
 
         $page_slug = kepoli_current_page_slug();
@@ -1217,15 +1217,15 @@ function kepoli_browse_items(): array
 {
     $items = [
         [
-            'label' => kepoli_ui_text('Toate retetele', 'All recipes'),
+            'label' => kepoli_ui_text('Toate faptele', 'All health facts'),
             'url' => kepoli_recipes_page_url(),
-            'meta' => kepoli_ui_text('Retete organizate pe categorii', 'Recipes organized by category'),
+            'meta' => kepoli_ui_text('Fapte organizate pe categorii', 'Facts organized by category'),
             'class' => 'tone-mains',
         ],
         [
             'label' => kepoli_ui_text('Articole utile', 'Useful guides'),
             'url' => kepoli_guides_page_url(),
-            'meta' => kepoli_ui_text('Ghiduri, tehnici si ingrediente', 'Guides, techniques, and ingredients'),
+            'meta' => kepoli_ui_text('Ghiduri, obiceiuri si mituri', 'Guides, habits, and myths'),
             'class' => 'tone-guides',
         ],
     ];
@@ -1239,7 +1239,7 @@ function kepoli_browse_items(): array
         $items[] = [
             'label' => $category->name,
             'url' => get_category_link($category),
-            'meta' => sprintf(kepoli_is_english() ? _n('%d recipe', '%d recipes', $category->count, 'kepoli') : _n('%d articol', '%d articole', $category->count, 'kepoli'), $category->count),
+            'meta' => sprintf(kepoli_is_english() ? _n('%d fact', '%d facts', $category->count, 'kepoli') : _n('%d fapt', '%d fapte', $category->count, 'kepoli'), $category->count),
             'class' => kepoli_tone_class($slug),
         ];
     }
@@ -1314,7 +1314,7 @@ function kepoli_primary_menu_items(): array
             'url' => home_url('/'),
         ],
         [
-            'label' => kepoli_ui_text('Retete', 'Recipes'),
+            'label' => kepoli_ui_text('Fapte sanatate', 'Health facts'),
             'url' => kepoli_recipes_page_url(),
         ],
         [
@@ -1381,25 +1381,25 @@ function kepoli_editorial_paths(): array
 
     $definitions = [
         [
-            'eyebrow' => kepoli_ui_text('Camara si ingrediente', 'Pantry and ingredients'),
-            'title' => kepoli_ui_text('Incepe cu baza care te ajuta toata saptamana', 'Start with the basics that help all week'),
-            'summary' => kepoli_ui_text('Ghiduri pentru cumparaturi mai clare, ingrediente mai potrivite si o camara care chiar sustine mesele de acasa.', 'Guides for clearer shopping, better ingredients, and a pantry that supports everyday meals.'),
+            'eyebrow' => kepoli_ui_text('Mancare si obiceiuri', 'Food and habits'),
+            'title' => kepoli_ui_text('Incepe cu alegeri zilnice usor de observat', 'Start with everyday choices that are easy to notice'),
+            'summary' => kepoli_ui_text('Ghiduri despre etichete, bauturi, fibre, sare si obiceiuri care apar in viata de zi cu zi.', 'Guides about labels, drinks, fiber, salt, and habits that show up in everyday life.'),
             'class' => 'tone-pantry',
-            'slugs' => ['pantry-staples-for-fast-meals', 'how-to-plan-weeknight-dinners'],
+            'slugs' => ['label-sugar-health-halo', 'hidden-salt-restaurant-meals', 'fiber-facts-most-people-miss'],
         ],
         [
-            'eyebrow' => kepoli_ui_text('Sezon si planificare', 'Season and planning'),
-            'title' => kepoli_ui_text('Leaga pofta de sezon cu mesele care ies usor', 'Connect seasonal cravings with meals that work'),
-            'summary' => kepoli_ui_text('Pentru zilele in care vrei sa alegi mai bine ce merita gatit acum si cum construiesti un meniu coerent.', 'For days when you want to choose what is worth cooking now and build a more coherent menu.'),
+            'eyebrow' => kepoli_ui_text('Somn si energie', 'Sleep and energy'),
+            'title' => kepoli_ui_text('Intelege ritmul care iti schimba ziua', 'Understand the rhythm that changes your day'),
+            'summary' => kepoli_ui_text('Articole despre lumina telefonului, cafeina, somn de recuperare si micile alegeri care schimba energia.', 'Articles about phone light, caffeine, catch-up sleep, and small choices that shape energy.'),
             'class' => 'tone-mains',
-            'slugs' => ['how-to-store-fresh-herbs', 'how-to-build-a-simple-salad'],
+            'slugs' => ['phone-light-sleep-delay', 'caffeine-timing-energy-crash', 'sleep-debt-weekend-catchup'],
         ],
         [
-            'eyebrow' => kepoli_ui_text('Tehnica si pastrare', 'Technique and storage'),
-            'title' => kepoli_ui_text('Ghiduri pentru rezultate mai previzibile', 'Guides for more predictable results'),
-            'summary' => kepoli_ui_text('Explicatii practice despre aluaturi, baze si pastrarea mancarii gatite fara improvizatii care complica lucrurile.', 'Practical explanations for doughs, bases, and storing cooked food without making the process harder.'),
+            'eyebrow' => kepoli_ui_text('Semnale ale corpului', 'Body signals'),
+            'title' => kepoli_ui_text('Citeste semnalele cu mai mult context', 'Read signals with more context'),
+            'summary' => kepoli_ui_text('Explicatii despre gura uscata, maini reci, ameteli scurte si alte semnale care merita inteles calm.', 'Explainers about dry mouth, cold hands, brief dizziness, and other signals worth reading calmly.'),
             'class' => 'tone-guides',
-            'slugs' => ['beginner-guide-to-seasoning-food'],
+            'slugs' => ['morning-mouth-warning-signals', 'cold-hands-common-reasons', 'standing-too-fast-dizzy'],
         ],
     ];
 
@@ -3223,8 +3223,8 @@ function kepoli_newsletter_cta(string $class = ''): string
         '<section class="%1$s" aria-labelledby="newsletter-title"><div class="newsletter-cta__inner"><p class="eyebrow">%2$s</p><h2 id="newsletter-title" class="newsletter-cta__title">%3$s</h2><p class="newsletter-cta__copy">%4$s</p>%5$s<form class="newsletter-cta__form" action="%6$s" method="post"><input type="hidden" name="action" value="kepoli_newsletter_signup"><input type="hidden" name="redirect_to" value="%7$s"><input type="hidden" name="source_label" value="%8$s"><input type="hidden" name="source_url" value="%7$s">%9$s<label class="screen-reader-text" for="%10$s">%11$s</label><input class="newsletter-cta__input" id="%10$s" name="newsletter_email" type="email" inputmode="email" autocomplete="email" placeholder="%12$s" maxlength="190" required><button class="newsletter-cta__submit" type="submit">%13$s</button><div class="newsletter-cta__honeypot" aria-hidden="true"><label for="%14$s">%15$s</label><input id="%14$s" name="website" type="text" tabindex="-1" autocomplete="off"></div></form><p class="newsletter-cta__fine-print">%16$s <a href="mailto:%17$s">%17$s</a>.</p></div></section>',
         esc_attr($classes),
         esc_html(kepoli_ui_text('Newsletter', 'Newsletter')),
-        esc_html(kepoli_ui_text('Primeste retetele noi pe email', 'Get new recipes by email')),
-        esc_html(kepoli_ui_text('Trimitem un mesaj scurt cand publicam ceva util: retete noi, ghiduri practice si actualizari importante.', 'We send a short message when something useful is published: new recipes, practical guides, and important updates.')),
+        esc_html(kepoli_ui_text('Primeste articolele noi pe email', 'Get new health facts by email')),
+        esc_html(kepoli_ui_text('Trimitem un mesaj scurt cand publicam ceva util: fapte noi, ghiduri practice si actualizari importante.', 'We send a short message when something useful is published: new facts, practical guides, and important updates.')),
         $notice_markup,
         esc_url(admin_url('admin-post.php')),
         esc_url($current_url),

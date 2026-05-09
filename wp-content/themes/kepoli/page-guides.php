@@ -16,8 +16,8 @@ $page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_conte
 <header class="archive-header">
     <?php kepoli_breadcrumbs(); ?>
     <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Articole', 'Guides')); ?></p>
-    <h1><?php echo esc_html($page_title !== '' ? $page_title : kepoli_ui_text('Ghiduri de bucatarie', 'Kitchen guides')); ?></h1>
-    <p><?php echo esc_html($page_intro !== '' ? $page_intro : kepoli_ui_text('Organizare, ingrediente, tehnici si idei practice pentru gatit mai clar acasa.', 'Organization, ingredients, techniques, and practical ideas for better home cooking.')); ?></p>
+    <h1><?php echo esc_html($page_title !== '' ? $page_title : kepoli_ui_text('Ghiduri despre sanatate', 'Health guides')); ?></h1>
+    <p><?php echo esc_html($page_intro !== '' ? $page_intro : kepoli_ui_text('Obiceiuri, semnale ale corpului, mituri si context practic pentru citire rapida.', 'Habits, body signals, myths, and practical context for quick reading.')); ?></p>
     <?php if ($article_meta_items) : ?>
         <div class="meta-strip">
             <?php foreach ($article_meta_items as $item) : ?>
@@ -83,7 +83,7 @@ $page_intro = $page_content !== '' ? wp_trim_words(wp_strip_all_tags($page_conte
                 <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Zone editoriale', 'Editorial paths')); ?></p>
                 <h2><?php echo esc_html(kepoli_ui_text('Alege dupa tipul de ajutor de care ai nevoie', 'Choose by the kind of help you need')); ?></h2>
             </div>
-            <p><?php echo esc_html(kepoli_ui_text('Ghidurile sunt grupate simplu, ca sa ajungi mai repede la ingredientele, tehnicile sau ideile de planificare care conteaza pentru tine.', 'Guides are grouped simply so readers can reach the ingredients, techniques, or planning ideas they need faster.')); ?></p>
+            <p><?php echo esc_html(kepoli_ui_text('Ghidurile sunt grupate simplu, ca sa ajungi mai repede la obiceiurile, semnalele corpului sau miturile care conteaza pentru tine.', 'Guides are grouped simply so readers can reach the habits, body signals, or myths they need faster.')); ?></p>
         </div>
         <div class="guide-path-grid">
             <?php foreach ($editorial_paths as $path) : ?>

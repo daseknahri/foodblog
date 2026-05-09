@@ -42,9 +42,9 @@ $gravatar_profile_url = kepoli_writer_gravatar_url();
     <div class="section__header section__header--compact">
         <div>
             <p class="eyebrow"><?php echo esc_html(kepoli_ui_text('Publicat recent', 'Recently published')); ?></p>
-            <h2><?php echo esc_html(sprintf(kepoli_ui_text('Retete si ghiduri de la %s', 'Recipes and guides from %s'), $writer_name)); ?></h2>
+            <h2><?php echo esc_html(sprintf(kepoli_ui_text('Articole si ghiduri de la %s', 'Articles and guides from %s'), $writer_name)); ?></h2>
         </div>
-        <p><?php echo esc_html(sprintf(kepoli_ui_text('Cele mai noi materiale %s, cu accent pe retete, organizare si gatit clar pentru acasa.', 'The newest pieces on %s, focused on recipes, kitchen guidance, and practical home cooking.'), $site_name)); ?></p>
+        <p><?php echo esc_html(sprintf(kepoli_ui_text('Cele mai noi materiale %s, cu accent pe fapte despre sanatate, obiceiuri si explicatii clare.', 'The newest pieces on %s, focused on health facts, habits, and clear explainers.'), $site_name)); ?></p>
     </div>
     <div class="post-grid">
         <?php
